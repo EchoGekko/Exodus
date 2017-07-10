@@ -240,6 +240,13 @@ function Exodus:newGame(fromSave)
             ---<<ENEMIES>>---
             FLYERBALL = { Fires = {} },
         }
+        
+        local player = Isaac.GetPlayer(0)
+        
+        if player then
+            player:AddCacheFlags(CacheFlag.CACHE_ALL)
+            player:EvaluateItems()
+        end
     end
     
     itemPool = game:GetItemPool()
@@ -2159,41 +2166,58 @@ function Exodus:wotlUpdate()
         end
     end
     
-    if room:IsClear() and ItemVariables.WRATH_OF_THE_LAMB.RoomIndex == level:GetCurrentRoomIndex() and player:HasCollectible(ItemId.WRATH_OF_THE_LAMB) then
-        music:Play(Music.MUSIC_BOSS_OVER, 0.1)
-        local limit = 1
-        
-        if player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) then
-            limit = 2
-        end
-        
-        for i = 1, limit do
-            local payout = rng:RandomInt(100)
+    if ItemVariables.WRATH_OF_THE_LAMB.RoomIndex == level:GetCurrentRoomIndex() and player:HasCollectible(ItemId.WRATH_OF_THE_LAMB) then
+        if room:IsClear() then
+            music:Play(Music.MUSIC_BOSS_OVER, 0.1)
+            local limit = 1
             
-            if payout < 70 then
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-            elseif payout < 75 then
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-            elseif payout < 80 then
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-            elseif payout < 85 then
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-            elseif payout < 90 then
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-            elseif payout < 95 then
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-            else
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+            if player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) then
+                limit = 2
+            end
+            
+            for i = 1, limit do
+                local payout = rng:RandomInt(100)
+                
+                if payout < 70 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 75 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 80 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 85 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 90 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 95 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                else
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                end
+            end
+            
+            ItemVariables.WRATH_OF_THE_LAMB.RoomIndex = nil
+        else
+            for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+                local door = room:GetDoor(i)
+                
+                if door ~= nil then
+                    local tarType = door.TargetRoomType
+                    local curType = door.CurrentRoomType
+                    
+                    if tarType ~= RoomType.ROOM_SECRET and tarType ~= RoomType.ROOM_SUPERSECRET and curType ~= RoomType.ROOM_SECRET and curType ~= RoomType.ROOM_SUPERSECRET then
+                        door:Bar()
+                    elseif door:IsOpen() then
+                        door:Bar()
+                    end
+                end
             end
         end
-        
-        ItemVariables.WRATH_OF_THE_LAMB.RoomIndex = nil
     end
 end
 
@@ -2237,9 +2261,20 @@ function Exodus:wotlUse()
 	player:EvaluateItems()
 	music:PitchSlide(0.5)
     
+    local room = game:GetRoom()
+    
 	for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
-		if game:GetRoom():GetDoor(i) ~= nil then
-			game:GetRoom():GetDoor(i):Bar()
+        local door = room:GetDoor(i)
+        
+		if door ~= nil then
+            local tarType = door.TargetRoomType
+            local curType = door.CurrentRoomType
+            
+            if tarType ~= RoomType.ROOM_SECRET and tarType ~= RoomType.ROOM_SUPERSECRET and curType ~= RoomType.ROOM_SECRET and curType ~= RoomType.ROOM_SUPERSECRET then
+                door:Bar()
+            elseif door:IsOpen() then
+                door:Bar()
+            end
 		end
 	end
     
