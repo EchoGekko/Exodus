@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>Exodus</name>
+    <directory>exodus</directory>
+    <id>957486714</id>
+    <description>Test version for the Binding of Isaac: Exodus!
+
+[h1]Coders[/h1]
+[b]Micromario[/b]
+[b]Exudias[/b]
+[b]AstroPenguin642[/b]
+[b]Jaketheboss888[/b]
+[b]Echo[/b]
+
+[h1]Artists[/h1]
+[b]Bustin Blotch[/b]
+[b]CatnipOverdose[/b]
+[b]TRPG[/b]
+[b]Psychotic[/b]
+[b]DrTapeworm[/b]
+
+[h1]Special Thanks[/h1]
+[b]Ambassador Pineapple[/b]
+</description>
+    <version>1.14</version>
+    <visibility>Private</visibility>
+    <tag id="Lua"/>
+    <tag id="Items"/>
+    <tag id="Active Items"/>
+    <tag id="Trinkets"/>
+    <tag id="Familiars"/>
+    <tag id="Rooms"/>
+    <tag id="Floors"/>
+    <tag id="Enemies"/>
+    <tag id="Bosses"/>
+    <tag id="Tweaks"/>
+    <tag id="Graphics"/>
+    <tag id="Sound Effects"/>
+    <tag id="Music"/>
+</metadata>

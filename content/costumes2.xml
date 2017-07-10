@@ -1,0 +1,22 @@
+<costumes anm2root = "gfx/characters/">
+	<costume anm2path="costume_Queen Bee.anm2" type="none" />
+	<costume anm2path="costume_Beenades.anm2" type="none" />
+	<costume anm2path="costume_Busted Pipe.anm2" type="none" />
+	<costume anm2path="costume_Unholy Mantle.anm2" type="none" />
+
+	<costume anm2path="costume_TechY.anm2" type="none"/>
+
+	<costume anm2path="costume_Paper Cut.anm2" type="none" />
+	<costume anm2path="costume_Dragon Breath.anm2" type="none"/>
+	<costume anm2path="costume_Pig Blood.anm2" type="none"/>
+	<costume anm2path="costume_Dad's Boots.anm2" type="none"/>
+	<costume anm2path="CursedMetronome.anm2" type="none"/>
+	<costume anm2path="MysteriousMustache.anm2" type="none"/>
+
+	<costume anm2path="oww.anm2" type="none" />
+	<costume anm2path="oww blue.anm2" type="none" />
+	<costume anm2path="oww gray.anm2" type="none" />
+	<costume anm2path="oww black.anm2" type="none" />
+	<costume anm2path="oww black w red eyes.anm2" type="none" />
+	<costume anm2path="oww white.anm2" type="none" />
+</costumes>

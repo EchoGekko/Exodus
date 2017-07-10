@@ -1,0 +1,4 @@
+<music root="music/">
+<track name="Locus" path="Locus - Mini boss.ogg" loop="true"/>
+<track name="Tyrannicide" path="Tyrannicide - Mega Satan theme.ogg" loop="true"/>
+</music>
