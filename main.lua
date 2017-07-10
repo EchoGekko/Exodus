@@ -2699,12 +2699,18 @@ function Exodus:astroBabyFamiliarUpdate(astro)
         local data = entity:GetData()
         
         if entity.Type == EntityType.ENTITY_TEAR and data.IsFromAstroBaby == true then
-            entity.Velocity = (entity.Velocity:Rotated(data.RotateAmount)):Resized(10)
-            
-            if data.RotateAmount < 10 then
-                data.RotateAmount = data.RotateAmount / 1.01
+            if not entity:IsDead() then
+                entity.Velocity = entity.Velocity:Rotated(data.RotateAmount)
+
+                if data.RotateAmount < 10 then
+                    data.RotateAmount = data.RotateAmount / 1.01
+                else
+                    data.RotateAmount = data.RotateAmount / 1.1
+                end
             else
-                data.RotateAmount = data.RotateAmount / 1.1
+                local hit = Isaac.Spawn(1000, 12, 0, entity.Position, NullVector, nil)
+                hit:ToEffect():SetTimeout(30)
+                hit.SpriteRotation = rng:RandomInt(360)
             end
         end
     end
@@ -2728,7 +2734,7 @@ function Exodus:astroBabyFamiliarUpdate(astro)
                 sprite:Play("ShootUp", true)
             end
             
-            local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 0, 0, astro.Position, dir, astro):ToTear()
+            local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, astro.Position, dir, astro):ToTear()
             local tearData = tear:GetData()
             tearData.IsFromAstroBaby = true
             tearData.Parent = astro
