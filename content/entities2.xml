@@ -178,7 +178,7 @@
         <preload-snd id="185" /> <!-- BOSS2_BUBBLES -->
     </entity>
 
-    <entity anm2path="Carrion Prince.anm2" baseHP="22" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="20" friction="1" id="764" name="Carrion Prince" numGridCollisionPoints="0" shadowSize="25" stageHP="0" variant="0" portrait="0" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="WalkHeadHori">
+    <entity anm2path="Carrion Prince.anm2" baseHP="30" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="20" friction="1" id="764" name="Carrion Prince" numGridCollisionPoints="0" shadowSize="25" stageHP="0" variant="0" portrait="0" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="WalkHeadHori">
         <gibs amount="8" blood="1" bone="1" eye="0" gut="1" large="0" />
         <preload-snd id="115" /> <!-- SOUND_MONSTER_ROAR_0 -->
     </entity>

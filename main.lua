@@ -49,8 +49,8 @@ local ItemId = {
     PSEUDOBULBAR_AFFECT = Isaac.GetItemIdByName("The Pseudobulbar Affect"),
     MUTANT_CLOVER = Isaac.GetItemIdByName("Mutant Clover"),
     TRAGIC_MUSHROOM = Isaac.GetItemIdByName("Tragic Mushroom"),
-	ANAMNESIS = Isaac.GetItemIdByName("Anamnesis"),
-    
+    ANAMNESIS = Isaac.GetItemIdByName("Anamnesis"),
+	
     ---<<FAMILIARS>>---
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
     RITUAL_CANDLE = Isaac.GetItemIdByName("Ritual Candle"),
@@ -200,6 +200,7 @@ function Exodus:newGame(fromSave)
             MYSTERIOUS_MUSTACHE = { HasMysteriousMustache = false, ItemCount = 0, CoinCount = 0 },
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false },
             GLUTTONYS_STOMACH = { Parts = 0 },
+			ASTRO_BABY = { UsedBox = 0 },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -2772,7 +2773,7 @@ Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.hungryHippoUpdate, En
 --<<<ASTRO BABY>>>--
 function Exodus:astroBabyCache(player, flag)
     if player:HasCollectible(ItemId.ASTRO_BABY) and flag == CacheFlag.CACHE_FAMILIARS then
-        player:CheckFamiliar(Entities.ASTRO_BABY.variant, player:GetCollectibleNum(ItemId.ASTRO_BABY), rng)
+        player:CheckFamiliar(Entities.ASTRO_BABY.variant, player:GetCollectibleNum(ItemId.ASTRO_BABY) + ItemVariables.ASTRO_BABY.UsedBox, rng)
     end
 end
 
@@ -2870,6 +2871,24 @@ function Exodus:astroBabyFamiliarUpdate(astro)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.astroBabyFamiliarUpdate, Entities.ASTRO_BABY.variant)
+
+function Exodus:boxOfFriendsUse()
+    local player = Isaac.GetPlayer(0)
+	ItemVariables.ASTRO_BABY.UsedBox = ItemVariables.ASTRO_BABY.UsedBox + 1
+	player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
+	player:EvaluateItems()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.boxOfFriendsUse, CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS)
+
+function Exodus:astroBabyNewRoom()
+    local player = Isaac.GetPlayer(0)
+	ItemVariables.ASTRO_BABY.UsedBox = 0
+	player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
+	player:EvaluateItems()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.astroBabyNewRoom)
 
 --<<<BUSTED PIPE>>>--
 function Exodus:bustedPipeUpdate()
@@ -3511,6 +3530,7 @@ function Exodus:pseudobulbarAffectUse()
 	return true
 end
 
+--<<<ANAMNESIS>>>--
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.pseudobulbarAffectUse, ItemId.PSEUDOBULBAR_AFFECT)
 
 function Exodus:anamnesisUse()
@@ -4823,6 +4843,8 @@ function Exodus:carrionPrinceEntityUpdate(entity)
 	local angle = (target.Position - entity.Position):GetAngleDegrees()
     
 	if entity.FrameCount <= 1 then
+		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+		entity.GridCollisionClass = GridCollisionClass.COLLISION_SOLID
 		data.DirectionMultiplier = math.random(5)
 		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
