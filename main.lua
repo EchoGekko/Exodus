@@ -65,12 +65,12 @@ local ItemId = {
     BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul")
 }
 
-local function getEntity(name, subt)
-    if subt == nil then 
-        subt = 0 
+local function getEntity(stringName, intSubtype)
+    if intSubtype == nil then 
+        intSubtype = 0 
     end
     
-    return { id = Isaac.GetEntityTypeByName(name), variant = Isaac.GetEntityVariantByName(name), subtype = subt }
+    return { id = Isaac.GetEntityTypeByName(stringName), variant = Isaac.GetEntityVariantByName(stringName), subtype = intSubtype, name = stringName }
 end
 
 local Entities = {
@@ -126,6 +126,7 @@ local Entities = {
     SOULFUL_FLY = getEntity("Soulful Fly"),
     HATEFUL_FLY = getEntity("Hateful Fly"),
     HATEFUL_FLY_GHOST = getEntity("Hateful Fly Ghost"),
+    HOTHEAD = getEntity("Hothead"),
     
     ---<<OTHERS>>---
     BIRDBATH = getEntity("Birdbath"),
@@ -137,6 +138,14 @@ local Entities = {
     FIREBALL = getEntity("Fireball"),
     FIREBALL_2 = getEntity("Fireball 2")
 }
+
+for i, entity in pairs(Entities) do
+    if entity.id == -1 then
+        Isaac.DebugString("ERROR: Could not find a type for entity " .. entity.name)
+    elseif entity.variant == -1 then
+        Isaac.DebugString("ERROR: Could not find a variant for entity " .. entity.name)
+    end
+end
 
 local CostumeId = {
     QUEEN_BEE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Queen Bee.anm2"),
@@ -333,10 +342,8 @@ function Exodus:PlayTearSprite(tear, anm2)
 end
 
 function Exodus:IsAOEFree()
-	local entities = Isaac.GetRoomEntities()
-    
-	for i=1, #entities do
-		if entities[i]:GetData().IsOccultistAOE then
+	for i, entity in pairs(Isaac.GetRoomEntities()) do
+		if entity:GetData().IsOccultistAOE then
 			return false
 		end
 	end
@@ -358,17 +365,18 @@ end
 function Exodus:SpawnGib(position, spawner, big)
 	local YOffset = math.random(5, 20)
 	local LanternGibs = Isaac.Spawn(EntityType.ENTITY_EFFECT, Entities.LANTERN_GIBS.variant, 0, position, Vector(math.random(-20, 20), -1 * YOffset), spawner)
+    local sprite = LanternGibs:GetSprite()
     
 	LanternGibs:GetData().Offset = YOffset
 	LanternGibs.SpriteRotation = math.random(360)
     
 	if LanternGibs.FrameCount == 0 then
 		if not big then
-			LanternGibs:GetSprite():Play("Gib0" .. tostring(math.random(2, 4)),false)
-			LanternGibs:GetSprite():Stop()
+			sprite:Play("Gib0" .. tostring(math.random(2, 4)),false)
+			sprite:Stop()
 		elseif big then
-			LanternGibs:GetSprite():Play("Gib01",false)
-			LanternGibs:GetSprite():Stop()
+			sprite:Play("Gib01",false)
+			sprite:Stop()
 		end
 	end
 end
@@ -4989,6 +4997,7 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.deathsEyeTakeDamage, Entities.DEATHS_EYE.id)
 
+--<<<LOVELY FLIES>>>--
 local FLIES = {
     LOVELY_FLY = { 
         turnFactor = 1, --This value influences how fast the fly will turn towards the player when it can't find a mate
@@ -5456,3 +5465,122 @@ function Exodus:hatefulFlyLaserStop(fly)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.hatefulFlyLaserStop)
+
+--<<<HOTHEAD>>>--
+function Exodus:hotheadEntityUpdate(hothead)
+    local player = Isaac.GetPlayer(0)
+    local sprite = hothead:GetSprite()
+    local data = hothead:GetData()
+    local room = game:GetRoom()
+    
+    if hothead.Variant == Entities.HOTHEAD.variant then
+        if not hothead.Pathfinder:HasPathToPos(player.Position, false) or sprite:IsPlaying("Jump") then
+            if not data.awake then
+                sprite:Play("Sleeping", true)
+            else
+                if not sprite:IsPlaying("Jump") then
+                    sprite:Play("Jump", true)
+                elseif sprite:IsEventTriggered("Jump") then
+                    local nextFreePos
+                    
+                    for i = 50, (player.Position - hothead.Position):Length(), 10 do
+                        local nextPos = hothead.Position + Vector(i, 0):Rotated((player.Position - hothead.Position):GetAngleDegrees())
+                        local gridEnt = room:GetGridEntityFromPos(nextPos)
+                        
+                        if not gridEnt or (gridEnt and not(gridEnt:ToRock() or gridEnt:ToPoop() or gridEnt:ToPit() or gridEnt:ToTNT())) then
+                            nextFreePos = Isaac.GetFreeNearPosition(nextPos, 10)
+                            break
+                        end
+                    end
+                    
+                    if not nextFreePos then
+                        nextFreePos = Isaac.GetFreeNearPosition(player.Position, 10)
+                    end
+                    
+                    hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
+                    hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+                    hothead:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+                    hothead.Velocity = Vector(0, 0)
+                    hothead:AddVelocity((nextFreePos - hothead.Position):Resized((nextFreePos - hothead.Position):Length() / 11))
+                end
+                
+                if sprite:IsPlaying("Jump") and sprite:GetFrame() > 15 then
+                    hothead.Velocity = Vector(0, 0)
+                end
+            end
+        else
+            if sprite:IsPlaying("Jump") and sprite:GetFrame() > 15 then
+                hothead.Velocity = Vector(0, 0)
+            end
+            
+            if hothead.EntityCollisionClass ~= EntityCollisionClass.ENTCOLL_ALL then
+                hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
+                hothead:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+            end
+            
+            if hothead.GridCollisionClass ~= EntityGridCollisionClass.GRIDCOLL_GROUND then
+                hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
+            end
+            
+            if not data.awake then
+                data.awake = true
+                hothead.Target = player
+                
+                for i, entity in pairs(Isaac.GetRoomEntities()) do
+                    local entData = entity:GetData()
+                    
+                    if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant and not entData.awake then
+                        entData.awake = true
+                    end
+                end
+            else
+                local directPath = true
+                
+                for i = 0, (player.Position - hothead.Position):Length(), 15 do
+                    local gridEnt = room:GetGridEntityFromPos(hothead.Position + Vector(i, 0):Rotated((player.Position - hothead.Position):GetAngleDegrees()))
+                    
+                    if gridEnt and (gridEnt:ToRock() or gridEnt:ToPoop() or gridEnt:ToPit() or gridEnt:ToTNT()) then
+                        directPath = false
+                        break
+                    end
+                end
+                
+                for i, entity in pairs(Isaac.GetRoomEntities()) do
+                    if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant then
+                        if hothead.Position:DistanceSquared(entity.Position) < 25^2 then
+                            hothead:AddVelocity((hothead.Position - entity.Position):Resized(hothead.Velocity:Length()))
+                            entity:AddVelocity((entity.Position - hothead.Position):Resized(entity.Velocity:Length()))
+                        end
+                    end
+                end
+                
+                if directPath then
+                    hothead:AddVelocity((player.Position - hothead.Position):Resized(0.8))
+                    hothead.Velocity = hothead.Velocity:Resized(math.min(hothead.Velocity:Length(), 8))
+                else
+                    hothead.Pathfinder:FindGridPath(player.Position, 2, 0, true)
+                end
+                
+                local velAngle = hothead.Velocity:GetAngleDegrees()
+                
+                if (velAngle > -135 and velAngle < -45) or (velAngle < 135 and velAngle > 45) then
+                    if not sprite:IsPlaying("WalkVerti") then
+                        sprite:Play("WalkVerti", true)
+                    end
+                else
+                    if velAngle > 90 or velAngle < -90 then
+                        sprite.FlipX = true
+                    else
+                        sprite.FlipX = false
+                    end
+                    
+                    if not sprite:IsPlaying("WalkHori") then
+                        sprite:Play("WalkHori", true)
+                    end
+                end
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.hotheadEntityUpdate, Entities.HOTHEAD.id)
