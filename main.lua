@@ -49,6 +49,7 @@ local ItemId = {
     PSEUDOBULBAR_AFFECT = Isaac.GetItemIdByName("The Pseudobulbar Affect"),
     MUTANT_CLOVER = Isaac.GetItemIdByName("Mutant Clover"),
     TRAGIC_MUSHROOM = Isaac.GetItemIdByName("Tragic Mushroom"),
+	ANAMNESIS = Isaac.GetItemIdByName("Anamnesis"),
     
     ---<<FAMILIARS>>---
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
@@ -3420,6 +3421,46 @@ function Exodus:pseudobulbarAffectUse()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.pseudobulbarAffectUse, ItemId.PSEUDOBULBAR_AFFECT)
+
+function Exodus:anamnesisUse()
+	local player = Isaac.GetPlayer(0)
+	local config = Isaac.GetItemConfig()
+	local collectibleList = {}
+    local function itempairs()
+    local count = #config:GetCollectibles()
+        local i = 0
+
+        return function()
+            local value
+            while not value do
+            i = i + 1
+            if i >= count then return end
+                value = config:GetCollectible(i)
+            end
+            return i, value
+        end
+    end
+
+	do
+		local i = 0
+		for k, v in itempairs() do
+			if Isaac.GetPlayer(0):HasCollectible(k) then
+				table.insert(collectibleList, 1, k)
+			end
+		end
+    end
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == 5 and entity.Variant == 100 then
+            local pickup = entity:ToPickup()
+            pickup:Morph(5, 100, collectibleList[math.random(#collectibleList)], true)
+        end
+    end
+
+    return true
+end
+
+Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.anamnesisUse, ItemId.ANAMNESIS)
 
 --<<<BIRDBATH>>>--
 function Exodus:birdbathUse()
