@@ -91,6 +91,7 @@ local Entities = {
     PART_UP = getEntity("Part Up"),
     PART_UP_UP = getEntity("Part Up Up"),
     PART_UP_UP_UP = getEntity("Part Up Up Up"),
+    PIT_GIBS = getEntity("Pit Gibs"),
     
     ---<<FAMILIARS>>---
     HUNGRY_HIPPO = getEntity("Hungry Hippo"),
@@ -626,6 +627,14 @@ function Exodus:FireFire(vector, wiz, double, two)
                 
                 Exodus:ShootFireball(player.Position, vector)
             end
+        end
+    end
+end
+
+local function getEntityFromRef(entityRef)
+    for i, ent in pairs(Isaac.GetRoomEntities()) do
+        if ent.Index == entityRef.Entity.Index and ent.InitSeed == entityRef.Entity.InitSeed then
+            return ent
         end
     end
 end
@@ -5173,14 +5182,6 @@ local function getTableByVariant(variant)
     end
 end
 
-local function getEntityFromRef(entityRef)
-    for i, ent in pairs(Isaac.GetRoomEntities()) do
-        if ent.Index == entityRef.Entity.Index and ent.InitSeed == entityRef.Entity.InitSeed then
-            return ent
-        end
-    end
-end
-
 function Exodus:lovelyFlyLogic(fly)
     local data = fly:GetData()
     local sprite = fly:GetSprite()
@@ -5591,114 +5592,126 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.hatefulFlyLaserStop)
 
 --<<<HOTHEAD>>>--
 function Exodus:hotheadEntityUpdate(hothead)
-    local player = Isaac.GetPlayer(0)
+    local path = hothead.Pathfinder
     local sprite = hothead:GetSprite()
     local data = hothead:GetData()
+    local target = hothead:GetPlayerTarget()
+    local angleVec = target.Position - hothead.Position
+    
     local room = game:GetRoom()
     
     if hothead.Variant == Entities.HOTHEAD.variant then
-        if not hothead.Pathfinder:HasPathToPos(player.Position, false) or sprite:IsPlaying("Jump") then
-            if not data.awake then
-                sprite:Play("Sleeping", true)
+        if hothead.FrameCount <= 1 then
+            hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
+            hothead:AddEntityFlags(EntityFlag.FLAG_NO_BLOOD_SPLASH + EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+            data.soundTimer = math.random(40, 100)
+        end
+        
+        if not data.wakingUp then
+            if path:HasPathToPos(target.Position, false) then
+                data.wakingUp = true
+                
+                for i, entity in pairs(Isaac.GetRoomEntities()) do
+                    if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant then
+                        entity:GetData().wakingUp = true
+                    end
+                end
             else
-                if not sprite:IsPlaying("Jump") then
-                    sprite:Play("Jump", true)
-                elseif sprite:IsEventTriggered("Jump") then
-                    local nextFreePos
+                sprite:Play("Sleeping", true)
+            end
+        else
+            if not data.awake then
+                if sprite:IsFinished("Awaken") then
+                    data.awake = true
                     
-                    for i = 50, (player.Position - hothead.Position):Length(), 10 do
-                        local nextPos = hothead.Position + Vector(i, 0):Rotated((player.Position - hothead.Position):GetAngleDegrees())
-                        local gridEnt = room:GetGridEntityFromPos(nextPos)
+                elseif not sprite:IsPlaying("Awaken") then
+                    sprite:Play("Awaken", true)
+                    sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_3, 1, 0, false, 0.7)
+                end
+            else
+                if path:HasPathToPos(target.Position, false) and not sprite:IsPlaying("Jump") then
+                    local directPath = true
+                    
+                    for i = 20, hothead.Position:Distance(target.Position), 20 do
+                        local newPos = hothead.Position + Vector(i, 0):Rotated(angleVec:GetAngleDegrees())
+                        local gridEnt = room:GetGridEntityFromPos(newPos)
                         
-                        if not gridEnt or (gridEnt and not(gridEnt:ToRock() or gridEnt:ToPoop() or gridEnt:ToPit() or gridEnt:ToTNT())) then
-                            nextFreePos = Isaac.GetFreeNearPosition(nextPos, 10)
+                        if gridEnt and (gridEnt:ToRock() or gridEnt:ToPit() or gridEnt:ToPoop() or gridEnt:ToTNT() or gridEnt:ToSpikes()) then
+                            directPath = false
                             break
                         end
                     end
                     
-                    if not nextFreePos then
-                        nextFreePos = Isaac.GetFreeNearPosition(player.Position, 10)
+                    if directPath then
+                        local velLimit = 8
+                        
+                        if target:ToPlayer() then
+                            velLimit = velLimit * math.min(target:ToPlayer().MoveSpeed, 1.3)
+                        end
+                        
+                        hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
+                        hothead:AddVelocity(angleVec:Resized(math.min(150 / angleVec:Length(), 2)))
+                        hothead.Velocity = hothead.Velocity:Resized(math.min(hothead.Velocity:Length(), velLimit))
+                    else
+                        path:FindGridPath(target.Position, 1.5, 0, true)
                     end
                     
-                    hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
-                    hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
-                    hothead:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-                    hothead.Velocity = Vector(0, 0)
-                    hothead:AddVelocity((nextFreePos - hothead.Position):Resized((nextFreePos - hothead.Position):Length() / 11))
-                end
-                
-                if sprite:IsPlaying("Jump") and sprite:GetFrame() > 15 then
-                    hothead.Velocity = Vector(0, 0)
-                end
-            end
-        else
-            if sprite:IsPlaying("Jump") and sprite:GetFrame() > 15 then
-                hothead.Velocity = Vector(0, 0)
-            end
-            
-            if hothead.EntityCollisionClass ~= EntityCollisionClass.ENTCOLL_ALL then
-                hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
-                hothead:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-            end
-            
-            if hothead.GridCollisionClass ~= EntityGridCollisionClass.GRIDCOLL_GROUND then
-                hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
-            end
-            
-            if not data.awake then
-                data.awake = true
-                hothead.Target = player
-                
-                for i, entity in pairs(Isaac.GetRoomEntities()) do
-                    local entData = entity:GetData()
+                    local velAngle = hothead.Velocity:GetAngleDegrees()
                     
-                    if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant and not entData.awake then
-                        entData.awake = true
-                    end
-                end
-            else
-                local directPath = true
-                
-                for i = 0, (player.Position - hothead.Position):Length(), 15 do
-                    local gridEnt = room:GetGridEntityFromPos(hothead.Position + Vector(i, 0):Rotated((player.Position - hothead.Position):GetAngleDegrees()))
+                    if (velAngle > -135 and velAngle < -45) or velAngle < 135 and velAngle > 45 then
+                        if not sprite:IsPlaying("WalkVerti") then
+                            sprite:Play("WalkVerti", true)
+                        end
+                    else
+                        if velAngle < -90 or velAngle > 90 then
+                            sprite.FlipX = true
+                        else
+                            sprite.FlipX = false
+                        end
                     
-                    if gridEnt and (gridEnt:ToRock() or gridEnt:ToPoop() or gridEnt:ToPit() or gridEnt:ToTNT()) then
-                        directPath = false
-                        break
-                    end
-                end
-                
-                for i, entity in pairs(Isaac.GetRoomEntities()) do
-                    if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant then
-                        if hothead.Position:DistanceSquared(entity.Position) < 25^2 then
-                            hothead:AddVelocity((hothead.Position - entity.Position):Resized(hothead.Velocity:Length()))
-                            entity:AddVelocity((entity.Position - hothead.Position):Resized(entity.Velocity:Length()))
+                        if not sprite:IsPlaying("WalkHori") then
+                            sprite:Play("WalkHori", true)
                         end
                     end
-                end
-                
-                if directPath then
-                    hothead:AddVelocity((player.Position - hothead.Position):Resized(0.8))
-                    hothead.Velocity = hothead.Velocity:Resized(math.min(hothead.Velocity:Length(), 8))
-                else
-                    hothead.Pathfinder:FindGridPath(player.Position, 2, 0, true)
-                end
-                
-                local velAngle = hothead.Velocity:GetAngleDegrees()
-                
-                if (velAngle > -135 and velAngle < -45) or (velAngle < 135 and velAngle > 45) then
-                    if not sprite:IsPlaying("WalkVerti") then
-                        sprite:Play("WalkVerti", true)
-                    end
-                else
-                    if velAngle > 90 or velAngle < -90 then
-                        sprite.FlipX = true
-                    else
-                        sprite.FlipX = false
+                    
+                    for i, entity in pairs(Isaac.GetRoomEntities()) do
+                        if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant then
+                            if entity.Position:DistanceSquared(hothead.Position) < 25^2 then
+                                local vel = (entity.Position - hothead.Position):Resized(hothead.Velocity:Length())
+                                entity:AddVelocity(vel)
+                                hothead:AddVelocity(vel * -1)
+                            end
+                        end
                     end
                     
-                    if not sprite:IsPlaying("WalkHori") then
-                        sprite:Play("WalkHori", true)
+                    if data.soundTimer <= 0 then
+                        sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0, 0.8, 0, false, 0.6)
+                        data.soundTimer = math.random(40, 100)
+                    else
+                        data.soundTimer = data.soundTimer - 1
+                    end
+                else
+                    if not sprite:IsPlaying("Jump") then
+                        sprite:Play("Jump", true)
+                    elseif sprite:IsEventTriggered("Jump") then
+                        local jumpPos = Isaac.GetFreeNearPosition(hothead.Position, 20)
+                        
+                        for i = 50, hothead.Position:Distance(target.Position), 10 do
+                            local newPos = hothead.Position + Vector(i, 0):Rotated(angleVec:GetAngleDegrees())
+                            local gridEnt = room:GetGridEntityFromPos(newPos)
+                                
+                            if not gridEnt or (gridEnt and not(gridEnt:ToRock() or gridEnt:ToPit() or gridEnt:ToPoop() or gridEnt:ToTNT() or gridEnt:ToSpikes())) then
+                                jumpPos = Isaac.GetFreeNearPosition(newPos, 20)
+                                break
+                            end
+                        end
+                        
+                        hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
+                        hothead.Velocity = angleVec:Resized(hothead.Position:Distance(jumpPos) / 11)
+                    elseif sprite:GetFrame() == 15 then
+                        sfx:Play(SoundEffect.SOUND_CHEST_DROP, 1, 0, false, 0.5)
+                    elseif sprite:GetFrame() > 15 then
+                        hothead.Velocity = Vector(0, 0)
                     end
                 end
             end
@@ -5707,3 +5720,47 @@ function Exodus:hotheadEntityUpdate(hothead)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.hotheadEntityUpdate, Entities.HOTHEAD.id)
+
+function Exodus:hotheadTakeDamage(entity, dmgAmount, dmgFlags, dmgSource, invulnFrames)
+    if entity.Variant == Entities.HOTHEAD.variant and entity.HitPoints - dmgAmount <= 0 then
+        for i = 1, math.random(5, 8) do
+            local gibs = Isaac.Spawn(Entities.PIT_GIBS.id, Entities.PIT_GIBS.variant, 0, entity.Position + Vector(0, -15), Vector(math.random(-20, 20), math.random(-20, 20)), entity):ToEffect()
+            local sprite = gibs:GetSprite()
+            
+            gibs.SpriteRotation = math.random(360)
+            
+            local gib = rng:RandomInt(4)
+            
+            if gib == 0 then
+                sprite:Play("BloodGib0" .. rng:RandomInt(3) + 1, true)
+            elseif gib == 1 then
+                sprite:Play("Bone0" .. rng:RandomInt(2) + 1, true)
+            elseif gib == 2 then
+                sprite:Play("Eye", true)
+            elseif gib == 3 then
+                sprite:Play("Guts0" .. rng:RandomInt(2) + 1, true)
+            end
+            
+            sprite:Stop()
+        end
+        
+        entity.HitPoints = 0
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.hotheadTakeDamage, Entities.HOTHEAD.id)
+
+function Exodus:hotheadUpdate()
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == Entities.PIT_GIBS.id and entity.Variant == Entities.PIT_GIBS.variant then
+            entity.Velocity = entity.Velocity / 1.3
+            
+            if entity.Velocity:LengthSquared() < 4 then
+                entity.Velocity = Vector(0, 0)
+                entity:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.hotheadUpdate)
