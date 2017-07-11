@@ -175,6 +175,8 @@ local MusicId = {
 
 local ItemVariables = {}
 local EntityVariables = {}
+local GameState = {}
+local json = require("json")
 
 function Exodus:newGame(fromSave)
     if not fromSave then
@@ -270,6 +272,84 @@ Exodus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Exodus.newGame)
 --<<<FUNCTIONS>>>--
 -------------------
 
+--<<<ENTITY REGISTRATION>>>--
+function Exodus:RemoveFromRegister(entity)
+	for i=1, #GameState.Register do
+		if GameState.Register[i].Room == game:GetLevel():GetCurrentRoomIndex() 
+		and GameState.Register[i].Position.X == entity.Position.X 
+		and GameState.Register[i].Position.Y == entity.Position.Y
+		and GameState.Register[i].Entity.Type == entity.Type
+		and GameState.Register[i].Entity.Variant == entity.Variant
+		then
+			table.remove(GameState.Register, i)
+			break
+		end
+	end
+end
+
+function Exodus:SpawnRegister()
+	for i=1, #GameState.Register do
+		if GameState.Register[i].Room == game:GetLevel():GetCurrentRoomIndex() then
+			local entity = Isaac.Spawn(GameState.Register[i].Type, GameState.Register[i].Variant, 0, GameState.Register[i].Position, NullVector, nil)
+		end
+	end
+end
+
+function Exodus:AddToRegister(entity)
+	table.insert(GameState.Register, 
+		{
+			Room = game:GetLevel():GetCurrentRoomIndex(),
+			Position = entity.Position,
+			Entity = {Type = entity.Type, Variant = entity.Variant}
+		}
+	)
+end
+
+--<<<SAVING MOD DATA>>>--
+function Exodus:OnStart()
+	GameState = json.decode(Exodus:LoadData())
+	if GameState.Register == nil then GameState.Register = {} end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, Exodus.OnStart)
+
+function Exodus:OnExit()
+	Exodus:SaveData(json.encode(GameState))
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_GAME_END, Exodus.OnExit)
+Exodus:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, Exodus.OnExit)
+
+function Exodus:OnNewGame(fromSave)
+	local player = Isaac.GetPlayer(0)
+	if not fromSave then
+		GameState.Register = {}
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Exodus.OnNewGame)
+
+--[[
+function Exodus:TestData()
+	local entities = Isaac.GetRoomEntities()
+	for i=1, #entities do	
+		if entities[i]:IsVulnerableEnemy() and entities[i]:GetData().AddedToRegister ~= true then
+			Exodus:AddToRegister(entities[i])
+			entities[i]:GetData().AddedToRegister = true
+		end
+	end
+	if GameState.Register[1] ~= nil then
+		Isaac.DebugString("The Entity Register: " .. tostring(GameState.Register[1].Entity.Type))
+	end
+	if GameState.Register[2] ~= nil then
+		Isaac.DebugString("The Entity Register: " .. tostring(GameState.Register[2].Entity.Type))
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.TestData)
+--]]
+
+--<<<OTHER FUNCTIONS>>>--
 function Exodus:PlayerIsMoving()
     local player = Isaac.GetPlayer(0)
     
@@ -281,6 +361,8 @@ function Exodus:PlayerIsMoving()
     
     return false
 end
+
+
 
 function Exodus:IsProperEnemy(ent)
     if ent ~= nil then
