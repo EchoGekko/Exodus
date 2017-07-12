@@ -4844,7 +4844,7 @@ function Exodus:carrionPrinceEntityUpdate(entity)
     
 	if entity.FrameCount <= 1 then
 		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
-		entity.GridCollisionClass = GridCollisionClass.COLLISION_SOLID
+		entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
 		data.DirectionMultiplier = math.random(5)
 		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
 		entity:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
