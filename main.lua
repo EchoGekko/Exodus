@@ -5665,7 +5665,7 @@ function Exodus:hotheadEntityUpdate(hothead)
                     end
                     
                     if directPath then
-                        local velLimit = 8
+                        local velLimit = 7
                         
                         if target:ToPlayer() then
                             velLimit = velLimit * math.min(target:ToPlayer().MoveSpeed, 1.3)
@@ -5699,7 +5699,7 @@ function Exodus:hotheadEntityUpdate(hothead)
                     for i, entity in pairs(Isaac.GetRoomEntities()) do
                         if entity.Type == Entities.HOTHEAD.id and entity.Variant == Entities.HOTHEAD.variant then
                             if entity.Position:DistanceSquared(hothead.Position) < 25^2 then
-                                local vel = (entity.Position - hothead.Position):Resized(hothead.Velocity:Length())
+                                local vel = (entity.Position - hothead.Position):Resized(hothead.Velocity:Length() / 1.5)
                                 entity:AddVelocity(vel)
                                 hothead:AddVelocity(vel * -1)
                             end
