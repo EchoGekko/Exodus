@@ -5624,6 +5624,8 @@ function Exodus:hotheadEntityUpdate(hothead)
     
     if hothead.Variant == Entities.HOTHEAD.variant then
         if hothead.FrameCount <= 1 then
+			sprite:ReplaceSpritesheet(0, "gfx/monsters/Hothead" .. math.random(1, 3) .. ".png")
+			sprite:LoadGraphics()
             hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
             hothead:AddEntityFlags(EntityFlag.FLAG_NO_BLOOD_SPLASH + EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
             data.soundTimer = math.random(40, 100)

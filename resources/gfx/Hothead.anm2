@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="7/11/2017 3:26:34 AM" Version="148" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="15.7.2017 г/ 23:12:14" Version="151" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="monsters\Hothead.png" Id="0"/>
+			<Spritesheet Path="monsters\Hothead1.png" Id="0"/>
 			<Spritesheet Path="monsters\Hotheadbod.png" Id="1"/>
 			<Spritesheet Path="monsters\afterbirth\enemy_fire.png" Id="2"/>
 		</Spritesheets>
@@ -12,7 +12,7 @@
 			<Layer Name="Fire" Id="2" SpritesheetId="2"/>
 		</Layers>
 		<Nulls>
-			<Null Name="Tractor" Id="0"/>
+			<Null Name="Tractor" Id="0" ShowRect="false"/>
 		</Nulls>
 		<Events>
 			<Event Name="Jump" Id="0"/>
