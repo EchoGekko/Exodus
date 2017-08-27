@@ -864,7 +864,6 @@ function Exodus:newScaredHeartLogic()
 					player:AddHearts(2)
 					data.Collected = true
 					data.CollectedFrames = 0
-                    sfx:Play(SoundEffect.SOUND_BAND_AID_PICK_UP, 1, 0, false, 1)
 				end
                 
 				if data.CollectedFrames ~= nil then
@@ -1787,6 +1786,14 @@ Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.ominousLanternUse, ItemId.OM
 function Exodus:baseballMittUpdate()
     local player = Isaac.GetPlayer(0)
     
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_TEAR and entity.Variant == Entities.BASEBALL.variant and entity:IsDead() then
+            local hit = Isaac.Spawn(Entities.BASEBALL_HIT.id, Entities.BASEBALL_HIT.variant, 0, entity.Position, NullVector, nil)
+            hit:ToEffect():SetTimeout(20)
+            hit.SpriteRotation = rng:RandomInt(360)
+        end
+    end
+    
     if ItemVariables.BASEBALL_MITT.Used and player:HasCollectible(ItemId.BASEBALL_MITT) then
         player:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
         
@@ -1808,11 +1815,7 @@ function Exodus:baseballMittUpdate()
 					entity:Remove()
 					ItemVariables.BASEBALL_MITT.BallsCaught = ItemVariables.BASEBALL_MITT.BallsCaught + 1
 				end
-			elseif entity.Type == EntityType.ENTITY_TEAR and entity.Variant == Entities.BASEBALL.variant and entity:IsDead() then
-                local hit = Isaac.Spawn(Entities.BASEBALL_HIT.id, Entities.BASEBALL_HIT.variant, 0, entity.Position, NullVector, nil)
-                hit:ToEffect():SetTimeout(20)
-                hit.SpriteRotation = rng:RandomInt(360)
-            end
+			end
 		end
         
 		if game:GetFrameCount() >= ItemVariables.BASEBALL_MITT.UseDelay + 120 or Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, player.ControllerIndex) or
