@@ -695,12 +695,12 @@ function Exodus:ritualCandleUpdate()
                     ItemVariables.RITUAL_CANDLE.LitCandles = ItemVariables.RITUAL_CANDLE.LitCandles + 1
                     
                     if ItemVariables.RITUAL_CANDLE.HasBonus and data.LitTimer > 120 then
-                        sprite:Play("Lit All", true)
+                        sprite:Play("Lit All", false)
                     else
-                        sprite:Play("Lit", true)
+                        sprite:Play("Lit", false)
                     end
                 elseif not data.IsLit then
-                    sprite:Play("Idle", true)
+                    sprite:Play("Idle", false)
                 end
             end
         end
@@ -1987,15 +1987,21 @@ function Exodus:gluttonysStomachUpdate()
 				local sprite = entity:GetSprite()
                 
 				if sprite:IsPlaying("Idle") then
-                    local parts = 1
-                    local effect = Entities.PART_UP.variant
                     
-					if entity.SubType == HeartSubType.HEART_FULL then
+					local parts = 1
+					local effect = Entities.PART_UP.variant
+
+					if entity.SubType == HeartSubType.HEART_HALF then
+						local parts = 1
+						local effect = Entities.PART_UP.variant
+					elseif entity.SubType == HeartSubType.HEART_FULL then
 						parts = 2
                         effect = Entities.PART_UP_UP.variant
 					elseif entity.SubType == HeartSubType.HEART_DOUBLEPACK then
 						parts = 4
                         effect = Entities.PART_UP_UP_UP.variant
+					else
+						return
 					end
                     
                     ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts + parts
@@ -2451,7 +2457,7 @@ function Exodus:cursedMetronomeUpdate()
         local maxhp = player:GetMaxHearts() - 2
         player:AddHearts(maxhp * -1)
         
-        for i = 1, rng:RandomInt(maxhp / 2) do
+        for i = 1, math.random(0, maxhp / 2) do
             Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL, room:FindFreePickupSpawnPosition(player.Position, 5, true), Vector(0, 0), player)
         end
         
