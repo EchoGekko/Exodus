@@ -3526,11 +3526,12 @@ function Exodus:pseudobulbarAffectRender()
     local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.PSEUDOBULBAR_AFFECT) then
+        ItemVariables.PSEUDOBULBAR_AFFECT.Icon.Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+        ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Update()
+        ItemVariables.PSEUDOBULBAR_AFFECT.Icon:LoadGraphics()
+        
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:GetData().IsPseudobulbarTurret then
-                ItemVariables.PSEUDOBULBAR_AFFECT.Icon.Color = Color(1, 1, 1, 0.5, 0, 0, 0)
-                ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Update()
-                ItemVariables.PSEUDOBULBAR_AFFECT.Icon:LoadGraphics()
                 ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position + Vector(0, entity.Size)), NullVector, NullVector)
             end
         end
