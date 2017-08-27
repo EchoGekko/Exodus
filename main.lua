@@ -143,9 +143,9 @@ local Entities = {
 
 for i, entity in pairs(Entities) do
     if entity.id == -1 then
-        Isaac.DebugString("ERROR: Could not find a type for entity " .. entity.name)
+        Isaac.DebugString("Exodus ERROR: Could not find a type for entity " .. entity.name)
     elseif entity.variant == -1 then
-        Isaac.DebugString("ERROR: Could not find a variant for entity " .. entity.name)
+        Isaac.DebugString("Exodus ERROR: Could not find a variant for entity " .. entity.name)
     end
 end
 
@@ -193,7 +193,7 @@ function Exodus:newGame(fromSave)
             DRAGON_BREATH = { HasDragonBreath = false, Charge = 0, ChargeDirection = NullVector },
             RITUAL_CANDLE = { LitCandles = 0, HasBonus = false, Pentagram = nil, SoundPlayed = false },
             PIG_BLOOD = { HasPigBlood = false },
-            WIN_STREAK = { HasWinStreak = false, Count = 0, IsRoomClear = false  },
+            WIN_STREAK = { HasWinStreak = false, Count = 0, IsRoomClear = true, Counter = nil  },
             DEFECATION = { HasDefecation = false },
             BIG_SCISSORS = { Triggered = false },
             CURSED_METRONOME = { HasCursedMetronome = false },
@@ -3166,6 +3166,22 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.queenBeeUpdate)
 
 --<<<WIN STREAK>>>--
+function Exodus.setScoreDisplay()
+    Isaac.ConsoleOutput("setScoreDisplay")
+    
+    if ItemVariables.WIN_STREAK.Counter then
+        local sprite = ItemVariables.WIN_STREAK.Counter:GetSprite()
+        Isaac.ConsoleOutput("Counter")
+        if ItemVariables.WIN_STREAK.Count <= 101 then
+            sprite:SetFrame("Frames", ItemVariables.WIN_STREAK.Count)
+        else
+            sprite:SetFrame("Frames", 102)
+        end
+        
+        sprite:Stop()
+    end
+end
+
 function Exodus:winStreakUpdate()
     local player = Isaac.GetPlayer(0)
     
@@ -3173,11 +3189,12 @@ function Exodus:winStreakUpdate()
         local room = game:GetRoom()
         
         if ItemVariables.WIN_STREAK.HasWinStreak == false then
-            Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), NullVector, player)
-            ItemVariables.WIN_STREAK.Count = -1
+            ItemVariables.WIN_STREAK.Counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), Vector(0, 0), player)
+            ItemVariables.WIN_STREAK.Count = 0
             ItemVariables.WIN_STREAK.HasWinStreak = true
+            Exodus.setScoreDisplay()
         end
-            
+        
         if room:IsClear() then
             player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
             player:EvaluateItems()
@@ -3188,7 +3205,8 @@ function Exodus:winStreakUpdate()
                 else
                     ItemVariables.WIN_STREAK.Count = ItemVariables.WIN_STREAK.Count + 1
                 end
-                    
+                
+                Exodus.setScoreDisplay()  
                 ItemVariables.WIN_STREAK.IsRoomClear = true
             end
         else
@@ -3202,14 +3220,9 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.winStreakUpdate)
 function Exodus:winStreakNewRoom()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.WIN_STREAK) then
-        local counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), NullVector, player):GetSprite()
-        
-        if ItemVariables.WIN_STREAK.Count <= 20 then
-            counter:Play(tostring(ItemVariables.WIN_STREAK.Count), false)
-        else
-            counter:Play("Limitbreak", false)
-        end
+    if player:HasCollectible(ItemId.WIN_STREAK) and (ItemVariables.WIN_STREAK.Counter == nil or not ItemVariables.WIN_STREAK.Counter:Exists()) then
+        ItemVariables.WIN_STREAK.Counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), NullVector, player)
+        Exodus.setScoreDisplay()
     end 
 end
 
@@ -3220,6 +3233,7 @@ function Exodus:winStreakDamage(target, amount, flags, source, cdtimer)
     
     if player:HasCollectible(ItemId.WIN_STREAK) then
         ItemVariables.WIN_STREAK.Count = 0
+        Exodus.setScoreDisplay()
         player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
         player:EvaluateItems()
     end
@@ -3238,18 +3252,12 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.winStreakCache)
 function Exodus:winStreakRender()
     local player = Isaac.GetPlayer(0)
     
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == Entities.SCORE_DISPLAY.id and entity.Variant == Entities.SCORE_DISPLAY.variant then
-            if not player:HasCollectible(ItemId.WIN_STREAK) then
-                entity:Remove()
-            end
-            
-            entity.GridCollisionClass = GridCollisionClass.COLLISION_NONE
-            entity.Velocity = player.Position + Vector(0, -69 + (math.sin(entity.FrameCount / 2) * 2)) - entity.Position + player.Velocity
-            
-            if ItemVariables.WIN_STREAK.Count ~= 10 and ItemVariables.WIN_STREAK.IsRoomClear then
-                entity:GetSprite():Play(tostring(ItemVariables.WIN_STREAK.Count), false)
-            end
+    if ItemVariables.WIN_STREAK.Counter then
+        if player:HasCollectible(ItemId.WIN_STREAK) then
+            ItemVariables.WIN_STREAK.Counter.GridCollisionClass = GridCollisionClass.COLLISION_NONE
+            ItemVariables.WIN_STREAK.Counter.Position = player.Position + Vector(0, -69) + player.Velocity
+        else
+            ItemVariables.WIN_STREAK.Counter:Remove()
         end
     end
 end
@@ -3282,6 +3290,7 @@ function Exodus:mutantCloverUse()
     ItemVariables.MUTANT_CLOVER.Used = true
     player:AddCacheFlags(CacheFlag.CACHE_LUCK)
     player:EvaluateItems()
+    
     return true
 end
 
