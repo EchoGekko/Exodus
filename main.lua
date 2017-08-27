@@ -226,14 +226,13 @@ function Exodus:newGame(fromSave)
             
             ---<<ACTIVES>>---
             MUTANT_CLOVER = { Used = false },
-            TRAGIC_MUSHROOM = { Used = false },
+            TRAGIC_MUSHROOM = { Uses = 0 },
             FORBIDDEN_FRUIT = { UseCount = 0 },
             BASEBALL_MITT = { Used = false, Lifted = true, BallsCaught = 0, UseDelay = 0 },
             PSEUDOBULBAR_AFFECT = { Icon = Sprite() },
             OMINOUS_LANTERN = { Fired = true, Lifted = false, Hid = false, LastEnemyHit = nil, FrameModifier = 300 },
             WRATH_OF_THE_LAMB = { 
-                BossSpawned = false, RoomIndex = nil, FrameCount = nil, Position = NullVector, 
-                DamageLost = 0, FireDelayLost = 0, RangeLost = 0, SpeedLost = 0
+                Uses = {}, DamageLost = 0, FireDelayLost = 0, RangeLost = 0, SpeedLost = 0
             },
             
             ---<<MISCELLANEOUS>>--
@@ -2211,7 +2210,18 @@ end
   
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.mysteriousMustacheUpdate)
 
---<<<WRATH OF THE LAMB>>>--
+--<<<WRATH OF THE LAMB>>>-- NEW VERSION
+--[[
+function Exodus:wotlUpdate()
+    local player = Isaac.GetPlayer(0)
+    local level = game:GetLevel()
+    local room = game:GetRoom()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.wotlUpdate)
+]]
+
+--<<<WRATH OF THE LAMB>>>-- OLD VERSION
 function Exodus:wotlUpdate()
     local player = Isaac.GetPlayer(0)
     local level = game:GetLevel()
@@ -2494,15 +2504,15 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.cursedMetronomeCache)
   
 --<<<TRAGIC MUSHROOM>>>--
 function Exodus:tragicMushroomCache(player, flag)
-    if ItemVariables.TRAGIC_MUSHROOM.Used then
+    for i = 1, ItemVariables.TRAGIC_MUSHROOM.Uses do
+        local ratio = 1 / (1<<(i - 1))
+        
         if flag == CacheFlag.CACHE_DAMAGE then
-            player.Damage = (player.Damage + 0.8) * 2
-        end
-        if flag == CacheFlag.CACHE_RANGE then
-            player.TearHeight = player.TearHeight - 7.25
-        end
-        if flag == CacheFlag.CACHE_SPEED then
-            player.MoveSpeed = player.MoveSpeed + 0.6
+            player.Damage = (player.Damage + (0.8 * ratio)) * (ratio + 1)
+        elseif flag == CacheFlag.CACHE_RANGE then
+            player.TearHeight = player.TearHeight - (7.25 * ratio)
+        elseif flag == CacheFlag.CACHE_SPEED then
+            player.MoveSpeed = player.MoveSpeed + (0.6 * ratio)
         end
     end
 end
@@ -2512,21 +2522,22 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.tragicMushroomCache)
 function Exodus:tragicMushroomUse()
     local player = Isaac.GetPlayer(0)
     
-    if player:GetPlayerType() == PlayerType.PLAYER_XXX then
-        local maxhp = player:GetSoulHearts() - 2
-        player:AddSoulHearts(maxhp * -1)
+    if player:GetMaxHearts() == 2 and player:GetSoulHearts() == 0 then
+        player:AddHearts(-player:GetHearts())
     else
-        local maxhp = player:GetSoulHearts()
-        player:AddSoulHearts(maxhp * -1)
-        maxhp = player:GetMaxHearts() - 2
-        player:AddMaxHearts(maxhp * -1)
+        if player:GetPlayerType() == PlayerType.PLAYER_XXX then
+            local maxhp = player:GetSoulHearts() - 2
+            player:AddSoulHearts(-maxhp)
+        else
+            local maxhp = player:GetMaxHearts() - 2
+            player:AddSoulHearts(-player:GetSoulHearts())
+            player:AddMaxHearts(-maxhp)
+        end
     end
     
-    ItemVariables.TRAGIC_MUSHROOM.Used = true
+    ItemVariables.TRAGIC_MUSHROOM.Uses = ItemVariables.TRAGIC_MUSHROOM.Uses + 1
     sfx:Play(SoundEffect.SOUND_VAMP_GULP, 1, 0, false, 1)
-    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-    player:AddCacheFlags(CacheFlag.CACHE_RANGE)
-    player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE + CacheFlag.CACHE_RANGE + CacheFlag.CACHE_SPEED)
     player:EvaluateItems()
     player:RemoveCollectible(ItemId.TRAGIC_MUSHROOM)
     
@@ -3540,30 +3551,35 @@ function Exodus:pseudobulbarAffectUse()
 	return true
 end
 
---<<<ANAMNESIS>>>--
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.pseudobulbarAffectUse, ItemId.PSEUDOBULBAR_AFFECT)
 
+--<<<ANAMNESIS>>>--
 function Exodus:anamnesisUse()
 	local player = Isaac.GetPlayer(0)
 	local config = Isaac.GetItemConfig()
 	local collectibleList = {}
     local function itempairs()
-    local count = #config:GetCollectibles()
+        local count = #config:GetCollectibles()
         local i = 0
 
         return function()
             local value
+            
             while not value do
-            i = i + 1
-            if i >= count then return end
+                i = i + 1
+                
+                if i >= count then return end
+                    
                 value = config:GetCollectible(i)
             end
+            
             return i, value
         end
     end
 
 	do
 		local i = 0
+        
 		for k, v in itempairs() do
 			if Isaac.GetPlayer(0):HasCollectible(k) then
 				table.insert(collectibleList, 1, k)
