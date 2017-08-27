@@ -2,7 +2,7 @@
 	<Info CreatedBy="robot" CreatedOn="7/15/2017 1:25:05 PM" Version="152" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="monsters\Hothead.png" Id="0"/>
+			<Spritesheet Path="monsters\Hothead1.png" Id="0"/>
 			<Spritesheet Path="monsters\Hotheadbod.png" Id="1"/>
 			<Spritesheet Path="monsters\afterbirth\enemy_fire.png" Id="2"/>
 		</Spritesheets>
