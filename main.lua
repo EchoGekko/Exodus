@@ -906,15 +906,18 @@ function Exodus:occultistAOEMarkTrigger()
         local data = entity:GetData()
         
 		if data.IsOccultistAOE == true then
-			if data.AOEFrames < 120 then
-				if entity.FrameCount >= 2 then
-					local NewAOETear = Isaac.Spawn(EntityType.ENTITY_PROJECTILE, ProjectileVariant.BLOOD, 0, entity.Position, Vector(0, 0), entity):GetData()
-                    
-					NewAOETear.IsOccultistAOE = true
-					NewAOETear.AOEFrames = data.AOEFrames + 1
-					entity:Remove()
-				end
-			end
+            if data.OccultistParent and not data.OccultistParent:IsDead() then
+                if data.AOEFrames < 120 then
+                    if entity.FrameCount >= 2 then
+                        local NewAOETear = Isaac.Spawn(EntityType.ENTITY_PROJECTILE, ProjectileVariant.BLOOD, 0, entity.Position, Vector(0, 0), entity):GetData()
+                        
+                        NewAOETear.IsOccultistAOE = true
+                        NewAOETear.AOEFrames = data.AOEFrames + 1
+                        NewAOETear.OccultistParent = data.OccultistParent
+                        entity:Remove()
+                    end
+                end
+            end
 		end
 	end
 end
@@ -935,7 +938,7 @@ function Exodus:occultistEntityUpdate(entity)
 	elseif sprite:IsEventTriggered("Flap") then
 		sfx:Play(SoundEffect.SOUND_BIRD_FLAP, 1, 0, false, 0.7)
 	elseif sprite:IsEventTriggered("Stop") then
-		entity.Velocity = Vector(0,0)
+		entity.Velocity = Vector(0, 0)
 	elseif sprite:IsEventTriggered("Invisible") then
 		sfx:Play(SoundEffect.SOUND_VAMP_GULP, 1, 0, false, 0.3)
 		entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
@@ -964,6 +967,7 @@ function Exodus:occultistEntityUpdate(entity)
 				local OccultistProjectile = Isaac.Spawn(EntityType.ENTITY_PROJECTILE, 0, 0, ent.Position, Vector(0,0), entity):GetData()
 				OccultistProjectile.IsOccultistAOE = true
 				OccultistProjectile.AOEFrames = 0
+                OccultistProjectile.OccultistParent = entity
 				ent:Remove()
 			end
 		end
