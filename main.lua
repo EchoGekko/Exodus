@@ -864,6 +864,7 @@ function Exodus:newScaredHeartLogic()
 					player:AddHearts(2)
 					data.Collected = true
 					data.CollectedFrames = 0
+                    sfx:Play(SoundEffect.SOUND_BAND_AID_PICK_UP, 1, 0, false, 1)
 				end
                 
 				if data.CollectedFrames ~= nil then
