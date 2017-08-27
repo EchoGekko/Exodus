@@ -3559,7 +3559,7 @@ function Exodus:anamnesisUse()
 	local config = Isaac.GetItemConfig()
 	local collectibleList = {}
     
-    for i = 1, #config:GetCollectibles() - 1 do
+    for i = 1, #config:GetCollectibles() do
         value = config:GetCollectible(i)
         
         if value and player:HasCollectible(value.ID) then
