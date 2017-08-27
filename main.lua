@@ -2454,11 +2454,11 @@ function Exodus:cursedMetronomeUpdate()
     local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.CURSED_METRONOME) and not ItemVariables.CURSED_METRONOME.HasCursedMetronome then
-        local maxhp = player:GetMaxHearts() - 2
+        local maxhp = player:GetHearts() - 2
         player:AddHearts(maxhp * -1)
         
-        for i = 1, math.random(0, maxhp / 2) do
-            Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL, room:FindFreePickupSpawnPosition(player.Position, 5, true), Vector(0, 0), player)
+        for i = 1, rng:RandomInt(maxhp / 2) do
+            Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL,  Isaac.GetFreeNearPosition(player.Position, 20), Vector(0, 0), player)
         end
         
         player:AddNullCostume(CostumeId.CURSED_METRONOME)
