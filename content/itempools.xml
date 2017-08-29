@@ -9,7 +9,6 @@
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Win Streak" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Boots" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Defecation" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Big Scissors" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Welcome Mat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -74,7 +73,6 @@
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Win Streak" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Dad's Boots" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-		<Item Name="Defecation" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Big Scissors" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Welcome Mat" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
@@ -96,7 +94,6 @@
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Win Streak" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Boots" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Defecation" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Big Scissors" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Welcome Mat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>

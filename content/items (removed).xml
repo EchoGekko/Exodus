@@ -1,0 +1,2 @@
+	<passive description="NOT THIS AGAIN!" cache="firedelay damage range tearcolor" name="Defecation" gfx="Defecation.png" />
+	<passive description="Honey bombs" gfx="Beenades.png" name="Beenades" bombs="5"/>

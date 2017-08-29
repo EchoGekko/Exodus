@@ -2,7 +2,6 @@
 	<!-- Passive Items -->
 	<passive description="Swarm tears + sticky honey!" gfx="Queen Bee.png" name="Queen Bee"/>
 	<passive description="Even they are crying" name="Sad Tears" gfx="Sad Tears.png" cache="shotspeed"/>
-	<passive description="Honey bombs" gfx="Beenades.png" name="Beenades" bombs="5"/>
 	<passive description="Leaky tears" gfx="Busted Pipe.png" name="Busted Pipe"/>
 	<passive description="Satanic defence" gfx="Unholy Mantle.png" name="Unholy Mantle" devilprice="2"/>
 	<passive description="Tech bubble" gfx="TechY.png" name="Tech Y" cache="firedelay"/>
@@ -14,7 +13,6 @@
 	<passive description="Squish" gfx="Dad's Boots.png" name="Dad's Boots" cache="speed"/>
 	<passive description="Where did it come from?" gfx="Mysterious Mustache.png" name="Mysterious Mustache"/>
 	<passive description="Tock tick" gfx="Cursed Metronome.png" cache="luck" name="Cursed Metronome"/>
-	<passive description="NOT THIS AGAIN!" cache="firedelay damage range tearcolor" name="Defecation" gfx="Defecation.png" />
 	<passive description="Running with them!" cache="speed" name="Big Scissors" gfx="Big Scissors.png" />
 	<passive description="No place like home" cache="" name="Welcome Mat" gfx="Welcome Mat.png" />
 	<passive description="Rewards overeating" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png" cache="" />
