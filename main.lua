@@ -7,7 +7,6 @@ local itemPool = game:GetItemPool()
 local NullVector = Vector(0, 0)
 
 --<<<VARIABLE DECLARATION>>>--
-
 local ProjectileVariant = {
     BLOOD = 0,
     BONE = 1,
@@ -4283,6 +4282,7 @@ function Exodus:carrionPrinceEntityUpdate(entity)
 	local data = entity:GetData()
 	local sprite = entity:GetSprite()
 	local target = entity:GetPlayerTarget()
+    local room = game:GetRoom()
     
 	local angle = (target.Position - entity.Position):GetAngleDegrees()
     
@@ -4313,7 +4313,7 @@ function Exodus:carrionPrinceEntityUpdate(entity)
     
 	if entity.State >= 3 then
 		for i, ent in pairs(Isaac.GetRoomEntities()) do
-			if ent.Type == EntityType.ENTITY_BOMBDROP and ent.Variant == BombVariant.BOMB_NORMAL then
+			if ent:ToBomb() then
 				if ent.Position:DistanceSquared(entity.Position) < (entity.Size + ent.Size)^2 then
 					entity.State = entity.State + 4
 					data.BombTimer = 15
@@ -4352,7 +4352,7 @@ function Exodus:carrionPrinceEntityUpdate(entity)
 		end
 	elseif entity.State == 2 then -- Move Around
 		if entity:GetData().IsHead ~= true then
-			if entity.Position:Distance(entity.Parent.Position) > 30 then
+			if entity.Position:DistanceSquared(entity.Parent.Position) > 30^2 then
 				entity.Position = entity.Parent.Position + (entity.Position - entity.Parent.Position):Resized(30)
 			end
 		else
@@ -4368,21 +4368,20 @@ function Exodus:carrionPrinceEntityUpdate(entity)
             
 			entity.Velocity = Vector.FromAngle(data.DirectionMultiplier * 90):Resized(7)
             
-			if target.Position.X < entity.Position.X and target.Position.Y - 10 < entity.Position.Y and target.Position.Y + 10 > entity.Position.Y then
+            local dirAngle = (target.Position - entity.Position):GetAngleDegrees()
+            
+			if dirAngle > 170 and dirAngle < 190 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Left
 				entity.State = 3
-				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_2   , 1, 0, false, 1)
-			end
-			if target.Position.X > entity.Position.X and target.Position.Y - 10 < entity.Position.Y and target.Position.Y + 10 > entity.Position.Y then
+				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_2, 1, 0, false, 1)
+			elseif dirAngle > -10 and dirAngle < 10 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Right
 				entity.State = 4
-				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_1   , 1, 0, false, 1)
-			end
-			if target.Position.Y < entity.Position.Y and target.Position.X - 10 < entity.Position.X and target.Position.X + 10 > entity.Position.X then -- Facing Up
+				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_1, 1, 0, false, 1)
+			elseif dirAngle < -80 and dirAngle > -100 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Up
 				entity.State = 5
-				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0   , 1, 0, false, 1)
-			end
-			if target.Position.Y > entity.Position.Y and target.Position.X - 10 < entity.Position.X and target.Position.X + 10 > entity.Position.X then -- Facing Down
+				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0, 1, 0, false, 1)
+			elseif dirAngle > 80 and dirAngle < 100 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Down
 				entity.State = 6
-				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0   , 1, 0, false, 1)
+				sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0, 1, 0, false, 1)
 			end
 		end
         
