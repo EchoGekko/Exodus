@@ -2300,7 +2300,7 @@ function Exodus:wotlUpdate()
                     end
                 elseif payout < 90 then
                     for i = 1, 3 do
-                        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(tbl.Mark.Position, 20), Vector(0, 0), player)
+                        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, 0, Isaac.GetFreeNearPosition(tbl.Mark.Position, 20), Vector(0, 0), player)
                     end
                 elseif payout < 95 then
                     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(tbl.Mark.Position, 20), Vector(0, 0), player)
