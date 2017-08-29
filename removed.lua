@@ -1,3 +1,192 @@
+--<<<WRATH OF THE LAMB>>>-- OLD VERSION (REPLACED BY SLIGHTLY BETTER WORKING VERSION)
+function Exodus:wotlUpdate()
+    local player = Isaac.GetPlayer(0)
+    local level = game:GetLevel()
+    local room = game:GetRoom()
+    
+    if ItemVariables.WRATH_OF_THE_LAMB.FrameCount ~= nil and player:HasCollectible(ItemId.WRATH_OF_THE_LAMB) then
+        local summonMark = Isaac.Spawn(Entities.SUMMONING_MARK.id, 0, 0, ItemVariables.WRATH_OF_THE_LAMB.Position, NullVector, player)
+        local sprite = summonMark:GetSprite()
+        
+        sprite:Play("Idle", false)
+        sprite:SetFrame("Idle", (game:GetFrameCount() % 21))
+        summonMark:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+        room:SetClear(false)
+        
+        if game:GetFrameCount() >= ItemVariables.WRATH_OF_THE_LAMB.FrameCount + 65 and ItemVariables.WRATH_OF_THE_LAMB.BossSpawned == false then
+            if music:GetCurrentMusicID() ~= MusicId.LOCUS then
+                music:PitchSlide(1)
+                music:Play(MusicId.LOCUS, 0.15)
+            end
+            
+            ItemVariables.WRATH_OF_THE_LAMB.BossSpawned = true
+            ItemVariables.WRATH_OF_THE_LAMB.RoomIndex = game:GetLevel():GetCurrentRoomIndex()
+            
+            local absoluteStage = level:GetAbsoluteStage()
+            local enemyPool = {}
+            
+            for i, entity in pairs(Isaac.GetRoomEntities()) do
+                if entity.Type == Entities.SUMMONING_MARK.id then
+                    if absoluteStage == 1 or absoluteStage == 2 then
+                        enemyPool = {EntityType.ENTITY_THE_HAUNT, EntityType.ENTITY_DINGLE, EntityType.ENTITY_MONSTRO, EntityType.ENTITY_LITTLE_HORN,
+                        EntityType.ENTITY_GURDY_JR, EntityType.ENTITY_FISTULA_BIG, EntityType.ENTITY_DUKE, EntityType.ENTITY_GEMINI, EntityType.ENTITY_RAG_MAN,
+                        EntityType.ENTITY_PIN, EntityType.ENTITY_WIDOW, EntityType.ENTITY_FAMINE, EntityType.ENTITY_GREED}
+                    elseif absoluteStage == 3 or absoluteStage == 4 then
+                        enemyPool = {EntityType.ENTITY_CHUB, EntityType.ENTITY_POLYCEPHALUS, EntityType.ENTITY_RAG_MEGA, EntityType.ENTITY_DARK_ONE,
+                        EntityType.ENTITY_MEGA_FATTY, EntityType.ENTITY_BIG_HORN, EntityType.ENTITY_MEGA_MAW, EntityType.ENTITY_PESTILENCE, EntityType.ENTITY_PEEP,
+                        EntityType.ENTITY_GURDY }
+                    elseif absoluteStage == 5 or absoluteStage == 6 then
+                        enemyPool = {EntityType.ENTITY_MONSTRO2, EntityType.ENTITY_ADVERSARY, EntityType.ENTITY_GATE, EntityType.ENTITY_LOKI, EntityType.ENTITY_MONSTRO2,
+                        EntityType.ENTITY_ADVERSARY, EntityType.ENTITY_BROWNIE, EntityType.ENTITY_WAR, EntityType.ENTITY_URIEL }
+                    elseif absoluteStage == 7 or absoluteStage == 8 then
+                        enemyPool = {EntityType.ENTITY_MR_FRED, EntityType.ENTITY_BLASTOCYST_BIG, EntityType.ENTITY_CAGE, EntityType.ENTITY_MASK_OF_INFAMY,
+                        EntityType.ENTITY_GABRIEL, EntityType.ENTITY_MAMA_GURDY}
+                    elseif absoluteStage == 9 then
+                        enemyPool = {EntityType.ENTITY_FORSAKEN, EntityType.ENTITY_STAIN}
+                    elseif absoluteStage == 10 then
+                        enemyPool = {EntityType.ENTITY_DEATH, EntityType.ENTITY_DADDYLONGLEGS, EntityType.ENTITY_SISTERS_VIS}
+                    elseif absoluteStage == 11 then
+                        if level:GetStageType() == StageType.STAGETYPE_WOTL then
+                            Isaac.ExecuteCommand("stage 11")
+                        else
+                            player:UseCard(Card.CARD_EMPEROR)
+                        end
+                    else
+                        enemyPool = {EntityType.ENTITY_MOMS_HEART, EntityType.ENTITY_SATAN, EntityType.ENTITY_ISAAC}
+                    end
+                    
+                    Isaac.Spawn(enemyPool[rng:RandomInt(#enemyPool) + 1], 0, 0, entity.Position, NullVector, nil)
+                    ItemVariables.WRATH_OF_THE_LAMB.FrameCount = nil
+                    ItemVariables.WRATH_OF_THE_LAMB.BossSpawned = false
+                    entity:Remove()
+                end
+            end
+        end
+    end
+    
+    if ItemVariables.WRATH_OF_THE_LAMB.RoomIndex == level:GetCurrentRoomIndex() and player:HasCollectible(ItemId.WRATH_OF_THE_LAMB) then
+        if room:IsClear() then
+            music:Play(Music.MUSIC_BOSS_OVER, 0.1)
+            local limit = 1
+            
+            if player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) then
+                limit = 2
+            end
+            
+            for i = 1, limit do
+                local payout = rng:RandomInt(100)
+                
+                if payout < 70 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 75 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 80 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 85 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 90 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                elseif payout < 95 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                else
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0, Isaac.GetFreeNearPosition(ItemVariables.WRATH_OF_THE_LAMB.Position, 20), Vector(0, 0), entity)
+                end
+            end
+            
+            ItemVariables.WRATH_OF_THE_LAMB.RoomIndex = nil
+        else
+            for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+                local door = room:GetDoor(i)
+                
+                if door ~= nil then
+                    local tarType = door.TargetRoomType
+                    local curType = door.CurrentRoomType
+                    
+                    if tarType ~= RoomType.ROOM_SECRET and tarType ~= RoomType.ROOM_SUPERSECRET and curType ~= RoomType.ROOM_SECRET and curType ~= RoomType.ROOM_SUPERSECRET then
+                        door:Bar()
+                    elseif door:IsOpen() then
+                        door:Bar()
+                    end
+                end
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.wotlUpdate)
+
+function Exodus:wotlCache(player, flag)
+    if flag == CacheFlag.CACHE_RANGE then
+        player.TearHeight = player.TearHeight + ItemVariables.WRATH_OF_THE_LAMB.RangeLost
+    end
+    if flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage - ItemVariables.WRATH_OF_THE_LAMB.DamageLost
+    end
+    if flag == CacheFlag.CACHE_SPEED then
+        player.MoveSpeed = player.MoveSpeed - ItemVariables.WRATH_OF_THE_LAMB.SpeedLost
+    end
+    if flag == CacheFlag.CACHE_FIREDELAY then
+        player.MaxFireDelay = player.MaxFireDelay + ItemVariables.WRATH_OF_THE_LAMB.FireDelayLost
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.wotlCache)
+
+function Exodus:wotlUse()
+	local player = Isaac.GetPlayer(0)
+	local statdown = rng:RandomInt(4)
+    
+	if statdown == 0 then
+		ItemVariables.WRATH_OF_THE_LAMB.DamageLost = ItemVariables.WRATH_OF_THE_LAMB.DamageLost + 0.5
+		player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+	elseif statdown == 1 then
+		ItemVariables.WRATH_OF_THE_LAMB.FireDelayLost = ItemVariables.WRATH_OF_THE_LAMB.FireDelayLost + 2
+		player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+	elseif statdown == 2 then
+		ItemVariables.WRATH_OF_THE_LAMB.RangeLost = ItemVariables.WRATH_OF_THE_LAMB.RangeLost + 2.5
+		player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+	elseif statdown == 3 then
+		ItemVariables.WRATH_OF_THE_LAMB.SpeedLost = ItemVariables.WRATH_OF_THE_LAMB.SpeedLost + 0.15
+		player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+	end
+    
+	player:EvaluateItems()
+	music:PitchSlide(0.5)
+    
+    local room = game:GetRoom()
+    
+	for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+        local door = room:GetDoor(i)
+        
+		if door ~= nil then
+            local tarType = door.TargetRoomType
+            local curType = door.CurrentRoomType
+            
+            if tarType ~= RoomType.ROOM_SECRET and tarType ~= RoomType.ROOM_SUPERSECRET and curType ~= RoomType.ROOM_SECRET and curType ~= RoomType.ROOM_SUPERSECRET then
+                door:Bar()
+            elseif door:IsOpen() then
+                door:Bar()
+            end
+		end
+	end
+    
+    local summonMark = Isaac.Spawn(Entities.SUMMONING_MARK.id, 0, 0, player.Position, NullVector, player)
+	local sprite = summonMark:GetSprite()
+	sprite:Play("Idle",false)
+	summonMark:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+	ItemVariables.WRATH_OF_THE_LAMB.Position = summonMark.Position
+	game:GetRoom():SetClear(false)
+	ItemVariables.WRATH_OF_THE_LAMB.FrameCount = game:GetFrameCount()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.wotlUse, ItemId.WRATH_OF_THE_LAMB)
+
 --<<<DEFECATION>>>--
     DEFECATION = Isaac.GetItemIdByName("Defecation"),
             DEFECATION = { HasDefecation = false },
