@@ -2198,21 +2198,27 @@ function Exodus:wotlUse()
     player:EvaluateItems()
     
     local mark = Isaac.Spawn(Entities.SUMMONING_MARK.id, Entities.SUMMONING_MARK.variant, 0, player.Position, Vector(0, 0), player)
+    mark:GetSprite():SetFrame("Idle", 0)
     mark:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
-    table.insert(ItemVariables.WRATH_OF_THE_LAMB.Uses, { Room = level:GetCurrentRoomIndex(), Mark = mark, BossSpawned = false, Countdown = 30 })
+    table.insert(ItemVariables.WRATH_OF_THE_LAMB.Uses, { Room = level:GetCurrentRoomIndex(), Mark = mark, BossSpawned = false, Countdown = 65 })
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.wotlUse, ItemId.WRATH_OF_THE_LAMB)
 
 function Exodus:wotlCache(player, cacheFlag)
+    local damageBonus = 0.5 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Damage
+    local speedBonus = 0.15 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Speed
+    local rangeBonus = 2.5 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Range
+    local fireDelayBonus = ItemVariables.WRATH_OF_THE_LAMB.Stats.FireDelay
+    
     if cacheFlag == CacheFlag.CACHE_DAMAGE then
-        player.Damage = player.Damage - (0.5 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Damage)
+        player.Damage = player.Damage - damageBonus
     elseif cacheFlag == CacheFlag.CACHE_SPEED then
-        player.MoveSpeed = player.MoveSpeed - (0.15 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Speed)
+        player.MoveSpeed = math.max(0.6, player.MoveSpeed - speedBonus)
     elseif cacheFlag == CacheFlag.CACHE_RANGE then
-        player.TearHeight = player.TearHeight + (2.5 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Range)
+        player.TearHeight = player.TearHeight + rangeBonus
     elseif cacheFlag == CacheFlag.CACHE_FIREDELAY then
-        player.MaxFireDelay = player.MaxFireDelay + (ItemVariables.WRATH_OF_THE_LAMB.Stats.FireDelay)
+        player.MaxFireDelay = player.MaxFireDelay + fireDelayBonus
     end
 end
 
@@ -2228,7 +2234,6 @@ function Exodus:wotlUpdate()
             if tbl.Countdown >= 0 then
                 tbl.Countdown = tbl.Countdown - 1
             elseif not tbl.BossSpawned then
-                tbl.Mark:Remove()
                 tbl.BossSpawned = true
                 
                 local stage = level:GetAbsoluteStage()
@@ -2312,6 +2317,18 @@ function Exodus:wotlUpdate()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.wotlUpdate)
+
+function Exodus:wotlPEffectUpdate()
+    for i, tbl in pairs(ItemVariables.WRATH_OF_THE_LAMB.Uses) do
+        if tbl.Countdown >= 0 then
+            local mark = Isaac.Spawn(Entities.SUMMONING_MARK.id, Entities.SUMMONING_MARK.variant, 0, tbl.Mark.Position, Vector(0, 0), nil)
+            mark:GetSprite():SetFrame("Idle", 21 - (tbl.Countdown % 22))
+            mark:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Exodus.wotlPEffectUpdate)
 
 function Exodus:wotlNewRoom()
     ItemVariables.WRATH_OF_THE_LAMB.Uses = {}
