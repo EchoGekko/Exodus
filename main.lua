@@ -1336,6 +1336,7 @@ Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.flyerballEntityUpdate, Ent
 --<<<TRINKETS>>>--
 function Exodus:trinketUpdate()
     local player = Isaac.GetPlayer(0)
+    local playerData = player:GetData()
     
     ---<<BOMBS SOUL>>---
     if player:HasTrinket(ItemId.BOMBS_SOUL) then
@@ -1375,18 +1376,17 @@ function Exodus:trinketUpdate()
     
     ---<<PET ROCK>>---
     if player:HasTrinket(ItemId.PET_ROCK) then
-        if player:GetData().HasHadSturdyStone ~= true then
-            player:GetData().HasHadSturdyStone = true
+        if playerData.HasHadPetRock ~= true then
+            playerData.HasHadPetRock = true
         end
         
-        if player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) == false then
-            player:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-            player:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
+        if not player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
+            player:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK + EntityFlag.FLAG_NO_KNOCKBACK)
         end
-    else 
-        if player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) and player:GetData().HasHadSturdyStone then
-            player:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-            player:ClearEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
+    else
+        if player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) and playerData.HasHadPetRock then
+            player:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK + EntityFlag.FLAG_NO_KNOCKBACK)
+            playerData.HasHadPetRock = false
         end
     end
     
@@ -1523,27 +1523,28 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.trinketNewRoom)
 function Exodus:trinketInputAction(entity, hook, action)
 	  if entity ~= nil then
         local player = Isaac.GetPlayer(0)
+        local entPlayer = entity:ToPlayer()
         
-        if entity:ToPlayer() and player:HasTrinket(ItemId.BROKEN_GLASSES) and hook == InputHook.GET_ACTION_VALUE then
+        if entPlayer and player:HasTrinket(ItemId.BROKEN_GLASSES) and hook == InputHook.GET_ACTION_VALUE then
             if action == ButtonAction.ACTION_LEFT then
-                return Input.GetActionValue(ButtonAction.ACTION_RIGHT, entity:ToPlayer().ControllerIndex)
+                return Input.GetActionValue(ButtonAction.ACTION_RIGHT, entPlayer.ControllerIndex)
             elseif action == ButtonAction.ACTION_RIGHT then
-                return Input.GetActionValue(ButtonAction.ACTION_LEFT, entity:ToPlayer().ControllerIndex)
+                return Input.GetActionValue(ButtonAction.ACTION_LEFT, entPlayer.ControllerIndex)
             elseif action == ButtonAction.ACTION_UP then
-                return Input.GetActionValue(ButtonAction.ACTION_DOWN, entity:ToPlayer().ControllerIndex)
+                return Input.GetActionValue(ButtonAction.ACTION_DOWN, entPlayer.ControllerIndex)
             elseif action == ButtonAction.ACTION_DOWN then
-                return Input.GetActionValue(ButtonAction.ACTION_UP, entity:ToPlayer().ControllerIndex)
+                return Input.GetActionValue(ButtonAction.ACTION_UP, entPlayer.ControllerIndex)
             end
             
             if not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
                 if action == ButtonAction.ACTION_SHOOTLEFT then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTRIGHT, entity:ToPlayer().ControllerIndex)
+                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTRIGHT, entPlayer.ControllerIndex)
                 elseif action == ButtonAction.ACTION_SHOOTRIGHT then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTLEFT, entity:ToPlayer().ControllerIndex)
+                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTLEFT, entPlayer.ControllerIndex)
                 elseif action == ButtonAction.ACTION_SHOOTUP then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTDOWN, entity:ToPlayer().ControllerIndex)
+                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTDOWN, entPlayer.ControllerIndex)
                 elseif action == ButtonAction.ACTION_SHOOTDOWN then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTUP, entity:ToPlayer().ControllerIndex)
+                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTUP, entPlayer.ControllerIndex)
                 end
             end
         end
@@ -2051,7 +2052,7 @@ function Exodus:pigBloodUpdate()
     local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.PIG_BLOOD) then
-        if ItemVariables.PIG_BLOOD.HasPigBlood == false then
+        if not ItemVariables.PIG_BLOOD.HasPigBlood then
             ItemVariables.PIG_BLOOD.HasPigBlood = true
             player:AddNullCostume(CostumeId.PIG_BLOOD)
         end
@@ -2066,10 +2067,9 @@ function Exodus:pigBloodUpdate()
                 end
             end
         end
-    else
-        if ItemVariables.PIG_BLOOD.HasPigBlood then
-            ItemVariables.PIG_BLOOD.HasPigBlood = false
-        end
+    elseif ItemVariables.PIG_BLOOD.HasPigBlood then
+        ItemVariables.PIG_BLOOD.HasPigBlood = false
+        player:TryRemoveNullCostume(CostumeId.PIG_BLOOD)
     end
 end
 
@@ -2164,6 +2164,9 @@ function Exodus:mysteriousMustacheUpdate()
         if player:GetNumCoins() < ItemVariables.MYSTERIOUS_MUSTACHE.CoinCount and game:GetRoom():GetType() == RoomType.ROOM_SHOP and rng:RandomInt(100) == 1 then
             player:AddCoins(ItemVariables.MYSTERIOUS_MUSTACHE.CoinCount - player:GetNumCoins())
         end
+    elseif ItemVariables.MYSTERIOUS_MUSTACHE.HasMysteriousMoustache then
+        ItemVariables.MYSTERIOUS_MUSTACHE.HasMysteriousMoustache = false
+        player:TryRemoveNullCostume(CostumeId.MYSTERIOUS_MUSTACHE)
     end
     
     ItemVariables.MYSTERIOUS_MUSTACHE.ItemCount = player:GetCollectibleCount()
@@ -2393,16 +2396,21 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.bigScissorsCache)
 function Exodus:cursedMetronomeUpdate()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.CURSED_METRONOME) and not ItemVariables.CURSED_METRONOME.HasCursedMetronome then
-        local maxhp = player:GetHearts() - 2
-        player:AddHearts(maxhp * -1)
-        
-        for i = 1, rng:RandomInt(maxhp / 2) do
-            Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL,  Isaac.GetFreeNearPosition(player.Position, 20), Vector(0, 0), player)
+    if player:HasCollectible(ItemId.CURSED_METRONOME) then
+        if not ItemVariables.CURSED_METRONOME.HasCursedMetronome then
+            local maxhp = player:GetHearts() - 2
+            player:AddHearts(maxhp * -1)
+            
+            for i = 1, rng:RandomInt(maxhp / 2) do
+                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL,  Isaac.GetFreeNearPosition(player.Position, 20), Vector(0, 0), player)
+            end
+            
+            player:AddNullCostume(CostumeId.CURSED_METRONOME)
+            ItemVariables.CURSED_METRONOME.HasCursedMetronome = true
         end
-        
-        player:AddNullCostume(CostumeId.CURSED_METRONOME)
-        ItemVariables.CURSED_METRONOME.HasCursedMetronome = true
+    elseif ItemVariables.CURSED_METRONOME.HasCursedMetronome then
+        ItemVariables.CURSED_METRONOME.HasCursedMetronome = false
+        player:TryRemoveNullCostume(CostumeId.CURSED_METRONOME)
     end
 end
 
@@ -2478,7 +2486,7 @@ function Exodus:techYUpdate()
     local entities = Isaac.GetRoomEntities()
     
     if player:HasCollectible(ItemId.TECH_Y) then
-        if ItemVariables.TECH_Y.HasTechY == false then
+        if not ItemVariables.TECH_Y.HasTechY then
             ItemVariables.TECH_Y.HasTechY = true
             player:AddNullCostume(CostumeId.TECH_Y)
         end
@@ -2535,6 +2543,9 @@ function Exodus:techYUpdate()
                 end
             end
         end
+    elseif ItemVariables.TECH_Y.HasTechY then
+        ItemVariables.TECH_Y.HasTechY = false
+        player:TryRemoveNullCostume(CostumeId.TECH_Y)
     end
 end
 
@@ -2842,7 +2853,7 @@ function Exodus:bustedPipeUpdate()
     local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.BUSTED_PIPE) then
-        if ItemVariables.BUSTED_PIPE.HasBustedPipe == false then
+        if not ItemVariables.BUSTED_PIPE.HasBustedPipe then
             player:AddNullCostume(CostumeId.BUSTED_PIPE)
             ItemVariables.BUSTED_PIPE.HasBustedPipe = true
         end
@@ -2881,6 +2892,9 @@ function Exodus:bustedPipeUpdate()
                 end
             end
         end
+    elseif ItemVariables.BUSTED_PIPE.HasBustedPipe then
+        ItemVariables.BUSTED_PIPE.HasBustedPipe = false
+        player:TryRemoveNullCostume(CostumeId.BUSTED_PIPE)
     end
 end
 
@@ -2896,7 +2910,7 @@ function Exodus:queenBeeUpdate()
             creep:SetColor(Color(0, 0, 0, 1, math.random(200, 250), math.random(150, 200), math.random(0, 10)), -1, 1, false, false)
         end
         
-        if ItemVariables.QUEEN_BEE.HasQueenBee == false then
+        if not ItemVariables.QUEEN_BEE.HasQueenBee then
             player:AddNullCostume(CostumeId.QUEEN_BEE)
             ItemVariables.QUEEN_BEE.HasQueenBee = true
         end
@@ -2994,6 +3008,9 @@ function Exodus:queenBeeUpdate()
                 end
             end
         end
+    elseif ItemVariables.QUEEN_BEE.HasQueenBee then
+        ItemVariables.QUEEN_BEE.HasQueenBee = false
+        player:TryRemoveNullCostume(CostumeId.QUEEN_BEE)
     end
 end
 
@@ -3134,9 +3151,14 @@ Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.mutantCloverUse, ItemId.MUTA
 function Exodus:unholyMantleCostume()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.UNHOLY_MANTLE) and ItemVariables.UNHOLY_MANTLE.HasUnholyMantle == false then
-        player:AddNullCostume(CostumeId.UNHOLY_MANTLE)
-        ItemVariables.UNHOLY_MANTLE.HasUnholyMantle = true
+    if player:HasCollectible(ItemId.UNHOLY_MANTLE) then
+        if not ItemVariables.UNHOLY_MANTLE.HasUnholyMantle then
+            player:AddNullCostume(CostumeId.UNHOLY_MANTLE)
+            ItemVariables.UNHOLY_MANTLE.HasUnholyMantle = true
+        end
+    elseif ItemVariables.UNHOLY_MANTLE.HasUnholyMantle then
+        ItemVariables.UNHOLY_MANTLE.HasUnholyMantle = false
+        player:TryRemoveNullCostume(CostumeId.UNHOLY_MANTLE)
     end
 end
 
@@ -3182,9 +3204,14 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.unholyMantleNewFloor)
 function Exodus:paperCutCostume()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.PAPER_CUT) and ItemVariables.PAPER_CUT.HasPaperCut == false then
-        player:AddNullCostume(CostumeId.PAPER_CUT)
-        ItemVariables.PAPER_CUT.HasPaperCut = true
+    if player:HasCollectible(ItemId.PAPER_CUT) then
+        if not ItemVariables.PAPER_CUT.HasPaperCut then
+            player:AddNullCostume(CostumeId.PAPER_CUT)
+            ItemVariables.PAPER_CUT.HasPaperCut = true
+        end
+    elseif ItemVariables.UNHOLY_MANTLE.HasUnholyMantle then
+        ItemVariables.UNHOLY_MANTLE.HasUnholyMantle = false
+        player:TryRemoveNullCostume(CostumeId.PAPER_CUT)
     end
 end
 
@@ -3228,7 +3255,7 @@ function Exodus:dragonBreathUpdate()
         
         local bar
         
-        if ItemVariables.DRAGON_BREATH.HasDragonBreath == false then
+        if not ItemVariables.DRAGON_BREATH.HasDragonBreath then
             bar = Isaac.Spawn(Entities.CHARGE_BAR.id, Entities.CHARGE_BAR.variant, 0, player.Position, NullVector, player)
             bar:GetData().IsFireball = true
             bar.Visible = false
@@ -3259,6 +3286,9 @@ function Exodus:dragonBreathUpdate()
         else
             ItemVariables.DRAGON_BREATH.Charge = -1
         end
+    elseif ItemVariables.DRAGON_BREATH.HasDragonBreath then
+        ItemVariables.DRAGON_BREATH.HasDragonBreath = false
+        player:TryRemoveNullCostume(CostumeId.DRAGON_BREATH)
     end
     
     for i, entity in pairs(Isaac.GetRoomEntities()) do
