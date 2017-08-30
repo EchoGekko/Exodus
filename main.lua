@@ -148,14 +148,9 @@ local CostumeId = {
     DRAGON_BREATH = Isaac.GetCostumeIdByPath("gfx/characters/costume_Dragon Breath.anm2"),
     PIG_BLOOD = Isaac.GetCostumeIdByPath("gfx/characters/costume_Pig Blood.anm2"),
     DADS_BOOTS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Dad's Boots.anm2"),
-    CURSED_METRONOME = Isaac.GetCostumeIdByPath("gfx/characters/CursedMetronome.anm2"),
-    MYSTERIOUS_MUSTACHE = Isaac.GetCostumeIdByPath("gfx/characters/MysteriousMustache.anm2"),
-    OWW = Isaac.GetCostumeIdByPath("gfx/characters/oww.anm2"),
-    OWW_BLUE = Isaac.GetCostumeIdByPath("gfx/characters/oww blue.anm2"),
-    OWW_GRAY = Isaac.GetCostumeIdByPath("gfx/characters/oww gray.anm2"),
-    OWW_BLACK = Isaac.GetCostumeIdByPath("gfx/characters/oww black.anm2"),
-    OWW_BLACK_RED_EYES = Isaac.GetCostumeIdByPath("gfx/characters/oww black w red eyes.anm2"),
-    OWW_WHITE = Isaac.GetCostumeIdByPath("gfx/characters/oww white.anm2")
+    CURSED_METRONOME = Isaac.GetCostumeIdByPath("gfx/characters/costume_Cursed Metronome.anm2"),
+    MYSTERIOUS_MUSTACHE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Mysterious Mustache.anm2"),
+    POSSESSED_BOMBS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Possessed Bombs.anm2")
 }
 
 local MusicId = {
@@ -3531,7 +3526,7 @@ function Exodus:possessedBombUpdate()
     if player:HasCollectible(ItemId.POSSESSED_BOMBS) then
         if not ItemVariables.POSSESSED_BOMBS.HasPossessedBombs then
             ItemVariables.POSSESSED_BOMBS.HasPossessedBombs = true
-            --player:AddNullCostume(CostumeId.POSSESSED_BOMBS)
+            player:AddNullCostume(CostumeId.POSSESSED_BOMBS)
         end
         
         for i, entity in pairs(Isaac.GetRoomEntities()) do
@@ -3555,7 +3550,7 @@ function Exodus:possessedBombUpdate()
         end
     elseif ItemVariables.POSSESSED_BOMBS.HasPossessedBombs then
         ItemVariables.POSSESSED_BOMBS.HasPossessedBombs = false
-        --player:TryRemoveNullCostume(CostumeId.POSSESSED_BOMBS)
+        player:TryRemoveNullCostume(CostumeId.POSSESSED_BOMBS)
     end
 end
 

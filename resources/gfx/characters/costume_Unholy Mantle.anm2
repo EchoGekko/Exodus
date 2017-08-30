@@ -3,7 +3,7 @@
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="costumes\costume_Unholy Mantle.png" Id="0"/>
-			<Spritesheet Path="costume\costume_Unholy Mantle Glow.png" Id="1"/>
+			<Spritesheet Path="costumes\costume_Unholy Mantle Glow.png" Id="1"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="body1" Id="0" SpritesheetId="0"/>
