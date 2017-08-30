@@ -1,67 +1,67 @@
 <entities anm2root="gfx/" version="5">
 
-    <entity anm2path="Honey Splat.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="1000" name="Honey Splat" numGridCollisionPoints="12" shadowSize="24" stageHP="0" variant="18340" subtype="0">
+    <entity anm2path="effects/Honey Splat.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="1000" name="Honey Splat" numGridCollisionPoints="12" shadowSize="24" stageHP="0" variant="18340" subtype="0">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Honey Poof.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Honey Poof" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="18302" subtype="0">
+    <entity anm2path="effects/Honey Poof.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Honey Poof" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="18302" subtype="0">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Score Display.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Score Display" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="18324" subtype="0">
+    <entity anm2path="effects/Score Display.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Score Display" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="18324" subtype="0">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Charge Bar.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="0" friction="1" id="1000" name="Charge Bar" numGridCollisionPoints="12" shadowSize="0" stageHP="0"  variant="18325" subtype="0">
+    <entity anm2path="effects/Charge Bar.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="0" friction="1" id="1000" name="Charge Bar" numGridCollisionPoints="12" shadowSize="0" stageHP="0"  variant="18325" subtype="0">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Hungry Hippo.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Hungry Hippo" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="39193">
+    <entity anm2path="familiar/Hungry Hippo.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Hungry Hippo" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="39193">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Poison Mastermind.anm2" reroll="true" baseHP="62" boss="0" champion="1" collisionDamage="2" collisionMass="30" collisionRadius="26" friction="1" id="57" name="Poison Mastermind" numGridCollisionPoints="12" shadowSize="42" stageHP="0" variant="9900" portrait="46">
+    <entity anm2path="monsters/Poison Mastermind.anm2" reroll="true" baseHP="62" boss="0" champion="1" collisionDamage="2" collisionMass="30" collisionRadius="26" friction="1" id="57" name="Poison Mastermind" numGridCollisionPoints="12" shadowSize="42" stageHP="0" variant="9900" portrait="46">
         <gibs amount="12" blood="1" bone="0" eye="0" gut="1" large="1" />
         <preload id="32" variant="0" />
         <preload-snd id="48" /> <!-- SOUND_FORESTBOSS_STOMPS -->
     </entity>
 
-    <entity anm2path="Poison Hemisphere.anm2" reroll="true" baseHP="31" boss="0" champion="1" collisionDamage="1" collisionMass="30" collisionRadius="13" friction="1" id="57" name="Poison Hemisphere" numGridCollisionPoints="12" shadowSize="21" stageHP="0" variant="9901" portrait="46">
+    <entity anm2path="monsters/Poison Hemisphere.anm2" reroll="true" baseHP="31" boss="0" champion="1" collisionDamage="1" collisionMass="30" collisionRadius="13" friction="1" id="57" name="Poison Hemisphere" numGridCollisionPoints="12" shadowSize="21" stageHP="0" variant="9901" portrait="46">
         <gibs amount="12" blood="1" bone="0" eye="0" gut="1" large="1" />
         <preload id="32" variant="0" />
         <preload-snd id="48" /> <!-- SOUND_FORESTBOSS_STOMPS -->
     </entity>
 
-    <entity anm2path="Fireball.anm2" reroll="false" baseHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="30" collisionRadius="16" friction="1" id="2" name="Fireball" numGridCollisionPoints="12" shadowSize="16" stageHP="0" variant="1032">
+    <entity anm2path="effects/Fireball.anm2" reroll="false" baseHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="30" collisionRadius="16" friction="1" id="2" name="Fireball" numGridCollisionPoints="12" shadowSize="16" stageHP="0" variant="1032">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Fireball 2.anm2" reroll="false" baseHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="30" collisionRadius="16" friction="1" id="2" name="Fireball 2" numGridCollisionPoints="12" shadowSize="16" stageHP="0" variant="1033">
+    <entity anm2path="effects/Fireball 2.anm2" reroll="false" baseHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="30" collisionRadius="16" friction="1" id="2" name="Fireball 2" numGridCollisionPoints="12" shadowSize="16" stageHP="0" variant="1033">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity id="217" variant="49204" name="Dank Dip" reroll="true" baseHP="6" stageHP="1" boss="0" champion="0" collisionDamage="1" collisionMass="6" collisionRadius="9" friction="1" numGridCollisionPoints="12" shadowSize="12" portrait="85" anm2path="Dank Dip.anm2">
+    <entity id="217" variant="49204" name="Dank Dip" reroll="true" baseHP="6" stageHP="1" boss="0" champion="0" collisionDamage="1" collisionMass="6" collisionRadius="9" friction="1" numGridCollisionPoints="12" shadowSize="12" portrait="85" anm2path="monsters/Dank Dip.anm2">
         <gibs amount="5" blood="0" bone="0" eye="0" gut="0" large="0" poop="1" />
         <preload-snd id="60" /> <!-- SOUND_BABY_HURT -->
     </entity>
 
-    <entity anm2path="Drowned Shroomman.anm2" baseHP="23" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="300" name="Drowned Mushroom" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="13723" portrait="156">
+    <entity anm2path="monsters/Drowned Shroomman.anm2" baseHP="23" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="300" name="Drowned Mushroom" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="13723" portrait="156">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 
-    <entity anm2path="Scary Shroomman.anm2" baseHP="50" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="300" name="Scary Shroomman" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="13724" portrait="156">
+    <entity anm2path="monsters/Scary Shroomman.anm2" baseHP="50" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="300" name="Scary Shroomman" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="13724" portrait="156">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 
-    <entity anm2path="candle.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3"collisionRadius="13" friction="1" id="3" name="Candle" numGridCollisionPoints="12" shadowsize="12" stageHP="0" variant="3769">
+    <entity anm2path="familiar/candle.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3"collisionRadius="13" friction="1" id="3" name="Candle" numGridCollisionPoints="12" shadowsize="12" stageHP="0" variant="3769">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="pentagram.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="1000" name="Pentagram" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="6515">
+    <entity anm2path="effects/pentagram.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="1000" name="Pentagram" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="6515">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="mark.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Summoning Mark" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="597867">
+    <entity anm2path="effects/mark.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Summoning Mark" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="597867">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
@@ -69,71 +69,71 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Lantern Tear.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8"collisionRadius="8" friction="1" id="2" name="Lantern Tear" numGridCollisionPoints="8" shadowsize="8" stageHP="0"variant="5673">
+    <entity anm2path="effects/Lantern Tear.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8"collisionRadius="8" friction="1" id="2" name="Lantern Tear" numGridCollisionPoints="8" shadowsize="8" stageHP="0"variant="5673">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Lantern Gibs.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Lantern Gibs" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="5673">
+    <entity anm2path="effects/Lantern Gibs.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Lantern Gibs" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="5673">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Lantern Fire.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="16" friction="1" id="1000" name="Lantern Fire" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="5674">
+    <entity anm2path="effects/Lantern Fire.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="16" friction="1" id="1000" name="Lantern Fire" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="5674">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Portal Door.anm2" reroll="false" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Portal Door" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="390840294" shutdoors="false">
+    <entity anm2path="grid/Portal Door.anm2" reroll="false" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Portal Door" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="390840294" shutdoors="false">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Baseball.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="8" friction="1" id="2" name="Baseball" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="12445">
+    <entity anm2path="effects/Baseball.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="8" friction="1" id="2" name="Baseball" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="12445">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Baseball Hit.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Baseball Hit" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="21839">
+    <entity anm2path="effects/Baseball Hit.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Baseball Hit" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="21839">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Blockage.anm2" reroll="true" baseHP="30" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.1" id="687" name="Blockage" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Watching">
+    <entity anm2path="monsters/Blockage.anm2" reroll="true" baseHP="30" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.1" id="687" name="Blockage" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Watching">
         <gibs amount="8" blood="1" bone="1" eye="1" gut="0" large="0" worm="0" />
     </entity>
 
-    <entity anm2path="Closter.anm2" reroll="true" baseHP="59" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="1" id="973" name="Closter" numGridCollisionPoints="12" shadowSize="28" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hop">
+    <entity anm2path="monsters/Closter.anm2" reroll="true" baseHP="59" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="1" id="973" name="Closter" numGridCollisionPoints="12" shadowSize="28" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hop">
         <gibs amount="8" blood="1" bone="0" eye="0" gut="1" large="0" worm="1" />
     </entity>
 
-     <entity anm2path="Flyerball.anm2" reroll="true" baseHP="30" boss="0" collisionDamage="1" collisionMass="7" collisionRadius="13" friction="1" id="25" name="Flyerball" numGridCollisionPoints="12" shadowSize="20" stageHP="0" variant="784" portrait="19" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Fly">
+    <entity anm2path="mosnters/Flyerball.anm2" reroll="true" baseHP="30" boss="0" collisionDamage="1" collisionMass="7" collisionRadius="13" friction="1" id="25" name="Flyerball" numGridCollisionPoints="12" shadowSize="20" stageHP="0" variant="784" portrait="19" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Fly">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Iron Lung.anm2" gridCollision="walls" reroll="true" baseHP="45" boss="0" champion="0" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="1" id="913" name="Iron Lung" numGridCollisionPoints="12" shadowSize="17" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hori">
+    <entity anm2path="monsters/Iron Lung.anm2" gridCollision="walls" reroll="true" baseHP="45" boss="0" champion="0" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="1" id="913" name="Iron Lung" numGridCollisionPoints="12" shadowSize="17" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hori">
         <gibs amount="5" blood="1" bone="0" eye="1" gut="0" large="0" worm="0" />
     </entity>
 
-    <entity anm2path="Iron Lung Gas.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="13" friction="0.9" id="1000" name="Iron Lung Gas" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="654">
+    <entity anm2path="monsters/Iron Lung Gas.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="13" friction="0.9" id="1000" name="Iron Lung Gas" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="654">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Occultist.anm2" gridCollision="walls" reroll="true" baseHP="120" boss="0" champion="0" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.6" id="734" name="Occultist" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Walk">
+    <entity anm2path="monsters/Occultist.anm2" gridCollision="walls" reroll="true" baseHP="120" boss="0" champion="0" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.6" id="734" name="Occultist" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Walk">
         <gibs amount="8" blood="1" bone="1" eye="1" gut="0" large="0" worm="0" />
     </entity>
 
-    <entity anm2path="Tear Marker.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="9" friction="1" id="1000" name="Occultist Tear Marker" numGridCollisionPoints="6" shadowSize="0" stageHP="0" variant="57689">
+    <entity anm2path="effects/Tear Marker.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="9" friction="1" id="1000" name="Occultist Tear Marker" numGridCollisionPoints="6" shadowSize="0" stageHP="0" variant="57689">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="Halfblind.anm2" reroll="true" baseHP="35" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="13" friction="0.6" id="748" name="Halfblind" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="0" portrait="37" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hori">
+    <entity anm2path="monsters/Halfblind.anm2" reroll="true" baseHP="35" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="13" friction="0.6" id="748" name="Halfblind" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="0" portrait="37" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hori">
         <gibs amount="6" blood="0" bone="1" eye="1" gut="1" large="0" worm="1" />
     </entity>
 
-    <entity anm2path="Headcase.anm2" reroll="true" baseHP="75" boss="0" champion="0" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.1" id="897" name="Headcase" numGridCollisionPoints="12" shadowSize="30" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
+    <entity anm2path="monsters/Headcase.anm2" reroll="true" baseHP="75" boss="0" champion="0" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.1" id="897" name="Headcase" numGridCollisionPoints="12" shadowSize="30" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
         <gibs amount="8" blood="1" bone="1" eye="1" gut="0" large="0" worm="0" />
     </entity>
 
-    <entity anm2path="Hollowhead.anm2" gridCollision="walls" reroll="true" baseHP="78" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.6" id="647" name="Hollowhead" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Fly">
+    <entity anm2path="monsters/Hollowhead.anm2" gridCollision="walls" reroll="true" baseHP="78" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="0.6" id="647" name="Hollowhead" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Fly">
         <gibs amount="8" blood="0" bone="1" eye="1" gut="0" large="0" worm="0" />
     </entity>
 
-    <entity anm2path="Wombshroom.anm2" reroll="true" baseHP="50" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="1" id="934" name="Wombshroom" numGridCollisionPoints="12" shadowSize="28" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Blocking">
+    <entity anm2path="monsters/Wombshroom.anm2" reroll="true" baseHP="50" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="17" friction="1" id="934" name="Wombshroom" numGridCollisionPoints="12" shadowSize="28" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Blocking">
         <gibs amount="8" blood="1" bone="0" eye="0" gut="1" large="0" worm="1" />
     </entity>
 
@@ -141,69 +141,69 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
         <preload-snd id="185" /> <!-- BOSS2_BUBBLES -->
     </entity>
-
-    <entity anm2path="Carrion Prince.anm2" baseHP="21" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="17" friction="1" id="764" name="Carrion Prince" numGridCollisionPoints="9" shadowSize="25" stageHP="3" variant="0" portrait="0" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="WalkHeadHori">
+	
+    <entity anm2path="monsters/Carrion Prince.anm2" baseHP="21" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="17" friction="1" id="764" name="Carrion Prince" numGridCollisionPoints="9" shadowSize="25" stageHP="3" variant="0" portrait="0" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="WalkHeadHori">
         <gibs amount="8" blood="1" bone="1" eye="0" gut="1" large="0" />
         <preload-snd id="115" /> <!-- SOUND_MONSTER_ROAR_0 -->
     </entity>
 
-    <entity anm2path="Lithopedion.anm2" reroll="true" baseHP="60" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="34" friction="1" id="974" name="Lithopedion" numGridCollisionPoints="12" shadowSize="28" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hop">
+    <entity anm2path="monsters/Lithopedion.anm2" reroll="true" baseHP="60" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="34" friction="1" id="974" name="Lithopedion" numGridCollisionPoints="12" shadowSize="28" stageHP="0" variant="0" portrait="128" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Hop">
         <gibs amount="8" blood="1" bone="0" eye="0" gut="1" large="0" worm="1" />
     </entity>
 
-    <entity id="212" variant="783" name="Death's Eye" baseHP="20" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="20" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17" portrait="80" anm2path="Death's Eye.anm2" shutdoors="false" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
+    <entity id="212" variant="783" name="Death's Eye" baseHP="20" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="20" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17" portrait="80" anm2path="monsters/Death's Eye.anm2" shutdoors="false" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
         <gibs amount="8" blood="0" bone="1" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity id="212" variant="784" name="Flesh Death's Eye" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="20" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17" portrait="80" anm2path="Flesh Death's Eye.anm2" shutdoors="true" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
+    <entity id="212" variant="784" name="Flesh Death's Eye" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="20" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17" portrait="80" anm2path="monsters/Flesh Death's Eye.anm2" shutdoors="true" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
         <gibs amount="4" blood="1" bone="0" eye="1" gut="2" large="0" />
     </entity>
 
-    <entity anm2path="Astro Baby.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Astro Baby" numGridCollisionPoints="12" shadowSize="11" stageHP="0" variant="78456" >
+    <entity anm2path="familiar/Astro Baby.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Astro Baby" numGridCollisionPoints="12" shadowSize="11" stageHP="0" variant="78456" >
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="mat.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="742257" name="Welcome Mat" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0">
+    <entity anm2path="effects/mat.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="742257" name="Welcome Mat" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="partup.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Part Up" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="4990837">
+    <entity anm2path="effects/partup.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Part Up" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="4990837">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="partupup.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Part Up Up" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="4990838">
+    <entity anm2path="effects/partupup.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Part Up Up" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="4990838">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="partupupup.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Part Up Up Up" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="4990839">
+    <entity anm2path="effects/partupupup.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Part Up Up Up" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="4990839">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	
-	<entity anm2path="Lovely Fly.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="0" name="Lovely Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="4">
+	<entity anm2path="monsters/Lovely Fly.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="0" name="Lovely Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="4">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 	
-	<entity anm2path="Soulful Fly.anm2" reroll="true" baseHP="15" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="1" name="Soulful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="5">
+	<entity anm2path="monsters/Soulful Fly.anm2" reroll="true" baseHP="15" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="1" name="Soulful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="5">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 	
-	<entity anm2path="Hateful Fly.anm2" reroll="true" baseHP="21" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="2" name="Hateful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="5">
+	<entity anm2path="monsters/Hateful Fly.anm2" reroll="true" baseHP="21" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="2" name="Hateful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="5">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="1" />
     </entity>
 	
-	<entity anm2path="Hateful Fly.anm2" reroll="true" baseHP="1000" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="3" name="Hateful Fly Ghost" numGridCollisionPoints="12" shadowSize="16" stageHP="1">
+	<entity anm2path="monsters/Hateful Fly.anm2" reroll="true" baseHP="1000" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="3" name="Hateful Fly Ghost" numGridCollisionPoints="12" shadowSize="16" stageHP="1">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0" />
     </entity>
 
-    <entity anm2path="New Moon Record.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="8" friction="1" id="2" name="Moon" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="619575">
+    <entity anm2path="familiar/New Moon Record.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="8" friction="1" id="2" name="Moon" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="619575">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	
-	<entity anm2path="Hothead.anm2" reroll="true" baseHP="30" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="10" friction="1" id="868" variant="0" name="Hothead" numGridCollisionPoints="12" shadowSize="16" stageHP="0">
+	<entity anm2path="monsters/Hothead.anm2" reroll="true" baseHP="30" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="10" friction="1" id="868" variant="0" name="Hothead" numGridCollisionPoints="12" shadowSize="16" stageHP="0">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	
-	<entity anm2path="Pit Gibs.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Pit Gibs" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="1273">
+	<entity anm2path="effects/Pit Gibs.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Pit Gibs" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="1273">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 </entities>

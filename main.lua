@@ -248,7 +248,7 @@ function Exodus:newGame(fromSave)
                 OMINOUS_LANTERN = { id = ItemId.OMINOUS_LANTERN, frames = 0, Charge = 0 }
             }
         }
-        ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Load("gfx/Pseudobulbar Icon.anm2", true)
+        ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Load("gfx/effects/Pseudobulbar Icon.anm2", true)
         ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Play("Idle", true)
         
         ItemVariables.CHARGE_BAR.Bar:Load("gfx/ui/ui_chargebar2.anm2", true)
@@ -3540,7 +3540,7 @@ function Exodus:possessedBombUpdate()
                     bomb.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
                     bomb.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
                     bomb:SetColor(Color(1, 1, 1, 0.7, 0, 0, 0), -1, 1, false, false)
-                    bomb:GetSprite():Load("gfx/Possessed Bombs.anm2", true)
+                    bomb:GetSprite():Load("gfx/effects/Possessed Bombs.anm2", true)
                     
                     data.isPossessed = true
                 elseif data.isPossessed then
