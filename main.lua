@@ -36,6 +36,7 @@ local ItemId = {
     BIG_SCISSORS = Isaac.GetItemIdByName("Big Scissors"),
     WELCOME_MAT = Isaac.GetItemIdByName("Welcome Mat"),
     GLUTTONYS_STOMACH = Isaac.GetItemIdByName("Gluttony's Stomach"),
+    POSSESSED_BOMBS = Isaac.GetItemIdByName("Possessed Bombs"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -98,16 +99,9 @@ local Entities = {
     ---<<ENEMIES>>---
     POISON_MASTERMIND = getEntity("Poison Mastermind"),
     POISON_HEMISPHERE = getEntity("Poison Hemisphere"),
-    SILENT_FATTY = getEntity("Silent Fatty"),
-    SILENT_HOST = getEntity("Silent Host"),
-    GRIDSIE = getEntity("Gridsie"),
-    BOMB_GRIDSIE = getEntity("Bomb Gridsie"),
-    POLYP_GRIDSIE = getEntity("Polyp Gridsie"),
-    SPOOK = getEntity("Spook"),
     DANK_DIP = getEntity("Dank Dip"),
     DROWNED_SHROOMMAN = getEntity("Drowned Mushroom"),
     SCARY_SHROOMMAN = getEntity("Scary Shroomman"),
-    HUSHED_HORF = getEntity("Hushed Horf"),
     BLOCKAGE = getEntity("Blockage"),
     CLOSTER = getEntity("Closter"),
     FLYERBALL = getEntity("Flyerball"),
@@ -129,7 +123,6 @@ local Entities = {
     
     ---<<OTHERS>>---
     BIRDBATH = getEntity("Birdbath"),
-    CANMAN = getEntity("Canman"),
     LANTERN_TEAR = getEntity("Lantern Tear"),
     BASEBALL = getEntity("Baseball"),
     SCARED_HEART = getEntity("Exodus Scared Heart", 653),
@@ -195,6 +188,7 @@ function Exodus:newGame(fromSave)
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false },
             GLUTTONYS_STOMACH = { Parts = 0 },
 			ASTRO_BABY = { UsedBox = 0 },
+            POSSESSED_BOMBS = { HasPossessedBombs = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -383,8 +377,6 @@ function Exodus:PlayerIsMoving()
     
     return false
 end
-
-
 
 function Exodus:IsProperEnemy(ent)
     if ent ~= nil then
@@ -1250,6 +1242,8 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.flyerballNewRoom)
 
 function Exodus:flyerballTakeDamage(target, amount, flag, source, cdframes)
+    local dmgSource = getEntityFromRef(source)
+    
 	if target.Variant == Entities.FLYERBALL.variant then
         local data = target:GetData()
         
@@ -1257,7 +1251,18 @@ function Exodus:flyerballTakeDamage(target, amount, flag, source, cdframes)
 			return false
 		end
         
-		data.SpeedMultiplier = data.SpeedMultiplier - math.random(11) / 5
+        if dmgSource and dmgSource:ToTear() then
+            target.Velocity = target.Velocity + dmgSource.Velocity
+        end
+        
+		data.SpeedMultiplier = data.SpeedMultiplier - 0.75
+        
+        if target.HitPoints - amount <= 0.0 then
+            local Fire = Isaac.Spawn(EntityType.ENTITY_EFFECT, 51, 0, target.Position, Vector(0, 0), target)
+			table.insert(EntityVariables.FLYERBALL.Fires, Fire)
+			Fire:GetData().CountDown = 300
+            Isaac.Explode(target.Position, target, 40)
+        end
 	end
 end
 
@@ -1275,57 +1280,42 @@ function Exodus:flyerballEntityUpdate(entity)
 		if entity.FrameCount == 1 then
 			sprite:Play("Appear", false)
 			entity.State = 0
-			data.FlyFrames = 1
-			data.SpeedMultiplier = 1
-			data.AngryNoise = false
+			data.SpeedMultiplier = 1.0
+			data.PhaseChanged = false
+            data.UpperBound = 2.5
+            data.LowerBound = 1.0
+            data.Appeared = false
 		end
         
-		if entity:IsFrame(40, 0) then
-			data.SpeedMultiplier = data.SpeedMultiplier + math.random(11) / 10
-		end
+        data.SpeedMultiplier = math.min(math.max(data.LowerBound, data.SpeedMultiplier + 0.05), data.UpperBound)
         
-		if data.SpeedMultiplier <= 1 then
-			data.SpeedMultiplier = 1
-		end
+        if sprite:IsFinished("Appear") and not data.Appeared then
+            data.Appeared = true
+            sprite:Play("Fly", true)
+        end
         
-		if data.SpeedMultiplier >= 3 then
-			data.SpeedMultiplier = 3
-		end
-        
-		data.FlyFrames = data.FlyFrames + 1
-        
-		if data.FlyFrames >= 7 then
-			data.FlyFrames = 1
-		end
-        
-		if entity.FrameCount > 28 then
-			if entity.HitPoints <= entity.MaxHitPoints / 2 then
-				if data.AngryNoise == false then
+		if data.Appeared then
+            if not data.PhaseChanged then
+                if entity.HitPoints < entity.MaxHitPoints / 2 then
+                    data.PhaseChanged = true
+                    data.UpperBound = 4.0
 					sfx:Play(SoundEffect.SOUND_FIRE_RUSH, 1, 0, false, 1)
-					data.AngryNoise = true
-				end
+                end
                 
-				entity.Velocity = entity.Velocity:Resized(data.SpeedMultiplier * 6)
-				sprite:Play("Fury" .. tostring(data.FlyFrames), true)
+				entity.Velocity = entity.Velocity:Resized(data.SpeedMultiplier * 3.5)
 			else
-				data.AngryNoise = false
-				entity.Velocity = entity.Velocity:Resized(data.SpeedMultiplier * 4)
-			end
+                sprite:SetFrame("Fury", entity.FrameCount % 6)
+                
+                entity.Velocity = entity.Velocity:Resized(data.SpeedMultiplier * 5.0)
+            end
 		end
         
 		local entities = Isaac.GetRoomEntities()
         
 		for i, ent in pairs(Isaac.GetRoomEntities()) do
-			if ent.Type == EntityType.ENTITY_PROJECTILE and ent.SpawnerType == EntityType.ENTITY_BOOMFLY and ent.SpawnerVariant == Entities.FLYERBALL.variant then
+			if ent.Type == EntityType.ENTITY_PROJECTILE and ent.SpawnerType == Entities.FLYERBALL.id and ent.SpawnerVariant == Entities.FLYERBALL.variant then
 				ent:Remove()
 			end
-		end
-        
-		if entity:IsDead() then
-			Isaac.Explode(entity.Position, entity, 40)
-			local Fire = Isaac.Spawn(EntityType.ENTITY_EFFECT, 51, 0, entity.Position, Vector(0,0), entity)
-			table.insert(EntityVariables.FLYERBALL.Fires, Fire)
-			Fire:GetData().CountDown = 300
 		end
 	end
 end
@@ -3535,6 +3525,42 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.birdbathEntityUpdate, Entities.BIRDBATH.id)
 
+function Exodus:possessedBombUpdate()
+    local player = Isaac.GetPlayer(0)
+    
+    if player:HasCollectible(ItemId.POSSESSED_BOMBS) then
+        if not ItemVariables.POSSESSED_BOMBS.HasPossessedBombs then
+            ItemVariables.POSSESSED_BOMBS.HasPossessedBombs = true
+            --player:AddNullCostume(CostumeId.POSSESSED_BOMBS)
+        end
+        
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            local bomb = entity:ToBomb()
+            
+            if bomb then
+                local data = bomb:GetData()
+                
+                if not data.isPossessed then
+                    bomb.Flags = bomb.Flags | (TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_FEAR)
+                    bomb.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
+                    bomb.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
+                    bomb:SetColor(Color(1, 1, 1, 0.7, 0, 0, 0), -1, 1, false, false)
+                    bomb:GetSprite():Load("gfx/Possessed Bombs.anm2", true)
+                    
+                    data.isPossessed = true
+                elseif data.isPossessed then
+                    bomb.Velocity = bomb.Velocity + Vector(Input.GetActionValue(ButtonAction.ACTION_SHOOTRIGHT, player.ControllerIndex) - Input.GetActionValue(ButtonAction.ACTION_SHOOTLEFT, player.ControllerIndex), Input.GetActionValue(ButtonAction.ACTION_SHOOTDOWN, player.ControllerIndex) - Input.GetActionValue(ButtonAction.ACTION_SHOOTUP, player.ControllerIndex))
+                end
+            end
+        end
+    elseif ItemVariables.POSSESSED_BOMBS.HasPossessedBombs then
+        ItemVariables.POSSESSED_BOMBS.HasPossessedBombs = false
+        --player:TryRemoveNullCostume(CostumeId.POSSESSED_BOMBS)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.possessedBombUpdate)
+
 --<<<DROWNED CHARGER>>>--
 function Exodus:drownedChargerUpdate(entity)        
     if entity.Variant == 1 then
@@ -5070,7 +5096,7 @@ function Exodus:hotheadEntityUpdate(hothead)
 			sprite:ReplaceSpritesheet(0, "gfx/monsters/Hothead" .. math.random(1, 3) .. ".png")
 			sprite:LoadGraphics()
             hothead.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
-            hothead:AddEntityFlags(EntityFlag.FLAG_NO_BLOOD_SPLASH + EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+            hothead:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
             data.soundTimer = math.random(40, 100)
         end
         
@@ -5113,7 +5139,7 @@ function Exodus:hotheadEntityUpdate(hothead)
                         local velLimit = 7
                         
                         if target:ToPlayer() then
-                            velLimit = velLimit * math.min(target:ToPlayer().MoveSpeed, 1.3)
+                            velLimit = velLimit * math.min(math.max(target:ToPlayer().MoveSpeed, 0.7), 1.4)
                         end
                         
                         hothead.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
