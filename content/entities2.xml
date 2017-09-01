@@ -101,7 +101,7 @@
         <gibs amount="8" blood="1" bone="0" eye="0" gut="1" large="0" worm="1" />
     </entity>
 
-    <entity anm2path="mosnters/Flyerball.anm2" reroll="true" baseHP="30" boss="0" collisionDamage="1" collisionMass="7" collisionRadius="13" friction="1" id="25" name="Flyerball" numGridCollisionPoints="12" shadowSize="20" stageHP="0" variant="784" portrait="19" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Fly">
+    <entity anm2path="monsters/Flyerball.anm2" reroll="true" baseHP="30" boss="0" collisionDamage="1" collisionMass="7" collisionRadius="13" friction="1" id="25" name="Flyerball" numGridCollisionPoints="12" shadowSize="20" stageHP="0" variant="784" portrait="19" gridCollision="walls" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Fly">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
