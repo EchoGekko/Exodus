@@ -1,0 +1,35 @@
+<AnimatedActor>
+	<Info CreatedBy="Unknown" CreatedOn="8/23/2017 1:47:39 AM" Version="11" Fps="30"/>
+	<Content>
+		<Spritesheets>
+			<Spritesheet Path="effects\blight_effect.png" Id="0"/>
+		</Spritesheets>
+		<Layers>
+			<Layer Name="Main" Id="0" SpritesheetId="0"/>
+		</Layers>
+		<Nulls/>
+		<Events/>
+	</Content>
+	<Animations DefaultAnimation="Blight">
+		<Animation Name="Blight" FrameNum="26" Loop="true">
+			<RootAnimation>
+				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="18" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
+			</RootAnimation>
+			<LayerAnimations>
+				<LayerAnimation LayerId="0" Visible="true">
+					<Frame XPosition="12" YPosition="-10" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="190" YScale="30" Delay="3" Visible="true" RedTint="240" GreenTint="240" BlueTint="240" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="11" YPosition="-8" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="180" YScale="50" Delay="3" Visible="true" RedTint="230" GreenTint="230" BlueTint="230" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="11" YPosition="-7" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="180" YScale="60" Delay="3" Visible="true" RedTint="220" GreenTint="220" BlueTint="220" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="9" YPosition="-6" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="150" YScale="70" Delay="3" Visible="true" RedTint="210" GreenTint="210" BlueTint="210" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="8" YPosition="-3" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="130" YScale="90" Delay="3" Visible="true" RedTint="200" GreenTint="200" BlueTint="200" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="7" YPosition="1" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="120" YScale="100" Delay="3" Visible="true" RedTint="190" GreenTint="190" BlueTint="190" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="6" YPosition="4" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="100" YScale="130" Delay="3" Visible="true" RedTint="180" GreenTint="180" BlueTint="180" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="7" YPosition="1" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="120" YScale="100" Delay="3" Visible="true" RedTint="190" GreenTint="190" BlueTint="190" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="9" YPosition="-6" XPivot="16" YPivot="16" XCrop="-2" YCrop="-1" Width="19" Height="19" XScale="150" YScale="70" Delay="2" Visible="true" RedTint="210" GreenTint="210" BlueTint="210" AlphaTint="240" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+				</LayerAnimation>
+			</LayerAnimations>
+			<NullAnimations/>
+			<Triggers/>
+		</Animation>
+	</Animations>
+</AnimatedActor>

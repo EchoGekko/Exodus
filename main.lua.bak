@@ -3096,12 +3096,18 @@ function Exodus:buttrotUpdate()
     end
 
     if player:HasCollectible(ItemId.BUTTROT) then
+        Isaac.DebugString("Heyo 1")
         local entities = Isaac.GetRoomEntities()
+        Isaac.DebugString("Heyo 2")
         for i = 1, #entities do
+            Isaac.DebugString("Heyo 3")
             if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].Variant == Entities.BLIGHT_TEAR.variant and entities[i]:IsDead() then
+                Isaac.DebugString("Heyo 4")
                 local splash = Isaac.Spawn(1000, 538978236, 0, entities[i].Position, Vector(0,0), nil):ToEffect()
+                Isaac.DebugString("Heyo 5")
                 splash:SetTimeout(30)
             end
+            Isaac.DebugString("Heyo 6")
             if entities[i].Type == 1000 and entities[i].Variant == 538978237 then
                 entities[i].Position = entities[i]:GetData().parent.Position + Vector(0, entities[i]:GetData().parent.Size)
                 if entities[i]:GetData().parent:IsDead() or entities[i]:GetData().parent:GetData().BlightedFrame == nil then
