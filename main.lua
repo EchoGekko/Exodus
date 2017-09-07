@@ -39,6 +39,7 @@ local ItemId = {
     POSSESSED_BOMBS = Isaac.GetItemIdByName("Possessed Bombs"),
     BUTTROT = Isaac.GetItemIdByName("Buttrot"),
     CLAUSTROPHOBIA = Isaac.GetItemIdByName("Claustrophobia"),
+    SLING = Isaac.GetItemIdByName("Sling"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -186,12 +187,12 @@ function Exodus:newGame(fromSave)
             BIG_SCISSORS = { Triggered = false },
             CURSED_METRONOME = { HasCursedMetronome = false },
             MYSTERIOUS_MUSTACHE = { HasMysteriousMustache = false, ItemCount = 0, CoinCount = 0 },
-            WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false },
+            WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false, Placed = true, AppearFrame = nil },
             GLUTTONYS_STOMACH = { Parts = 0 },
             ASTRO_BABY = { UsedBox = 0 },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
-			BUTTROT = { HasButtrot = false },
-			CLAUSTROPHOBIA = { HasClaustrophobia = false, Triggered = false },
+            BUTTROT = { HasButtrot = false },
+            CLAUSTROPHOBIA = { HasClaustrophobia = false, Triggered = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -2070,7 +2071,8 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.pigBloodUpdate)
 --<<<WELCOME MAT>>>--
 function Exodus:welcomeMatUpdate()
     local player = Isaac.GetPlayer(0)
-    
+    local room = game:GetRoom()
+
     if player:HasCollectible(ItemId.WELCOME_MAT) then
         if ItemVariables.WELCOME_MAT.Position ~= nil then
             if (player.Position:DistanceSquared(ItemVariables.WELCOME_MAT.Position) <= 100^2) then
@@ -2084,42 +2086,66 @@ function Exodus:welcomeMatUpdate()
             end
         end
     end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.welcomeMatUpdate)
-
-function Exodus:welcomeMatNewRoom()
-    local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.WELCOME_MAT) then
-        local mat = Isaac.Spawn(Entities.WELCOME_MAT.id, 0, 0, player.Position, Vector(0, 0), player)
-        local sprite = mat:GetSprite()
-        sprite:Play("Idle", false)
-        
-        for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
-            local door = game:GetRoom():GetDoor(i)
+        if not ItemVariables.WELCOME_MAT.Placed then
+            ItemVariables.WELCOME_MAT.Placed = true
+            ItemVariables.WELCOME_MAT.AppearFrame = 0
+            local mat = Isaac.Spawn(Entities.WELCOME_MAT.id, 0, 0, player.Position, Vector(0, 0), player)
+            local sprite = mat:GetSprite()
+            sprite:Play("Appear", false)
+            mat.Visible = false
             
-            if(door ~= nil) then
-                if (player.Position:DistanceSquared(door.Position) <= 100^2) then
-                    ItemVariables.WELCOME_MAT.Direction = door.Direction
+            ItemVariables.WELCOME_MAT.Position = mat.Position
+            mat:Remove()
+        elseif ItemVariables.WELCOME_MAT.AppearFrame ~= nil then
+            local mat = Isaac.Spawn(Entities.WELCOME_MAT.id, 0, 0, ItemVariables.WELCOME_MAT.Position, Vector(0, 0), player)
+            local sprite = mat:GetSprite()
+            ItemVariables.WELCOME_MAT.AppearFrame = ItemVariables.WELCOME_MAT.AppearFrame + 1
+            sprite:SetFrame("Appear", ItemVariables.WELCOME_MAT.AppearFrame)
+
+            for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+                local door = room:GetDoor(i)
+                
+                if (door ~= nil) then
+                    if (player.Position:DistanceSquared(door.Position) <= 100^2) then
+                        ItemVariables.WELCOME_MAT.Direction = door.Direction
+                    end
                 end
             end
+            
+            if ItemVariables.WELCOME_MAT.Direction == Direction.LEFT then
+                sprite.Rotation = sprite.Rotation + 90
+            elseif ItemVariables.WELCOME_MAT.Direction == Direction.UP then
+                sprite.Rotation = sprite.Rotation + 180
+            elseif ItemVariables.WELCOME_MAT.Direction == Direction.RIGHT then
+                sprite.Rotation = sprite.Rotation + 270
+            end
+            if ItemVariables.WELCOME_MAT.AppearFrame <= 3 then
+                mat:Remove()
+            elseif ItemVariables.WELCOME_MAT.AppearFrame == 11 then
+                mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+                ItemVariables.WELCOME_MAT.AppearFrame = nil
+            else
+                mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+            end
         end
-        
-        if ItemVariables.WELCOME_MAT.Direction == Direction.LEFT then
-            sprite.Rotation = sprite.Rotation + 90
-        elseif ItemVariables.WELCOME_MAT.Direction == Direction.UP then
-            sprite.Rotation = sprite.Rotation + 180
-        elseif ItemVariables.WELCOME_MAT.Direction == Direction.RIGHT then
-            sprite.Rotation = sprite.Rotation + 270
-        end
-        
-        ItemVariables.WELCOME_MAT.Position = mat.Position
-        mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
     end
 end
 
+Exodus:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Exodus.welcomeMatUpdate)
+
+function Exodus:welcomeMatNewRoom()
+    ItemVariables.WELCOME_MAT.Placed = false
+end
+
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.welcomeMatNewRoom)
+
+function Exodus:welcomeMatNewLevel()
+    ItemVariables.WELCOME_MAT.Placed = true
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.welcomeMatNewLevel)
 
 function Exodus:welcomeMatCache(player, flag)
     if ItemVariables.WELCOME_MAT.Position ~= nil then
@@ -2389,7 +2415,6 @@ function Exodus:claustrophobiaUpdate()
     local player = Isaac.GetPlayer(0)
 
     if player:HasCollectible(ItemId.CLAUSTROPHOBIA) then
-        player:AddNullCostume(CostumeId.CLAUSTROPHOBIA)
         ItemVariables.CLAUSTROPHOBIA.HasClaustrophobia = true
     end
 end
@@ -3098,9 +3123,13 @@ function Exodus:buttrotUpdate()
     if player:HasCollectible(ItemId.BUTTROT) then
         local entities = Isaac.GetRoomEntities()
         for i = 1, #entities do
-            if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].Variant == Entities.BLIGHT_TEAR.variant and entities[i]:IsDead() then
-                local splash = Isaac.Spawn(1000, 538978236, 0, entities[i].Position, Vector(0,0), nil):ToEffect()
-                splash:SetTimeout(30)
+            if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].Variant == Entities.BLIGHT_TEAR.variant then
+                if entities[i]:IsDead() then
+                    local splash = Isaac.Spawn(1000, 538978236, 0, entities[i].Position + Vector(0, entities[i]:ToTear().Height), Vector(0,0), nil):ToEffect()
+                    splash:SetTimeout(30)                
+                else
+                    entities[i].Visible = true
+                end
             end
             if entities[i].Type == 1000 and entities[i].Variant == 538978237 then
                 entities[i].Position = entities[i]:GetData().parent.Position + Vector(0, entities[i]:GetData().parent.Size)
@@ -3117,14 +3146,47 @@ function Exodus:buttrotUpdate()
                 end
             end
             if entities[i].Type == EntityType.ENTITY_LASER and entities[i].SpawnerType == EntityType.ENTITY_PLAYER and entities[i].Variant ~= 5 then
-                entities[i].Color = Color(1, 0, 0.8, 1, 0, 0, 0)
-                entities[i].SplatColor = Color(1, 0, 0.8, 1, 0, 0, 0) 
+                player.TearColor = Color(0.5, 0.1, 0.8, 1, 125, 55, 225)
+                player.LaserColor = Color(0.5, 0.1, 0.8, 1, 125, 55, 225)
+                entities[i].Color = Color(0.5, 0.1, 0.8, 1, 125, 55, 225)
+                entities[i].SplatColor = Color(0.5, 0.1, 0.8, 1, 125, 55, 225) 
+            end
+            if entities[i].Type == EntityType.ENTITY_TEAR and entities[i].Variant ~= Entities.BLIGHT_TEAR.variant then
+                local tear = entities[i]:ToTear()
+                local flags = tear.TearFlags
+                local sprite = tear:GetSprite()
+                if flags & 1<<57 ~= 0 then
+                    tear.TearFlags = tear.TearFlags | TearFlags.TEAR_SLOW
+                    tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
+                    sprite:Play("Shroom6")
+                    if tear.FrameCount == 0 then
+                        tear.Visible = false
+                    end
+                end
             end
         end
     end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.buttrotUpdate)
+
+function Exodus.getSize(scale, flags)
+    if flags & 1<<57 ~= 0 then
+        return 6
+    elseif scale < 0.675 then
+        return 1
+    elseif scale < 0.925 then
+        return 2
+    elseif scale < 1.175 then
+        return 3
+    elseif scale < 1.675 then
+        return 4
+    elseif scale < 2.175 then
+        return 5
+    else
+        return 6
+    end
+end
 
 function Exodus:buttrotTear(tear)
     local player = Isaac.GetPlayer(0)
@@ -3136,13 +3198,30 @@ function Exodus:buttrotTear(tear)
         if math.random(buttchance) == 1 then
             tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
             tear.CollisionDamage = tear.CollisionDamage + 2
+            local sprite = tear:GetSprite()
+            local flags = tear.TearFlags
+            local size = Exodus.getSize(tear.Scale, flags)
+            sprite:Play("Shroom" .. size)
         end
     end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, Exodus.buttrotTear)
 
+
+function Exodus:onBombInit(bomb)
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.BUTTROT) then
+        bomb:GetSprite():Load("gfx/blight_bomb.anm2", true)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_BOMB_INIT, Exodus.onBombInit)
+
+--<<<SLING + BUTTROT PRE_TEAR_COLLISION>>>--
+
 function Exodus:buttrotShatter(tear, target)
+    local player = Isaac.GetPlayer(0)
     if target:IsVulnerableEnemy() and tear.Variant == Entities.BLIGHT_TEAR.variant then
         game:ButterBeanFart(target.Position, 64, target, true)
         if not target:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
@@ -3154,6 +3233,9 @@ function Exodus:buttrotShatter(tear, target)
             arrow:GetData().parent = target
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
+    end
+    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) then
+        tear.CollisionDamage = player.Damage + (target.Mass // 5)
     end
 end
 
