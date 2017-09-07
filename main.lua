@@ -3253,7 +3253,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ladderUpdate)
 
 function Exodus:ladderCache(player, flag)
     if player:HasCollectible(CollectibleType.COLLECTIBLE_LADDER) and flag == CacheFlag.CACHE_SPEED then
-        player.Speed = player.Speed + 0.1
+        player.MoveSpeed = player.MoveSpeed + 0.1
     end
 end
 
