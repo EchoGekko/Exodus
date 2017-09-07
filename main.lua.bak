@@ -2089,25 +2089,25 @@ function Exodus:welcomeMatUpdate()
     
     if player:HasCollectible(ItemId.WELCOME_MAT) then
         if not ItemVariables.WELCOME_MAT.Placed then
-			ItemVariables.WELCOME_MAT.Placed = true
-			ItemVariables.WELCOME_MAT.AppearFrame = 0
+            ItemVariables.WELCOME_MAT.Placed = true
+            ItemVariables.WELCOME_MAT.AppearFrame = 0
             local mat = Isaac.Spawn(Entities.WELCOME_MAT.id, 0, 0, player.Position, Vector(0, 0), player)
             local sprite = mat:GetSprite()
             sprite:Play("Appear", false)
-			mat.Visible = false
+            mat.Visible = false
             
             ItemVariables.WELCOME_MAT.Position = mat.Position
             mat:Remove()
         elseif ItemVariables.WELCOME_MAT.AppearFrame ~= nil then
             local mat = Isaac.Spawn(Entities.WELCOME_MAT.id, 0, 0, ItemVariables.WELCOME_MAT.Position, Vector(0, 0), player)
             local sprite = mat:GetSprite()
-			ItemVariables.WELCOME_MAT.AppearFrame = ItemVariables.WELCOME_MAT.AppearFrame + 1
-			sprite:SetFrame("Appear", ItemVariables.WELCOME_MAT.AppearFrame)
+            ItemVariables.WELCOME_MAT.AppearFrame = ItemVariables.WELCOME_MAT.AppearFrame + 1
+            sprite:SetFrame("Appear", ItemVariables.WELCOME_MAT.AppearFrame)
 
-			for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+            for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
                 local door = room:GetDoor(i)
                 
-				if (door ~= nil) then
+                if (door ~= nil) then
                     if (player.Position:DistanceSquared(door.Position) <= 100^2) then
                         ItemVariables.WELCOME_MAT.Direction = door.Direction
                     end
@@ -2121,15 +2121,15 @@ function Exodus:welcomeMatUpdate()
             elseif ItemVariables.WELCOME_MAT.Direction == Direction.RIGHT then
                 sprite.Rotation = sprite.Rotation + 270
             end
-			if ItemVariables.WELCOME_MAT.AppearFrame <= 3 then
-				mat:Remove()
-			elseif ItemVariables.WELCOME_MAT.AppearFrame == 11 then
-				mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
-				ItemVariables.WELCOME_MAT.AppearFrame = nil
-			else
-				mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
-			end
-		end
+            if ItemVariables.WELCOME_MAT.AppearFrame <= 3 then
+                mat:Remove()
+            elseif ItemVariables.WELCOME_MAT.AppearFrame == 11 then
+                mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+                ItemVariables.WELCOME_MAT.AppearFrame = nil
+            else
+                mat:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
+            end
+        end
     end
 end
 

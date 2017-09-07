@@ -3110,7 +3110,6 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.queenBeeUpdate)
 
 --<<<BUTTROT>>>--
-
 function Exodus:buttrotUpdate()
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(ItemId.BUTTROT) then
@@ -3219,7 +3218,6 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_BOMB_INIT, Exodus.onBombInit)
 
 --<<<SLING + BUTTROT PRE_TEAR_COLLISION>>>--
-
 function Exodus:buttrotShatter(tear, target)
     local player = Isaac.GetPlayer(0)
     if target:IsVulnerableEnemy() and tear.Variant == Entities.BLIGHT_TEAR.variant then
@@ -3240,6 +3238,26 @@ function Exodus:buttrotShatter(tear, target)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, Exodus.buttrotShatter)
+
+--<<<THE LADDER>>>--
+function Exodus:ladderUpdate()
+    local player = Isaac.GetPlayer(0)
+
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_LADDER) then
+        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+        player:EvaluateItems()
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ladderUpdate)
+
+function Exodus:ladderCache(player, flag)
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_LADDER) and flag == CacheFlag.CACHE_SPEED then
+        player.Speed = player.Speed + 0.1
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.ladderCache)
 
 --<<<WIN STREAK>>>--
 function Exodus.setScoreDisplay()
