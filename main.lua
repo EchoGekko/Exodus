@@ -191,6 +191,7 @@ function Exodus:newGame(fromSave)
             GLUTTONYS_STOMACH = { Parts = 0 },
             ASTRO_BABY = { UsedBox = 0 },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
+			MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
             CLAUSTROPHOBIA = { HasClaustrophobia = false, Triggered = false },
             DADS_BOOTS = { HasDadsBoots = false,
@@ -2150,7 +2151,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.welcomeMatNewLevel)
 function Exodus:welcomeMatCache(player, flag)
     if ItemVariables.WELCOME_MAT.Position ~= nil then
         if flag == CacheFlag.CACHE_FIREDELAY and player:HasCollectible(ItemId.WELCOME_MAT) and ItemVariables.WELCOME_MAT.CloseToMat then
-            player.MaxFireDelay = player.MaxFireDelay - 4
+            player.MaxFireDelay = player.MaxFireDelay - 3
         end
     end
 end
@@ -3232,7 +3233,7 @@ function Exodus:buttrotShatter(tear, target)
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
     end
-    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) then
+    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and target.Mass > 5 then
         tear.CollisionDamage = player.Damage + (target.Mass // 5)
     end
 end
@@ -3258,6 +3259,17 @@ function Exodus:ladderCache(player, flag)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.ladderCache)
+
+--<<<MOLDY BREAD>>>--
+function Exodus:breadUpdate()
+    local player = Isaac.GetPlayer(0)
+	if player:HasCollectible(CollectibleType.COLLECTIBLE_MOLDY_BREAD) and not ItemVariables.MOLDY_BREAD.GotFlies then
+		player:AddBlueFlies(20, player.Position, player)
+		ItemVariables.MOLDY_BREAD.GotFlies = true
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.breadUpdate)
 
 --<<<WIN STREAK>>>--
 function Exodus.setScoreDisplay()
