@@ -2176,7 +2176,7 @@ function Exodus:yinyangCache(player, flag)
         heartmap = heartmap - 2^(math.floor(math.log(heartmap) / math.log(2)))
         blackhearts = blackhearts + 1
     end
-    local soulhearts = player:GetSoulHearts() - blackhearts
+    local soulhearts = player:GetSoulHearts() - (blackhearts * 2)
 	Isaac.DebugString("Soul: " .. tostring(soulhearts))
 	Isaac.DebugString("Black: " .. tostring(blackhearts))
     if flag == CacheFlag.CACHE_FIREDELAY and player:HasCollectible(ItemId.YIN) then

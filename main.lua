@@ -2177,8 +2177,6 @@ function Exodus:yinyangCache(player, flag)
         blackhearts = blackhearts + 1
     end
     local soulhearts = player:GetSoulHearts() - (blackhearts * 2)
-	Isaac.DebugString("Soul: " .. tostring(soulhearts))
-	Isaac.DebugString("Black: " .. tostring(blackhearts))
     if flag == CacheFlag.CACHE_FIREDELAY and player:HasCollectible(ItemId.YIN) then
         if player:HasCollectible(ItemId.YANG) then
             player.MaxFireDelay = player.MaxFireDelay - blackhearts
