@@ -68,8 +68,8 @@
         <img src="../Exodus/images/Sad Tears.png"></img>
         <span>
     <p class="item-title">Sad Tears</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 531</p>
+    <p class="pickup">"Even they are crying"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -83,8 +83,8 @@
         <img src="../Exodus/images/Busted Pipe.png"></img>
         <span>
     <p class="item-title">Busted Pipe</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 532</p>
+    <p class="pickup">"Leaky tears"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -98,8 +98,8 @@
         <img src="../Exodus/images/Unholy Mantle.png"></img>
         <span>
     <p class="item-title">Unholy Mantle</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 533</p>
+    <p class="pickup">"Satanic defence"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -110,11 +110,11 @@
 </li>
 <li class="textbox">
     <a>
-        <img src="../Exodus/images/Tech Y.png"></img>
+        <img src="../Exodus/images/TechY.png"></img>
         <span>
-    <p class="item-title">TechY</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="item-title">Tech Y</p>
+    <p class="r-itemid">ItemID: 534</p>
+    <p class="pickup">"Tech bubble"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -128,8 +128,8 @@
         <img src="../Exodus/images/Paper Cut.png"></img>
         <span>
     <p class="item-title">Paper Cut</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 535</p>
+    <p class="pickup">"Ouch!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -143,8 +143,8 @@
         <img src="../Exodus/images/Forget Me Later.png"></img>
         <span>
     <p class="item-title">Forget Me Later</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 536</p>
+    <p class="pickup">"I still can't remember"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -158,8 +158,8 @@
         <img src="../Exodus/images/Dragon Breath.png"></img>
         <span>
     <p class="item-title">Dragon Breath</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 537</p>
+    <p class="pickup">"Charged fireballs"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -173,8 +173,8 @@
         <img src="../Exodus/images/Win Streak.png"></img>
         <span>
     <p class="item-title">Win Streak</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 538</p>
+    <p class="pickup">"Highscore!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -188,8 +188,8 @@
         <img src="../Exodus/images/Pig Blood.png"></img>
         <span>
     <p class="item-title">Pig Blood</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 539</p>
+    <p class="pickup">"Tastes like apples"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -203,8 +203,8 @@
         <img src="../Exodus/images/Dad's Boots.png"></img>
         <span>
     <p class="item-title">Dad's Boots</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 540</p>
+    <p class="pickup">"Squish"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -218,8 +218,8 @@
         <img src="../Exodus/images/Mysterious Mustache.png"></img>
         <span>
     <p class="item-title">Mysterious Mustache</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 541</p>
+    <p class="pickup">"Where did it come from?"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -233,8 +233,8 @@
         <img src="../Exodus/images/Cursed Metronome.png"></img>
         <span>
     <p class="item-title">Cursed Metronome</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 542</p>
+    <p class="pickup">"Tock tick"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -248,8 +248,8 @@
         <img src="../Exodus/images/Big Scissors.png"></img>
         <span>
     <p class="item-title">Big Scissors</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 543</p>
+    <p class="pickup">"Running with them!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -263,8 +263,8 @@
         <img src="../Exodus/images/Welcome Mat.png"></img>
         <span>
     <p class="item-title">Welcome Mat</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 544</p>
+    <p class="pickup">"No place like home"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -278,8 +278,8 @@
         <img src="../Exodus/images/Gluttony's Stomach.png"></img>
         <span>
     <p class="item-title">Gluttony's Stomach</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 545</p>
+    <p class="pickup">"Rewards overeating"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -293,8 +293,8 @@
         <img src="../Exodus/images/Possessed Bombs.png"></img>
         <span>
     <p class="item-title">Possessed Bombs</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 546</p>
+    <p class="pickup">"Controlled bombs"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -308,23 +308,8 @@
         <img src="../Exodus/images/Buttrot.png"></img>
         <span>
     <p class="item-title">Buttrot</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
-    <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
-    <ul>
-        <p>Type: Passive</p>
-        <p>Item Pool: Item Room</p>
-    </ul>
-    </span>
-    </a>
-</li>
-<li class="textbox">
-    <a>
-        <img src="../Exodus/images/Claustrophobia.png"></img>
-        <span>
-    <p class="item-title">Claustrophobia</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 547</p>
+    <p class="pickup">"Blight shot"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -338,8 +323,38 @@
         <img src="../Exodus/images/Sling.png"></img>
         <span>
     <p class="item-title">Sling</p>
-    <p class="r-itemid">ItemID: 530</p>
-    <p class="pickup">"Swarm tears + sticky honey!"</p>
+    <p class="r-itemid">ItemID: 548</p>
+    <p class="pickup">"Size matters"</p>
+    <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
+    <ul>
+        <p>Type: Passive</p>
+        <p>Item Pool: Item Room</p>
+    </ul>
+    </span>
+    </a>
+</li>
+<li class="textbox">
+    <a>
+        <img src="../Exodus/images/Yin.png"></img>
+        <span>
+    <p class="item-title">Yin</p>
+    <p class="r-itemid">ItemID: 549</p>
+    <p class="pickup">"Negativity"</p>
+    <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
+    <ul>
+        <p>Type: Passive</p>
+        <p>Item Pool: Item Room</p>
+    </ul>
+    </span>
+    </a>
+</li>
+<li class="textbox">
+    <a>
+        <img src="../Exodus/images/Yang.png"></img>
+        <span>
+    <p class="item-title">Yang</p>
+    <p class="r-itemid">ItemID: 550</p>
+    <p class="pickup">"Positivity"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
         <p>Type: Passive</p>
@@ -353,7 +368,7 @@
         <img src="../Exodus/images/The Forbidden Fruit.png"></img>
         <span>
     <p class="item-title">The Forbidden Fruit</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 551</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -368,7 +383,7 @@
         <img src="../Exodus/images/Wrath of the Lamb.png"></img>
         <span>
     <p class="item-title">Wrath of the Lamb</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 552</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -383,7 +398,7 @@
         <img src="../Exodus/images/Birdbath.png"></img>
         <span>
     <p class="item-title">Birdbath</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 553</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -398,7 +413,7 @@
         <img src="../Exodus/images/Ominous Lantern.png"></img>
         <span>
     <p class="item-title">Ominous Lantern</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 554</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -413,7 +428,7 @@
         <img src="../Exodus/images/Baseball Mitt.png"></img>
         <span>
     <p class="item-title">Baseball Mitt</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 555</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -428,7 +443,7 @@
         <img src="../Exodus/images/The Pseudobulbar Affect.png"></img>
         <span>
     <p class="item-title">The Pseudobulbar Affect</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 556</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -443,7 +458,7 @@
         <img src="../Exodus/images/Mutant Clover.png"></img>
         <span>
     <p class="item-title">Mutant Clover</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 557</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -458,7 +473,7 @@
         <img src="../Exodus/images/Tragic Mushroom.png"></img>
         <span>
     <p class="item-title">Tragic Mushroom</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 558</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -473,7 +488,7 @@
         <img src="../Exodus/images/Anamnesis.png"></img>
         <span>
     <p class="item-title">Anamnesis</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 559</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -488,7 +503,7 @@
         <img src="../Exodus/images/Hungry Hippo.png"></img>
         <span>
     <p class="item-title">Hungry Hippo</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 560</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -503,7 +518,7 @@
         <img src="../Exodus/images/Ritual Candle.png"></img>
         <span>
     <p class="item-title">Ritual Candle</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 561</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -518,7 +533,7 @@
         <img src="../Exodus/images/Astro Baby.png"></img>
         <span>
     <p class="item-title">Astro Baby</p>
-    <p class="r-itemid">ItemID: 530</p>
+    <p class="r-itemid">ItemID: 562</p>
     <p class="pickup">"Swarm tears + sticky honey!"</p>
     <p>&#8226; Turns your tears into bees that wiggle around and home in on enemies.</p>
     <ul>
@@ -549,9 +564,9 @@
 
 <li class="textbox">
   <a>
-    <img src="../Exodus/images/Grid Worm.png"></img>
+    <img src="../Exodus/images/Burlap Sack.png"></img>
     <span>
-      <p class="item-title">Grid Worm</p>
+      <p class="item-title">Burlap Sack</p>
       <p class="r-itemid">TrinketID: 125</p>
       <p class="pickup">"Eeek Ooop"</p>
       <p>&#8226; Your tears align with the grid.</p>
@@ -562,9 +577,9 @@
 
 <li class="textbox">
   <a>
-    <img src="../Exodus/images/Grid Worm.png"></img>
+    <img src="../Exodus/images/Sturdy Stone.png"></img>
     <span>
-      <p class="item-title">Grid Worm</p>
+      <p class="item-title">Sturdy Stone</p>
       <p class="r-itemid">TrinketID: 125</p>
       <p class="pickup">"Eeek Ooop"</p>
       <p>&#8226; Your tears align with the grid.</p>
@@ -575,9 +590,9 @@
 
 <li class="textbox">
   <a>
-    <img src="../Exodus/images/Grid Worm.png"></img>
+    <img src="../Exodus/images/Rotten Penny.png"></img>
     <span>
-      <p class="item-title">Grid Worm</p>
+      <p class="item-title">Rotten Penny</p>
       <p class="r-itemid">TrinketID: 125</p>
       <p class="pickup">"Eeek Ooop"</p>
       <p>&#8226; Your tears align with the grid.</p>
@@ -588,9 +603,9 @@
 
 <li class="textbox">
   <a>
-    <img src="../Exodus/images/Grid Worm.png"></img>
+    <img src="../Exodus/images/Purple Moon.png"></img>
     <span>
-      <p class="item-title">Grid Worm</p>
+      <p class="item-title">Purple Moon</p>
       <p class="r-itemid">TrinketID: 125</p>
       <p class="pickup">"Eeek Ooop"</p>
       <p>&#8226; Your tears align with the grid.</p>
@@ -601,9 +616,9 @@
 
 <li class="textbox">
   <a>
-    <img src="../Exodus/images/Grid Worm.png"></img>
+    <img src="../Exodus/images/Broken Glasses.png"></img>
     <span>
-      <p class="item-title">Grid Worm</p>
+      <p class="item-title">Broken Glasses</p>
       <p class="r-itemid">TrinketID: 125</p>
       <p class="pickup">"Eeek Ooop"</p>
       <p>&#8226; Your tears align with the grid.</p>
@@ -614,9 +629,9 @@
 
 <li class="textbox">
   <a>
-    <img src="../Exodus/images/Grid Worm.png"></img>
+    <img src="../Exodus/images/Bombs Soul.png"></img>
     <span>
-      <p class="item-title">Grid Worm</p>
+      <p class="item-title">Bombs Soul</p>
       <p class="r-itemid">TrinketID: 125</p>
       <p class="pickup">"Eeek Ooop"</p>
       <p>&#8226; Your tears align with the grid.</p>
@@ -624,6 +639,20 @@
     </span>
   </a>
 </li>
+
+<li class="textbox">
+  <a>
+    <img src="../Exodus/images/Claustrophobia.png"></img>
+    <span>
+      <p class="item-title">Claustrophobia</p>
+      <p class="r-itemid">TrinketID: 125</p>
+      <p class="pickup">"Eeek Ooop"</p>
+      <p>&#8226; Your tears align with the grid.</p>
+	  <p>&#8226; This allows your tears to go around rocks, poop, and other gridded objects.</p>
+    </span>
+  </a>
+</li>
+
 </div>
 
 <div class="tarot-container rebirth rhide">
