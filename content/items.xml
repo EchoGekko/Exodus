@@ -18,8 +18,9 @@
 	<passive description="Rewards overeating" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png"/>
 	<passive description="Controlled bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
 	<passive description="Blight shot" name="Buttrot" gfx="Buttrot.png" />
-	<passive description="Close quarters" name="Claustrophobia" gfx="Claustrophobia.png" />
 	<passive description="Size matters" name="Sling" gfx="Sling.png" />
+	<passive description="Negativity" name="Yin" gfx="Yin.png" cache="firedelay" />
+	<passive description="Positivity" name="Yang" gfx="Yang.png" cache="damage" />
 	
 	<!-- Active Items -->
 	<active description="Tree of knowledge" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
@@ -45,4 +46,5 @@
 	<trinket description="It's a secret" gfx="Purple Moon.png" name="Purple Moon"/>
 	<trinket description="Waht si ahpepinn?g" gfx="Broken Glasses.png" name="Broken Glasses" />
 	<trinket description="Booooo-OOM!" gfx="Bombs Soul.png" name="Bomb's Soul" />
+	<trinket description="Close quarters" gfx="Claustrophobia.png" name="Claustrophobia" />
 </items> 

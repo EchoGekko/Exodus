@@ -38,8 +38,9 @@ local ItemId = {
     GLUTTONYS_STOMACH = Isaac.GetItemIdByName("Gluttony's Stomach"),
     POSSESSED_BOMBS = Isaac.GetItemIdByName("Possessed Bombs"),
     BUTTROT = Isaac.GetItemIdByName("Buttrot"),
-    CLAUSTROPHOBIA = Isaac.GetItemIdByName("Claustrophobia"),
     SLING = Isaac.GetItemIdByName("Sling"),
+    YIN = Isaac.GetItemIdByName("Yin"),
+    YANG = Isaac.GetItemIdByName("Yang"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -64,7 +65,8 @@ local ItemId = {
     ROTTEN_PENNY = Isaac.GetTrinketIdByName("Rotten Penny"),
     PURPLE_MOON = Isaac.GetTrinketIdByName("Purple Moon"),
     BROKEN_GLASSES = Isaac.GetTrinketIdByName("Broken Glasses"),
-    BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul")
+    BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul"),
+    CLAUSTROPHOBIA = Isaac.GetTrinketIdByName("Claustrophobia")
 }
 
 local function getEntity(stringName, intSubtype)
@@ -191,9 +193,9 @@ function Exodus:newGame(fromSave)
             GLUTTONYS_STOMACH = { Parts = 0 },
             ASTRO_BABY = { UsedBox = 0 },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
-			MOLDY_BREAD = { GotFlies = false },
+            MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
-            CLAUSTROPHOBIA = { HasClaustrophobia = false, Triggered = false },
+            CLAUSTROPHOBIA = { Triggered = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -1474,6 +1476,71 @@ function Exodus:trinketCache(player, flag)
     if player:HasTrinket(ItemId.GRID_WORM) and flag == CacheFlag.CACHE_RANGE then
         player.TearFallingSpeed = 10
     end
+
+    --<<CLAUSTROPHOBIA>>--
+    if player:HasTrinket(ItemId.CLAUSTROPHOBIA) and player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+        if flag == CacheFlag.CACHE_SPEED then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.MoveSpeed = player.MoveSpeed + 0.5
+            end
+        end
+        if flag == CacheFlag.CACHE_FIREDELAY then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.MaxFireDelay = player.MaxFireDelay - 4
+            end
+        end
+        if flag == CacheFlag.CACHE_DAMAGE then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.Damage = player.Damage + 4
+            end
+        end
+        if flag == CacheFlag.CACHE_LUCK then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.Luck = player.Luck + 2
+            end
+        end
+        if flag == CacheFlag.CACHE_SHOTSPEED then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.ShotSpeed = player.ShotSpeed + 0.3
+            end
+        end
+        if flag == CacheFlag.CACHE_RANGE then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.TearHeight = player.TearHeight - 3
+            end
+        end
+    elseif player:HasTrinket(ItemId.CLAUSTROPHOBIA) then
+        if flag == CacheFlag.CACHE_SPEED then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.MoveSpeed = player.MoveSpeed + 0.4
+            end
+        end
+        if flag == CacheFlag.CACHE_FIREDELAY then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.MaxFireDelay = player.MaxFireDelay - 3
+            end
+        end
+        if flag == CacheFlag.CACHE_DAMAGE then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.Damage = player.Damage + 3
+            end
+        end
+        if flag == CacheFlag.CACHE_LUCK then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.Luck = player.Luck + 1
+            end
+        end
+        if flag == CacheFlag.CACHE_SHOTSPEED then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.ShotSpeed = player.ShotSpeed + 0.2
+            end
+        end
+        if flag == CacheFlag.CACHE_RANGE then
+            if ItemVariables.CLAUSTROPHOBIA.Triggered then
+                player.TearHeight = player.TearHeight - 2.5
+            end
+        end
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.trinketCache)
@@ -1509,7 +1576,27 @@ function Exodus:trinketNewRoom()
                 Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, Isaac.GetFreeNearPosition(room:GetCenterPos(), 7), NullVector, nil)
             end
         end
-    end 
+    end
+
+    if room:GetRoomShape() == RoomShape.ROOMSHAPE_IH or room:GetRoomShape() == RoomShape.ROOMSHAPE_IIH or room:GetRoomShape() == RoomShape.ROOMSHAPE_IV or room:GetRoomShape() == RoomShape.ROOMSHAPE_IIV then
+        ItemVariables.CLAUSTROPHOBIA.Triggered = true
+        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+        player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+        player:EvaluateItems()
+    else
+        ItemVariables.CLAUSTROPHOBIA.Triggered = false
+        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+        player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+        player:EvaluateItems()
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.trinketNewRoom) 
@@ -2069,6 +2156,47 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.pigBloodUpdate)
 
+--<<<YIN AND YANG>>>--
+
+function Exodus:yinyangUpdate()
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.YIN) or player:HasCollectible(ItemId.YANG) then
+        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+        player:EvaluateItems()
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.yinyangUpdate)
+
+function Exodus:yinyangCache(player, flag)
+    local heartmap = player:GetBlackHearts()
+    local blackhearts = 0
+    while heartmap > 0 do
+        heartmap = heartmap - 2^(math.floor(math.log(heartmap) / math.log(2)))
+        blackhearts = blackhearts + 1
+    end
+    local soulhearts = player:GetSoulHearts() - blackhearts
+	Isaac.DebugString("Soul: " .. tostring(soulhearts))
+	Isaac.DebugString("Black: " .. tostring(blackhearts))
+    if flag == CacheFlag.CACHE_FIREDELAY and player:HasCollectible(ItemId.YIN) then
+        if player:HasCollectible(ItemId.YANG) then
+            player.MaxFireDelay = player.MaxFireDelay - blackhearts
+        else
+            player.MaxFireDelay = player.MaxFireDelay - blackhearts + (soulhearts / 2)
+        end
+    end
+    if flag == CacheFlag.CACHE_DAMAGE and player:HasCollectible(ItemId.YANG) then
+        if player:HasCollectible(ItemId.YIN) then
+            player.Damage = player.Damage + (soulhearts / 2)
+        else
+            player.Damage = player.Damage + (soulhearts / 2) - blackhearts
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.yinyangCache)
+
 --<<<WELCOME MAT>>>--
 function Exodus:welcomeMatUpdate()
     local player = Isaac.GetPlayer(0)
@@ -2151,7 +2279,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.welcomeMatNewLevel)
 function Exodus:welcomeMatCache(player, flag)
     if ItemVariables.WELCOME_MAT.Position ~= nil then
         if flag == CacheFlag.CACHE_FIREDELAY and player:HasCollectible(ItemId.WELCOME_MAT) and ItemVariables.WELCOME_MAT.CloseToMat then
-            player.MaxFireDelay = player.MaxFireDelay - 4
+            player.MaxFireDelay = player.MaxFireDelay - 3
         end
     end
 end
@@ -2410,81 +2538,6 @@ function Exodus:bigScissorsCache(player, flag)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.bigScissorsCache)
-
---<<<CLAUSTROPHOBIA>>>--
-function Exodus:claustrophobiaUpdate()
-    local player = Isaac.GetPlayer(0)
-
-    if player:HasCollectible(ItemId.CLAUSTROPHOBIA) then
-        ItemVariables.CLAUSTROPHOBIA.HasClaustrophobia = true
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.claustrophobiaUpdate)
-
-function Exodus:claustrophobiaNewRoom()
-    local player = Isaac.GetPlayer(0)
-    local room = game:GetRoom()
-
-    if room:GetRoomShape() == RoomShape.ROOMSHAPE_IH or room:GetRoomShape() == RoomShape.ROOMSHAPE_IIH or room:GetRoomShape() == RoomShape.ROOMSHAPE_IV or room:GetRoomShape() == RoomShape.ROOMSHAPE_IIV then
-        ItemVariables.CLAUSTROPHOBIA.Triggered = true
-        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
-        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
-        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
-        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
-        player:AddCacheFlags(CacheFlag.CACHE_RANGE)
-        player:EvaluateItems()
-    else
-        ItemVariables.CLAUSTROPHOBIA.Triggered = false
-        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
-        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
-        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
-        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
-        player:AddCacheFlags(CacheFlag.CACHE_RANGE)
-        player:EvaluateItems()
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.claustrophobiaNewRoom)
-
-function Exodus:claustrophobiaCache(player, flag)
-    if player:HasCollectible(ItemId.CLAUSTROPHOBIA) then
-        if flag == CacheFlag.CACHE_SPEED then
-            if ItemVariables.CLAUSTROPHOBIA.Triggered then
-                player.MoveSpeed = player.MoveSpeed + 0.4
-            end
-        end
-        if flag == CacheFlag.CACHE_FIREDELAY then
-            if ItemVariables.CLAUSTROPHOBIA.Triggered then
-                player.MaxFireDelay = player.MaxFireDelay - 3
-            end
-        end
-        if flag == CacheFlag.CACHE_DAMAGE then
-            if ItemVariables.CLAUSTROPHOBIA.Triggered then
-                player.Damage = player.Damage + 3
-            end
-        end
-        if flag == CacheFlag.CACHE_LUCK then
-            if ItemVariables.CLAUSTROPHOBIA.Triggered then
-                player.Luck = player.Luck + 1
-            end
-        end
-        if flag == CacheFlag.CACHE_SHOTSPEED then
-            if ItemVariables.CLAUSTROPHOBIA.Triggered then
-                player.ShotSpeed = player.ShotSpeed + 0.2
-            end
-        end
-        if flag == CacheFlag.CACHE_RANGE then
-            if ItemVariables.CLAUSTROPHOBIA.Triggered then
-                player.TearHeight = player.TearHeight - 2.5
-            end
-        end
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.claustrophobiaCache)
   
 --<<<CURSED METRONOME>>>--
 function Exodus:cursedMetronomeUpdate()
@@ -3263,10 +3316,10 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.ladderCache)
 --<<<MOLDY BREAD>>>--
 function Exodus:breadUpdate()
     local player = Isaac.GetPlayer(0)
-	if player:HasCollectible(CollectibleType.COLLECTIBLE_MOLDY_BREAD) and not ItemVariables.MOLDY_BREAD.GotFlies then
-		player:AddBlueFlies(20, player.Position, player)
-		ItemVariables.MOLDY_BREAD.GotFlies = true
-	end
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_MOLDY_BREAD) and not ItemVariables.MOLDY_BREAD.GotFlies then
+        player:AddBlueFlies(20, player.Position, player)
+        ItemVariables.MOLDY_BREAD.GotFlies = true
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.breadUpdate)

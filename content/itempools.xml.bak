@@ -17,6 +17,8 @@
 		<Item Name="Mutant Clover" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Hungry Hippo" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Astro Baby" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Buttrot" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Claustrophobia" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop">
 		<Item Name="Win Streak" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>

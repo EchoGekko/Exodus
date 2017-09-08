@@ -16,9 +16,8 @@
 	<passive description="Running with them!" name="Big Scissors" gfx="Big Scissors.png" cache="speed"/>
 	<passive description="No place like home" name="Welcome Mat" gfx="Welcome Mat.png"/>
 	<passive description="Rewards overeating" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png"/>
-	<passive description="DESCRIPTION HERE" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
+	<passive description="Controlled bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
 	<passive description="Blight shot" name="Buttrot" gfx="Buttrot.png" />
-	<passive description="Close quarters" name="Claustrophobia" gfx="Claustrophobia.png" />
 	<passive description="Size matters" name="Sling" gfx="Sling.png" />
 	
 	<!-- Active Items -->
@@ -45,4 +44,5 @@
 	<trinket description="It's a secret" gfx="Purple Moon.png" name="Purple Moon"/>
 	<trinket description="Waht si ahpepinn?g" gfx="Broken Glasses.png" name="Broken Glasses" />
 	<trinket description="Booooo-OOM!" gfx="Bombs Soul.png" name="Bomb's Soul" />
+	<trinket description="Close quarters" gfx="Claustrophobia.png" name="Claustrophobia" />
 </items> 
