@@ -3305,9 +3305,7 @@ function Exodus:slingRender()
         
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY) then
-				Isaac.DebugString("SpriteScale: " .. entity.SpriteScale.Y)
-				Isaac.DebugString("SpriteScale 2: " .. entity.SpriteScale.Y * 2)
-                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * 2)), NullVector, NullVector)
+                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size)), NullVector, NullVector)
             end
         end
     end

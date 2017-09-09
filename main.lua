@@ -20,7 +20,7 @@ local ProjectileVariant = {
 
 local ItemId = {
     ---<<PASSIVES>>---
-    QUEEN_BEE = Isaac.GetItemIdByName("Queen Bee"),
+    BEEHIVE = Isaac.GetItemIdByName("Beehive"),
     SAD_TEARS = Isaac.GetItemIdByName("Sad Tears"),
     BUSTED_PIPE = Isaac.GetItemIdByName("Busted Pipe"),
     UNHOLY_MANTLE = Isaac.GetItemIdByName("Unholy Mantle"),
@@ -148,7 +148,7 @@ for i, entity in pairs(Entities) do
 end
 
 local CostumeId = {
-    QUEEN_BEE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Queen Bee.anm2"),
+    BEEHIVE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Beehive.anm2"),
     BUSTED_PIPE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Busted Pipe.anm2"),
     UNHOLY_MANTLE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Unholy Mantle.anm2"),
     TECH_Y = Isaac.GetCostumeIdByPath("gfx/characters/costume_TechY.anm2"),
@@ -176,7 +176,7 @@ function Exodus:newGame(fromSave)
     if not fromSave then
         ItemVariables = {
             ---<<PASSIVES>>---
-            QUEEN_BEE = { HasQueenBee = false, ColourIsBlack = false },
+            BEEHIVE = { HasBeehive = false, ColourIsBlack = false },
             BUSTED_PIPE = { HasBustedPipe = false },
             UNHOLY_MANTLE = { HasUnholyMantle = false, HasEffect = true },
             TECH_Y = { HasTechY = false },
@@ -570,7 +570,7 @@ function Exodus:GetTechYSize()
     local size = 1
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.QUEEN_BEE) then
+    if player:HasCollectible(ItemId.BEEHIVE) then
         size = math.random(-3, 5)
     end
     
@@ -3049,19 +3049,19 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.bustedPipeUpdate)
   
---<<<QUEEN BEE>>>--
-function Exodus:queenBeeUpdate()
+--<<<BEE HIVE>>>--
+function Exodus:beehiveUpdate()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.QUEEN_BEE) then
+    if player:HasCollectible(ItemId.BEEHIVE) then
         if player.FrameCount % (math.random(14, 16)) == 0 then
             local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_BLACK, 0, player.Position, NullVector, player)
             creep:SetColor(Color(0, 0, 0, 1, math.random(200, 250), math.random(150, 200), math.random(0, 10)), -1, 1, false, false)
         end
         
-        if not ItemVariables.QUEEN_BEE.HasQueenBee then
-            player:AddNullCostume(CostumeId.QUEEN_BEE)
-            ItemVariables.QUEEN_BEE.HasQueenBee = true
+        if not ItemVariables.BEEHIVE.HasBeehive then
+            player:AddNullCostume(CostumeId.BEEHIVE)
+            ItemVariables.BEEHIVE.HasBeehive = true
         end
         
         player.TearFallingAcceleration = -0.1
@@ -3081,14 +3081,14 @@ function Exodus:queenBeeUpdate()
         end
         
         if player.FrameCount % 5 == 0 or game:GetRoom():GetFrameCount() == 1 then
-            if ItemVariables.QUEEN_BEE.ColourIsBlack then
+            if ItemVariables.BEEHIVE.ColourIsBlack then
                 player.TearColor = Color(0.1, 0.1, 0.1, 1, 0, 0, 0)
                 player.LaserColor = Color(0.1, 0.1, 0.1, 1, 0, 0, 0)
-                ItemVariables.QUEEN_BEE.ColourIsBlack = false
+                ItemVariables.BEEHIVE.ColourIsBlack = false
             else
                 player.TearColor = Color(1, 1, 0, 1, 0, 0, 0)
                 player.LaserColor = Color(1, 1, 0, 1, 0, 0, 0)
-                ItemVariables.QUEEN_BEE.ColourIsBlack = true
+                ItemVariables.BEEHIVE.ColourIsBlack = true
             end
         end
         
@@ -3107,7 +3107,7 @@ function Exodus:queenBeeUpdate()
             end
             
             if entity.Type == EntityType.ENTITY_LASER and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant ~= 5 then
-                if ItemVariables.QUEEN_BEE.ColourIsBlack then
+                if ItemVariables.BEEHIVE.ColourIsBlack then
                     entity.Color = Color(0, 0, 0, 1, 0, 0, 0)
                     entity.SplatColor = Color(0, 0, 0, 1, 0, 0, 0) 
                 else
@@ -3157,13 +3157,13 @@ function Exodus:queenBeeUpdate()
                 end
             end
         end
-    elseif ItemVariables.QUEEN_BEE.HasQueenBee then
-        ItemVariables.QUEEN_BEE.HasQueenBee = false
-        player:TryRemoveNullCostume(CostumeId.QUEEN_BEE)
+    elseif ItemVariables.BEEHIVE.HasBeehive then
+        ItemVariables.BEEHIVE.HasBeehive = false
+        player:TryRemoveNullCostume(CostumeId.BEEHIVE)
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.queenBeeUpdate)
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.beehiveUpdate)
 
 --<<<BUTTROT>>>--
 function Exodus:buttrotUpdate()

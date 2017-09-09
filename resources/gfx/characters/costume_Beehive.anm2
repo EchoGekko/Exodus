@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="micromario" CreatedOn="05/02/2017 23:57:29" Version="107" Fps="30"/>
+	<Info CreatedBy="micromario" CreatedOn="9/9/2017 5:36:04 PM" Version="108" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="costumes\costume_Queen Bee.png" Id="0"/>
+			<Spritesheet Path="costumes\costume_Beehive.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="head0" Id="0" SpritesheetId="0"/>
