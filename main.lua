@@ -196,6 +196,7 @@ function Exodus:newGame(fromSave)
             MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
             CLAUSTROPHOBIA = { Triggered = false },
+			SLING = { Icon = Sprite() },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -262,6 +263,9 @@ function Exodus:newGame(fromSave)
         }
         ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Load("gfx/effects/Pseudobulbar Icon.anm2", true)
         ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Play("Idle", true)
+
+        ItemVariables.SLING.Icon:Load("gfx/effects/Sling_marker_effect.anm2", true)
+        ItemVariables.SLING.Icon:Play("Idle", true)
         
         ItemVariables.CHARGE_BAR.Bar:Load("gfx/ui/ui_chargebar2.anm2", true)
         
@@ -3290,6 +3294,24 @@ function Exodus:buttrotShatter(tear, target)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, Exodus.buttrotShatter)
+
+function Exodus:slingRender()
+    local player = Isaac.GetPlayer(0)
+    
+    if player:HasCollectible(ItemId.SLING) then
+        ItemVariables.SLING.Icon.Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+        ItemVariables.SLING.Icon:Update()
+        ItemVariables.SLING.Icon:LoadGraphics()
+        
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY) then
+                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size)), NullVector, NullVector)
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.slingRender)
 
 --<<<THE LADDER>>>--
 function Exodus:ladderUpdate()
