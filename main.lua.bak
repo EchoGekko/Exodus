@@ -2181,7 +2181,7 @@ function Exodus:yinyangCache(player, flag)
         if player:HasCollectible(ItemId.YANG) then
             player.MaxFireDelay = player.MaxFireDelay - blackhearts
         else
-            player.MaxFireDelay = player.MaxFireDelay - blackhearts + math.floor(soulhearts / 2)
+            player.MaxFireDelay = player.MaxFireDelay - blackhearts + math.ceil(soulhearts / 2)
         end
     end
     if flag == CacheFlag.CACHE_DAMAGE and player:HasCollectible(ItemId.YANG) then

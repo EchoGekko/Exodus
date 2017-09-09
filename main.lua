@@ -3284,7 +3284,7 @@ function Exodus:buttrotShatter(tear, target)
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
     end
-    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and target.Size > 13 then
+    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY) then
         tear.CollisionDamage = player.Damage + (target.Size // 13)
     end
 end
