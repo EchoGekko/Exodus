@@ -2171,7 +2171,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.yinyangUpdate)
 
 function Exodus:yinyangCache(player, flag)
     local heartmap = player:GetBlackHearts()
-    local blackhearts = 0
+	local blackhearts = 0
     while heartmap > 0 do
         heartmap = heartmap - 2^(math.floor(math.log(heartmap) / math.log(2)))
         blackhearts = blackhearts + 1
@@ -2181,7 +2181,7 @@ function Exodus:yinyangCache(player, flag)
         if player:HasCollectible(ItemId.YANG) then
             player.MaxFireDelay = player.MaxFireDelay - blackhearts
         else
-            player.MaxFireDelay = player.MaxFireDelay - blackhearts + (soulhearts / 2)
+            player.MaxFireDelay = player.MaxFireDelay - blackhearts + math.ceil(soulhearts / 2)
         end
     end
     if flag == CacheFlag.CACHE_DAMAGE and player:HasCollectible(ItemId.YANG) then
@@ -3284,8 +3284,8 @@ function Exodus:buttrotShatter(tear, target)
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
     end
-    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and target.Mass > 5 then
-        tear.CollisionDamage = player.Damage + (target.Mass // 5)
+    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and target.Size > 13 then
+        tear.CollisionDamage = player.Damage + (target.Size // 13)
     end
 end
 
