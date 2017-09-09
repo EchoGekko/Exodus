@@ -35,7 +35,7 @@
 
 	<!-- Familiar Items -->
 	<familiar description="Yummy" gfx="Hungry Hippo.png" name="Hungry Hippo" cache="familiars"/>
-	<familiar description="Light it up" gfx="Ritual Candle.png" name="Ritual Candle" devilprice="2"/>
+	<familiar description="Light them up" gfx="Ritual Candle.png" name="Ritual Candle" devilprice="2"/>
 	<familiar description="Lil' planet" gfx="Astro Baby.png" name="Astro Baby" cache="familiars" />
 	
 	<!-- Trinkets -->
