@@ -196,7 +196,7 @@ function Exodus:newGame(fromSave)
             MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
             CLAUSTROPHOBIA = { Triggered = false },
-			SLING = { Icon = Sprite() },
+            SLING = { Icon = Sprite() },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -221,7 +221,7 @@ function Exodus:newGame(fromSave)
             },
             
             ---<<ACTIVES>>---
-            MUTANT_CLOVER = { Used = false },
+            MUTANT_CLOVER = { Used = 0 },
             TRAGIC_MUSHROOM = { Uses = 0 },
             FORBIDDEN_FRUIT = { UseCount = 0 },
             BASEBALL_MITT = { Used = false, Lifted = true, BallsCaught = 0, UseDelay = 0 },
@@ -2113,12 +2113,15 @@ function Exodus:forbiddenFruitUse()
         player:AddHearts(24)
         player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
         player:EvaluateItems()
-        
+
         if player:GetSoulHearts() > 4 or player:GetMaxHearts() > 2 then
-            if player:GetSoulHearts() == 0 then
-                player:AddMaxHearts(-2)
-            else
+            if player:GetMaxHearts() == 0 then
                 player:AddSoulHearts(-4)
+                if math.random(2) == 1 then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, 10, 7, Isaac.GetFreeNearPosition(player.Position), Vector(0, 0), player)
+                end
+            else
+                player:AddMaxHearts(-2)
             end
         else
             player:Die()
@@ -2175,7 +2178,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.yinyangUpdate)
 
 function Exodus:yinyangCache(player, flag)
     local heartmap = player:GetBlackHearts()
-	local blackhearts = 0
+    local blackhearts = 0
     while heartmap > 0 do
         heartmap = heartmap - 2^(math.floor(math.log(heartmap) / math.log(2)))
         blackhearts = blackhearts + 1
@@ -3447,7 +3450,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.winStreakRender)
 function Exodus:mutantCloverNewRoom()
     local player = Isaac.GetPlayer(0)
     
-    ItemVariables.MUTANT_CLOVER.Used = false
+    ItemVariables.MUTANT_CLOVER.Used = 0
     player:AddCacheFlags(CacheFlag.CACHE_LUCK)
     player:EvaluateItems()
 end
@@ -3455,9 +3458,9 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.mutantCloverNewRoom)
 
 function Exodus:mutantCloverCache(player, flag)
-    if player:HasCollectible(ItemId.MUTANT_CLOVER) and ItemVariables.MUTANT_CLOVER.Used then
+    if player:HasCollectible(ItemId.MUTANT_CLOVER) and ItemVariables.MUTANT_CLOVER.Used > 0 then
         if flag == CacheFlag.CACHE_LUCK then
-            player.Luck = player.Luck + 10
+            player.Luck = player.Luck + (10 * ItemVariables.MUTANT_CLOVER.Used)
         end
     end
 end
@@ -3466,7 +3469,7 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.mutantCloverCache)
 
 function Exodus:mutantCloverUse()
     local player = Isaac.GetPlayer(0)
-    ItemVariables.MUTANT_CLOVER.Used = true
+    ItemVariables.MUTANT_CLOVER.Used = ItemVariables.MUTANT_CLOVER.Used + 1
     player:AddCacheFlags(CacheFlag.CACHE_LUCK)
     player:EvaluateItems()
     
