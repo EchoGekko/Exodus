@@ -221,7 +221,7 @@ function Exodus:newGame(fromSave)
             },
             
             ---<<ACTIVES>>---
-            MUTANT_CLOVER = { Used = false },
+            MUTANT_CLOVER = { Used = 0 },
             TRAGIC_MUSHROOM = { Uses = 0 },
             FORBIDDEN_FRUIT = { UseCount = 0 },
             BASEBALL_MITT = { Used = false, Lifted = true, BallsCaught = 0, UseDelay = 0 },

@@ -8,7 +8,7 @@
 	<passive description="Ouch!" name="Paper Cut" gfx="Paper Cut.png"/>
 	<passive description="I still can't remember" name="Forget Me Later" gfx="Forget Me Later.png"/>
 	<passive description="Charged fireballs" name="Dragon Breath" gfx="Dragon Breath.png" cache="firedelay"/>
-	<passive description="Highscore!" name="Win Streak" gfx="Win Streak.png" cache="damage"/>
+	<passive description="Win streak" name="Cobalt Necklace" gfx="Cobalt Necklace.png" cache="damage"/>
 	<passive description="Tastes like apples" name="Pig Blood" gfx="Pig Blood.png"/>
 	<passive description="Squish" name="Dad's Boots" gfx="Dad's Boots.png" cache="speed"/>
 	<passive description="Where did it come from?" name="Mysterious Mustache" gfx="Mysterious Mustache.png"/>
