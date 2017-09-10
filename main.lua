@@ -3291,7 +3291,7 @@ function Exodus:buttrotShatter(tear, target)
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
     end
-    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY) and target.Type ~= EntityType.ENTITY_ATTACKFLY then
+    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY or target:IsBoss()) and target.Type ~= EntityType.ENTITY_ATTACKFLY and target.Type ~= EntityType.ENTITY_POOTER and target.Type ~= EntityType.ENTITY_FLY then
         tear.CollisionDamage = player.Damage + (target.Size // 13)
     end
 end
@@ -3301,14 +3301,14 @@ Exodus:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, Exodus.buttrotShatter)
 function Exodus:slingRender()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.SLING) then
+    if player:HasCollectible(ItemId.SLING) and not game:IsPaused() then
         ItemVariables.SLING.Icon.Color = Color(1, 1, 1, 0.5, 0, 0, 0)
         ItemVariables.SLING.Icon:Update()
         ItemVariables.SLING.Icon:LoadGraphics()
-        
+
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY) and entity.Type ~= EntityType.ENTITY_ATTACKFLY then
-                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size)), NullVector, NullVector)
+            if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY or entity:IsBoss()) and entity.Type ~= EntityType.ENTITY_ATTACKFLY and entity.Type ~= EntityType.ENTITY_POOTER and entity.Type ~= EntityType.ENTITY_FLY then
+                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size * 1.5)), NullVector, NullVector)
             end
         end
     end
