@@ -28,7 +28,7 @@ local ItemId = {
     PAPER_CUT = Isaac.GetItemIdByName("Paper Cut"),
     FORGET_ME_LATER = Isaac.GetItemIdByName("Forget Me Later"),
     DRAGON_BREATH = Isaac.GetItemIdByName("Dragon Breath"),
-    WIN_STREAK = Isaac.GetItemIdByName("Win Streak"),
+    COBALT_NECKLACE = Isaac.GetItemIdByName("Cobalt Necklace"),
     PIG_BLOOD = Isaac.GetItemIdByName("Pig Blood"),
     DADS_BOOTS = Isaac.GetItemIdByName("Dad's Boots"),
     MYSTERIOUS_MUSTACHE = Isaac.GetItemIdByName("Mysterious Mustache"),
@@ -185,7 +185,7 @@ function Exodus:newGame(fromSave)
             DRAGON_BREATH = { HasDragonBreath = false, Charge = 0, ChargeDirection = NullVector },
             RITUAL_CANDLE = { LitCandles = 0, HasBonus = false, Pentagram = nil, SoundPlayed = false },
             PIG_BLOOD = { HasPigBlood = false },
-            WIN_STREAK = { HasWinStreak = false, Count = 0, IsRoomClear = true, Counter = nil  },
+            COBALT_NECKLACE = { HasCobaltNecklace = false, Count = 0, IsRoomClear = true, Counter = nil  },
             BIG_SCISSORS = { Triggered = false },
             CURSED_METRONOME = { HasCursedMetronome = false },
             MYSTERIOUS_MUSTACHE = { HasMysteriousMustache = false, ItemCount = 0, CoinCount = 0 },
@@ -3347,15 +3347,15 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.breadUpdate)
 
---<<<WIN STREAK>>>--
+--<<<COBALT NECKLACE>>>--
 function Exodus.setScoreDisplay()
     Isaac.ConsoleOutput("setScoreDisplay")
     
-    if ItemVariables.WIN_STREAK.Counter then
-        local sprite = ItemVariables.WIN_STREAK.Counter:GetSprite()
+    if ItemVariables.COBALT_NECKLACE.Counter then
+        local sprite = ItemVariables.COBALT_NECKLACE.Counter:GetSprite()
         Isaac.ConsoleOutput("Counter")
-        if ItemVariables.WIN_STREAK.Count <= 101 then
-            sprite:SetFrame("Frames", ItemVariables.WIN_STREAK.Count)
+        if ItemVariables.COBALT_NECKLACE.Count <= 101 then
+            sprite:SetFrame("Frames", ItemVariables.COBALT_NECKLACE.Count)
         else
             sprite:SetFrame("Frames", 102)
         end
@@ -3364,16 +3364,16 @@ function Exodus.setScoreDisplay()
     end
 end
 
-function Exodus:winStreakUpdate()
+function Exodus:cobaltNecklaceUpdate()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.WIN_STREAK) then
+    if player:HasCollectible(ItemId.COBALT_NECKLACE) then
         local room = game:GetRoom()
         
-        if ItemVariables.WIN_STREAK.HasWinStreak == false then
-            ItemVariables.WIN_STREAK.Counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), Vector(0, 0), player)
-            ItemVariables.WIN_STREAK.Count = 0
-            ItemVariables.WIN_STREAK.HasWinStreak = true
+        if ItemVariables.COBALT_NECKLACE.HasCobaltNecklace == false then
+            ItemVariables.COBALT_NECKLACE.Counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), Vector(0, 0), player)
+            ItemVariables.COBALT_NECKLACE.Count = 0
+            ItemVariables.COBALT_NECKLACE.HasCobaltNecklace = true
             Exodus.setScoreDisplay()
         end
         
@@ -3381,70 +3381,70 @@ function Exodus:winStreakUpdate()
             player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
             player:EvaluateItems()
             
-            if ItemVariables.WIN_STREAK.IsRoomClear == false then
+            if ItemVariables.COBALT_NECKLACE.IsRoomClear == false then
                 if room:GetRoomShape() == RoomShape.ROOMSHAPE_2x2 then
-                    ItemVariables.WIN_STREAK.Count = ItemVariables.WIN_STREAK.Count + 2
+                    ItemVariables.COBALT_NECKLACE.Count = ItemVariables.COBALT_NECKLACE.Count + 2
                 else
-                    ItemVariables.WIN_STREAK.Count = ItemVariables.WIN_STREAK.Count + 1
+                    ItemVariables.COBALT_NECKLACE.Count = ItemVariables.COBALT_NECKLACE.Count + 1
                 end
                 
                 Exodus.setScoreDisplay()  
-                ItemVariables.WIN_STREAK.IsRoomClear = true
+                ItemVariables.COBALT_NECKLACE.IsRoomClear = true
             end
         else
-            ItemVariables.WIN_STREAK.IsRoomClear = false
+            ItemVariables.COBALT_NECKLACE.IsRoomClear = false
         end
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.winStreakUpdate)
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.cobaltNecklaceUpdate)
 
-function Exodus:winStreakNewRoom()
+function Exodus:cobaltNecklaceNewRoom()
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.WIN_STREAK) and (ItemVariables.WIN_STREAK.Counter == nil or not ItemVariables.WIN_STREAK.Counter:Exists()) then
-        ItemVariables.WIN_STREAK.Counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), NullVector, player)
+    if player:HasCollectible(ItemId.COBALT_NECKLACE) and (ItemVariables.COBALT_NECKLACE.Counter == nil or not ItemVariables.COBALT_NECKLACE.Counter:Exists()) then
+        ItemVariables.COBALT_NECKLACE.Counter = Isaac.Spawn(Entities.SCORE_DISPLAY.id, Entities.SCORE_DISPLAY.variant, 0, player.Position + Vector(0, -69), NullVector, player)
         Exodus.setScoreDisplay()
     end 
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.winStreakNewRoom)
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.cobaltNecklaceNewRoom)
 
-function Exodus:winStreakDamage(target, amount, flags, source, cdtimer)
+function Exodus:cobaltNecklaceDamage(target, amount, flags, source, cdtimer)
     local player = Isaac.GetPlayer(0)
     
-    if player:HasCollectible(ItemId.WIN_STREAK) then
-        ItemVariables.WIN_STREAK.Count = 0
+    if player:HasCollectible(ItemId.COBALT_NECKLACE) then
+        ItemVariables.COBALT_NECKLACE.Count = 0
         Exodus.setScoreDisplay()
         player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
         player:EvaluateItems()
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.winStreakDamage, EntityType.ENTITY_PLAYER)
+Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.cobaltNecklaceDamage, EntityType.ENTITY_PLAYER)
 
-function Exodus:winStreakCache(player, flag)
-    if player:HasCollectible(ItemId.WIN_STREAK) and flag == CacheFlag.CACHE_DAMAGE and ItemVariables.WIN_STREAK.Count >= 0 then
-        player.Damage = player.Damage + (math.floor(((ItemVariables.WIN_STREAK.Count * 0.7)^0.7) * 100)) / 150 * player:GetCollectibleNum(ItemId.WIN_STREAK)
+function Exodus:cobaltNecklaceCache(player, flag)
+    if player:HasCollectible(ItemId.COBALT_NECKLACE) and flag == CacheFlag.CACHE_DAMAGE and ItemVariables.COBALT_NECKLACE.Count >= 0 then
+        player.Damage = player.Damage + (math.floor(((ItemVariables.COBALT_NECKLACE.Count * 0.7)^0.7) * 100)) / 150 * player:GetCollectibleNum(ItemId.COBALT_NECKLACE)
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.winStreakCache)
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.cobaltNecklaceCache)
 
-function Exodus:winStreakRender()
+function Exodus:cobaltNecklaceRender()
     local player = Isaac.GetPlayer(0)
     
-    if ItemVariables.WIN_STREAK.Counter then
-        if player:HasCollectible(ItemId.WIN_STREAK) then
-            ItemVariables.WIN_STREAK.Counter.GridCollisionClass = GridCollisionClass.COLLISION_NONE
-            ItemVariables.WIN_STREAK.Counter.Position = player.Position + Vector(0, -69) + player.Velocity
+    if ItemVariables.COBALT_NECKLACE.Counter then
+        if player:HasCollectible(ItemId.COBALT_NECKLACE) then
+            ItemVariables.COBALT_NECKLACE.Counter.GridCollisionClass = GridCollisionClass.COLLISION_NONE
+            ItemVariables.COBALT_NECKLACE.Counter.Position = player.Position + Vector(0, -69) + player.Velocity
         else
-            ItemVariables.WIN_STREAK.Counter:Remove()
+            ItemVariables.COBALT_NECKLACE.Counter:Remove()
         end
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.winStreakRender)
+Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.cobaltNecklaceRender)
 
 --<<<MUTANT CLOVER>>>--
 function Exodus:mutantCloverNewRoom()

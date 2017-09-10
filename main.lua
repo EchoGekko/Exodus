@@ -3291,7 +3291,7 @@ function Exodus:buttrotShatter(tear, target)
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
     end
-    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY) then
+    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY) and target.Type ~= EntityType.ENTITY_ATTACKFLY then
         tear.CollisionDamage = player.Damage + (target.Size // 13)
     end
 end
@@ -3307,7 +3307,7 @@ function Exodus:slingRender()
         ItemVariables.SLING.Icon:LoadGraphics()
         
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY) then
+            if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY) and entity.Type ~= EntityType.ENTITY_ATTACKFLY then
                 ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size)), NullVector, NullVector)
             end
         end
