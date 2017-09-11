@@ -2067,7 +2067,7 @@ function Exodus:gluttonysStomachUpdate()
         end    
     end
     
-    if ItemVariables.GLUTTONYS_STOMACH.Parts >= 12 then
+    if ItemVariables.GLUTTONYS_STOMACH.Parts >= 8 then
         ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts - 4
         player:AddMaxHearts(2, false)
     end

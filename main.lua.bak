@@ -2118,7 +2118,7 @@ function Exodus:forbiddenFruitUse()
             if player:GetMaxHearts() == 0 then
                 player:AddSoulHearts(-4)
                 if math.random(2) == 1 then
-                    Isaac.Spawn(EntityType.ENTITY_PICKUP, 10, 7, Isaac.GetFreeNearPosition(player.Position), Vector(0, 0), player)
+                    Isaac.Spawn(5, 10, 7, player.Position, Vector(0, 0), player)
                 end
             else
                 player:AddMaxHearts(-2)
