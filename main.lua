@@ -494,8 +494,8 @@ function Exodus:FireTurretBullet(pos, vel, spawner)
     local TurretBullet = player:FireTear(pos, vel, false, true, false)
     
     if spawner:IsBoss() then
-        TurretBullet.CollisionDamage = TurretBullet.CollisionDamage * 2
-        TurretBullet.Scale = TurretBullet.Scale * 2
+        TurretBullet.CollisionDamage = TurretBullet.CollisionDamage * 1.5
+        TurretBullet.Scale = TurretBullet.Scale * 1.5
     end
     
     local sprite = TurretBullet:GetSprite()

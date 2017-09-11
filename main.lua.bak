@@ -3308,7 +3308,7 @@ function Exodus:slingRender()
 
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY or entity:IsBoss()) and entity.Type ~= EntityType.ENTITY_ATTACKFLY and entity.Type ~= EntityType.ENTITY_POOTER and entity.Type ~= EntityType.ENTITY_FLY then
-                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, (entity.SpriteScale.Y * entity.Size) + 16)), NullVector, NullVector)
+                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size * 1.5)), NullVector, NullVector)
             end
         end
     end
