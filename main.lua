@@ -3291,8 +3291,12 @@ function Exodus:buttrotShatter(tear, target)
             target:GetData().BlightedFrame = game:GetFrameCount()
         end
     end
-    if target:IsVulnerableEnemy() and player:HasCollectible(ItemId.SLING) and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY or target:IsBoss()) and target.Type ~= EntityType.ENTITY_ATTACKFLY and target.Type ~= EntityType.ENTITY_POOTER and target.Type ~= EntityType.ENTITY_FLY then
-        tear.CollisionDamage = player.Damage + (target.Size // 13)
+    if target:IsVulnerableEnemy() and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY or target.Type == EntityType.ENTITY_SWARMER
+	or target.Type == EntityType.ENTITY_CRAZY_LONG_LEGS or target.Type == EntityType.ENTITY_DADDYLONGLEGS or target:IsBoss())
+	and target.Type ~= EntityType.ENTITY_ATTACKFLY and target.Type ~= EntityType.ENTITY_HUSH_FLY and target.Type ~= EntityType.ENTITY_POOTER and target.Type ~= EntityType.ENTITY_FLY
+	and target.Type ~= EntityType.ENTITY_RING_OF_FLIES and target.Type ~= EntityType.ENTITY_DART_FLY and target.Type ~= EntityType.ENTITY_SWARM and target.Type ~= EntityType.ENTITY_MOTER
+	and target.Type ~= EntityType.ENTITY_FLY_L2 and target.Type ~= EntityType.ENTITY_ETERNALFLY then
+		tear.CollisionDamage = player.Damage + (target.Size // 13)
     end
 end
 
@@ -3307,8 +3311,12 @@ function Exodus:slingRender()
         ItemVariables.SLING.Icon:LoadGraphics()
 
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY or entity:IsBoss()) and entity.Type ~= EntityType.ENTITY_ATTACKFLY and entity.Type ~= EntityType.ENTITY_POOTER and entity.Type ~= EntityType.ENTITY_FLY then
-                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, entity.SpriteScale.Y * entity.Size * 1.5)), NullVector, NullVector)
+            if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY or entity.Type == EntityType.ENTITY_SWARMER
+			or entity.Type == EntityType.ENTITY_CRAZY_LONG_LEGS or entity.Type == EntityType.ENTITY_DADDYLONGLEGS or entity:IsBoss())
+			and entity.Type ~= EntityType.ENTITY_ATTACKFLY and entity.Type ~= EntityType.ENTITY_HUSH_FLY and entity.Type ~= EntityType.ENTITY_POOTER and entity.Type ~= EntityType.ENTITY_FLY
+			and entity.Type ~= EntityType.ENTITY_RING_OF_FLIES and entity.Type ~= EntityType.ENTITY_DART_FLY and entity.Type ~= EntityType.ENTITY_SWARM and entity.Type ~= EntityType.ENTITY_MOTER
+			and entity.Type ~= EntityType.ENTITY_FLY_L2 and entity.Type ~= EntityType.ENTITY_ETERNALFLY then
+                ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, (entity.SpriteScale.Y * entity.Size * 1.5) + 20)), NullVector, NullVector)
             end
         end
     end
