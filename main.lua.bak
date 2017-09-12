@@ -3028,16 +3028,6 @@ function Exodus:lilRuneFamiliarUpdate(rune)
     local data = rune:GetData()
     
     rune:FollowParent()
-
-    if player:GetMovementDirection() == Direction.UP then
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
-    elseif player:GetMovementDirection() == Direction.LEFT then
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
-    elseif player:GetMovementDirection() == Direction.RIGHT then
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
-    else
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
-    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.lilRuneFamiliarUpdate, Entities.LIL_RUNE.variant)
@@ -3053,6 +3043,16 @@ function Exodus:lilRuneNewRoom()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.lilRuneNewRoom)
+
+function Exodus:lilRuneUse()
+    local player = Isaac.GetPlayer(0)
+    if ItemVariables.LIL_RUNE.State == "Purple" and player:HasCollectible(ItemId.LIL_RUNE) then
+		ItemVariables.LIL_RUNE.State = "Black"
+		player:UseCard(Card.RUNE_BLANK)
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.lilRuneUse)
 
 --<<<BUSTED PIPE>>>--
 function Exodus:bustedPipeUpdate()

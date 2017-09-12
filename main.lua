@@ -57,7 +57,7 @@ local ItemId = {
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
     RITUAL_CANDLE = Isaac.GetItemIdByName("Ritual Candle"),
     ASTRO_BABY = Isaac.GetItemIdByName("Astro Baby"),
-	LIL_RUNE = Isaac.GetItemIdByName("Lil' Rune"),
+    LIL_RUNE = Isaac.GetItemIdByName("Lil' Rune"),
     
     ---<<TRINKETS>>---
     GRID_WORM = Isaac.GetTrinketIdByName("Grid Worm"),
@@ -103,7 +103,7 @@ local Entities = {
     HUNGRY_HIPPO = getEntity("Hungry Hippo"),
     CANDLE = getEntity("Candle"),
     ASTRO_BABY = getEntity("Astro Baby"),
-	LIL_RUNE = getEntity("Lil Rune"),
+    LIL_RUNE = getEntity("Lil Rune"),
     
     ---<<ENEMIES>>---
     POISON_MASTERMIND = getEntity("Poison Mastermind"),
@@ -194,7 +194,7 @@ function Exodus:newGame(fromSave)
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false, Placed = true, AppearFrame = nil },
             GLUTTONYS_STOMACH = { Parts = 0 },
             ASTRO_BABY = { UsedBox = 0 },
-			LIL_RUNE = { UsedBox = 0, State = "Purple" },
+            LIL_RUNE = { UsedBox = 0, State = "Purple" },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
             MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
@@ -2988,7 +2988,7 @@ Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.astroBabyFamiliarUpda
 function Exodus:boxOfFriendsUse()
     local player = Isaac.GetPlayer(0)
     ItemVariables.ASTRO_BABY.UsedBox = ItemVariables.ASTRO_BABY.UsedBox + 1
-	ItemVariables.LIL_RUNE.UsedBox = ItemVariables.LIL_RUNE.UsedBox + 1
+    ItemVariables.LIL_RUNE.UsedBox = ItemVariables.LIL_RUNE.UsedBox + 1
     player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
     player:EvaluateItems()
 end
@@ -3028,16 +3028,7 @@ function Exodus:lilRuneFamiliarUpdate(rune)
     local data = rune:GetData()
     
     rune:FollowParent()
-
-    if player:GetMovementDirection() == Direction.UP then
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
-    elseif player:GetMovementDirection() == Direction.LEFT then
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
-    elseif player:GetMovementDirection() == Direction.RIGHT then
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
-    else
-        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
-    end
+    sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.lilRuneFamiliarUpdate, Entities.LIL_RUNE.variant)
@@ -3045,9 +3036,9 @@ Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.lilRuneFamiliarUpdate
 function Exodus:lilRuneNewRoom()
     local player = Isaac.GetPlayer(0)
     ItemVariables.LIL_RUNE.UsedBox = 0
-	if ItemVariables.LIL_RUNE.State == "Black" and game:GetRoom():IsFirstVisit() then
-		ItemVariables.LIL_RUNE.State = "Purple"
-	end
+    if ItemVariables.LIL_RUNE.State == "Black" and game:GetRoom():IsFirstVisit() then
+        ItemVariables.LIL_RUNE.State = "Purple"
+    end
     player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
     player:EvaluateItems()
 end
@@ -3056,10 +3047,10 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.lilRuneNewRoom)
 
 function Exodus:lilRuneUse()
     local player = Isaac.GetPlayer(0)
-    if ItemVariables.LIL_RUNE.State == "Purple" then
-		ItemVariables.LIL_RUNE.State = "Black"
-		player:UseCard(Card.RUNE_BLANK)
-	end
+    if ItemVariables.LIL_RUNE.State == "Purple" and player:HasCollectible(ItemId.LIL_RUNE) then
+        ItemVariables.LIL_RUNE.State = "Black"
+        player:UseCard(Card.RUNE_BLANK)
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.lilRuneUse)
@@ -3356,11 +3347,11 @@ function Exodus:buttrotShatter(tear, target)
         end
     end
     if target:IsVulnerableEnemy() and (target.Size > 13 or target.Type == EntityType.ENTITY_FATTY or target.Type == EntityType.ENTITY_SWARMER
-	or target.Type == EntityType.ENTITY_CRAZY_LONG_LEGS or target.Type == EntityType.ENTITY_DADDYLONGLEGS or target:IsBoss())
-	and target.Type ~= EntityType.ENTITY_ATTACKFLY and target.Type ~= EntityType.ENTITY_HUSH_FLY and target.Type ~= EntityType.ENTITY_POOTER and target.Type ~= EntityType.ENTITY_FLY
-	and target.Type ~= EntityType.ENTITY_RING_OF_FLIES and target.Type ~= EntityType.ENTITY_DART_FLY and target.Type ~= EntityType.ENTITY_SWARM and target.Type ~= EntityType.ENTITY_MOTER
-	and target.Type ~= EntityType.ENTITY_FLY_L2 and target.Type ~= EntityType.ENTITY_ETERNALFLY then
-		tear.CollisionDamage = player.Damage + (target.Size // 13)
+    or target.Type == EntityType.ENTITY_CRAZY_LONG_LEGS or target.Type == EntityType.ENTITY_DADDYLONGLEGS or target:IsBoss())
+    and target.Type ~= EntityType.ENTITY_ATTACKFLY and target.Type ~= EntityType.ENTITY_HUSH_FLY and target.Type ~= EntityType.ENTITY_POOTER and target.Type ~= EntityType.ENTITY_FLY
+    and target.Type ~= EntityType.ENTITY_RING_OF_FLIES and target.Type ~= EntityType.ENTITY_DART_FLY and target.Type ~= EntityType.ENTITY_SWARM and target.Type ~= EntityType.ENTITY_MOTER
+    and target.Type ~= EntityType.ENTITY_FLY_L2 and target.Type ~= EntityType.ENTITY_ETERNALFLY then
+        tear.CollisionDamage = player.Damage + (target.Size // 13)
     end
 end
 
@@ -3376,10 +3367,10 @@ function Exodus:slingRender()
 
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsVulnerableEnemy() and (entity.Size > 13 or entity.Type == EntityType.ENTITY_FATTY or entity.Type == EntityType.ENTITY_SWARMER
-			or entity.Type == EntityType.ENTITY_CRAZY_LONG_LEGS or entity.Type == EntityType.ENTITY_DADDYLONGLEGS or entity:IsBoss())
-			and entity.Type ~= EntityType.ENTITY_ATTACKFLY and entity.Type ~= EntityType.ENTITY_HUSH_FLY and entity.Type ~= EntityType.ENTITY_POOTER and entity.Type ~= EntityType.ENTITY_FLY
-			and entity.Type ~= EntityType.ENTITY_RING_OF_FLIES and entity.Type ~= EntityType.ENTITY_DART_FLY and entity.Type ~= EntityType.ENTITY_SWARM and entity.Type ~= EntityType.ENTITY_MOTER
-			and entity.Type ~= EntityType.ENTITY_FLY_L2 and entity.Type ~= EntityType.ENTITY_ETERNALFLY then
+            or entity.Type == EntityType.ENTITY_CRAZY_LONG_LEGS or entity.Type == EntityType.ENTITY_DADDYLONGLEGS or entity:IsBoss())
+            and entity.Type ~= EntityType.ENTITY_ATTACKFLY and entity.Type ~= EntityType.ENTITY_HUSH_FLY and entity.Type ~= EntityType.ENTITY_POOTER and entity.Type ~= EntityType.ENTITY_FLY
+            and entity.Type ~= EntityType.ENTITY_RING_OF_FLIES and entity.Type ~= EntityType.ENTITY_DART_FLY and entity.Type ~= EntityType.ENTITY_SWARM and entity.Type ~= EntityType.ENTITY_MOTER
+            and entity.Type ~= EntityType.ENTITY_FLY_L2 and entity.Type ~= EntityType.ENTITY_ETERNALFLY then
                 ItemVariables.SLING.Icon:Render(game:GetRoom():WorldToScreenPosition(entity.Position - Vector(0, (entity.SpriteScale.Y * entity.Size * 1.5) + 20)), NullVector, NullVector)
             end
         end
