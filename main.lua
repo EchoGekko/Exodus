@@ -2031,7 +2031,7 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.dadsBootsCache)
 
---<<<GLUTTYONY'S STOMACH>>>--
+--<<<GLUTTONY'S STOMACH>>>--
 function Exodus:gluttonysStomachUpdate()
     local player = Isaac.GetPlayer(0)
     
