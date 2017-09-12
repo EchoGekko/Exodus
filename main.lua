@@ -2553,9 +2553,9 @@ function Exodus:cursedMetronomeUpdate()
     
     if player:HasCollectible(ItemId.CURSED_METRONOME) then
         if not ItemVariables.CURSED_METRONOME.HasCursedMetronome then
-            local maxhp = player:GetHearts() - 2
+            local maxhp = player:GetMaxHearts() - 2
             player:AddHearts(maxhp * -1)
-            
+            maxhp = maxhp + 2
             for i = 1, rng:RandomInt(maxhp / 2) do
                 Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL,  Isaac.GetFreeNearPosition(player.Position, 20), Vector(0, 0), player)
             end

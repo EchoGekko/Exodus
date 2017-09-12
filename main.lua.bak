@@ -2553,10 +2553,10 @@ function Exodus:cursedMetronomeUpdate()
     
     if player:HasCollectible(ItemId.CURSED_METRONOME) then
         if not ItemVariables.CURSED_METRONOME.HasCursedMetronome then
-            local maxhp = player:GetHearts() - 2
+            local maxhp = player:GetMaxHearts() - 2
             player:AddHearts(maxhp * -1)
             
-            for i = 1, rng:RandomInt(maxhp / 2) do
+            for i = 1, rng:RandomInt(0, maxhp / 2) do
                 Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL,  Isaac.GetFreeNearPosition(player.Position, 20), Vector(0, 0), player)
             end
             
@@ -2922,9 +2922,9 @@ function Exodus:astroBabyFamiliarUpdate(astro)
                     data.RotateAmount = data.RotateAmount / 1.1
                 end
             else
-                local hit = Isaac.Spawn(1000, 12, 0, entity.Position, NullVector, nil)
-                hit:ToEffect():SetTimeout(30)
-                hit.SpriteRotation = rng:RandomInt(360)
+                for i = 1, 4 do
+                    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.NAIL_PARTICLE, 0, entity.Position, RandomVector() * ((math.random() * 4) + 1), player)
+                end
             end
         end
     end
