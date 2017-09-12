@@ -1,13 +1,13 @@
 <ItemPools>
 	<Pool Name="treasure">
-		<Item Name="Queen Bee" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Beehive" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sad Tears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Busted Pipe" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Tech Y" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Paper Cut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Win Streak" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Cobalt Necklace" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Boots" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Big Scissors" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>

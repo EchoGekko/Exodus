@@ -57,6 +57,7 @@ local ItemId = {
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
     RITUAL_CANDLE = Isaac.GetItemIdByName("Ritual Candle"),
     ASTRO_BABY = Isaac.GetItemIdByName("Astro Baby"),
+	LIL_RUNE = Isaac.GetItemIdByName("Lil' Rune"),
     
     ---<<TRINKETS>>---
     GRID_WORM = Isaac.GetTrinketIdByName("Grid Worm"),
@@ -102,6 +103,7 @@ local Entities = {
     HUNGRY_HIPPO = getEntity("Hungry Hippo"),
     CANDLE = getEntity("Candle"),
     ASTRO_BABY = getEntity("Astro Baby"),
+	LIL_RUNE = getEntity("Lil Rune"),
     
     ---<<ENEMIES>>---
     POISON_MASTERMIND = getEntity("Poison Mastermind"),
@@ -192,6 +194,7 @@ function Exodus:newGame(fromSave)
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false, Placed = true, AppearFrame = nil },
             GLUTTONYS_STOMACH = { Parts = 0 },
             ASTRO_BABY = { UsedBox = 0 },
+			LIL_RUNE = { UsedBox = 0, State = "Purple" },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
             MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
@@ -2985,6 +2988,7 @@ Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.astroBabyFamiliarUpda
 function Exodus:boxOfFriendsUse()
     local player = Isaac.GetPlayer(0)
     ItemVariables.ASTRO_BABY.UsedBox = ItemVariables.ASTRO_BABY.UsedBox + 1
+	ItemVariables.LIL_RUNE.UsedBox = ItemVariables.LIL_RUNE.UsedBox + 1
     player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
     player:EvaluateItems()
 end
@@ -2999,6 +3003,66 @@ function Exodus:astroBabyNewRoom()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.astroBabyNewRoom)
+
+--<<<LIL RUNE>>>--
+function Exodus:lilRuneCache(player, flag)
+    if player:HasCollectible(ItemId.LIL_RUNE) and flag == CacheFlag.CACHE_FAMILIARS then
+        player:CheckFamiliar(Entities.LIL_RUNE.variant, player:GetCollectibleNum(ItemId.LIL_RUNE) + ItemVariables.LIL_RUNE.UsedBox, rng)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.lilRuneCache)
+
+function Exodus:lilRuneInit(rune)
+    rune.IsFollower = true
+  
+    local sprite = rune:GetSprite()
+    sprite:Play("PurpleDown")
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.lilRuneInit, Entities.LIL_RUNE.variant)
+
+function Exodus:lilRuneFamiliarUpdate(rune)
+    local player = Isaac.GetPlayer(0)
+    local sprite = rune:GetSprite()
+    local data = rune:GetData()
+    
+    rune:FollowParent()
+
+    if player:GetMovementDirection() == Direction.UP then
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
+    elseif player:GetMovementDirection() == Direction.LEFT then
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
+    elseif player:GetMovementDirection() == Direction.RIGHT then
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
+    else
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.lilRuneFamiliarUpdate, Entities.LIL_RUNE.variant)
+
+function Exodus:lilRuneNewRoom()
+    local player = Isaac.GetPlayer(0)
+    ItemVariables.LIL_RUNE.UsedBox = 0
+	if ItemVariables.LIL_RUNE.State == "Black" and game:GetRoom():IsFirstVisit() then
+		ItemVariables.LIL_RUNE.State = "Purple"
+	end
+    player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
+    player:EvaluateItems()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.lilRuneNewRoom)
+
+function Exodus:lilRuneUse()
+    local player = Isaac.GetPlayer(0)
+    if ItemVariables.LIL_RUNE.State == "Purple" then
+		ItemVariables.LIL_RUNE.State = "Black"
+		player:UseCard(Card.RUNE_BLANK)
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.lilRuneUse)
 
 --<<<BUSTED PIPE>>>--
 function Exodus:bustedPipeUpdate()
