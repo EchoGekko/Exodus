@@ -2031,7 +2031,7 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.dadsBootsCache)
 
---<<<GLUTTYONY'S STOMACH>>>--
+--<<<GLUTTONY'S STOMACH>>>--
 function Exodus:gluttonysStomachUpdate()
     local player = Isaac.GetPlayer(0)
     
@@ -2071,7 +2071,7 @@ function Exodus:gluttonysStomachUpdate()
     end
     
     if ItemVariables.GLUTTONYS_STOMACH.Parts >= 8 then
-        ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts - 4
+        ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts - 8
         player:AddMaxHearts(2, false)
     end
 end
@@ -2555,8 +2555,8 @@ function Exodus:cursedMetronomeUpdate()
         if not ItemVariables.CURSED_METRONOME.HasCursedMetronome then
             local maxhp = player:GetMaxHearts() - 2
             player:AddHearts(maxhp * -1)
-            
-            for i = 1, rng:RandomInt(0, maxhp / 2) do
+            maxhp = maxhp + 2
+            for i = 1, rng:RandomInt(maxhp / 2) do
                 Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL,  Isaac.GetFreeNearPosition(player.Position, 20), Vector(0, 0), player)
             end
             
