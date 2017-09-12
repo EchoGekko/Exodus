@@ -2922,9 +2922,9 @@ function Exodus:astroBabyFamiliarUpdate(astro)
                     data.RotateAmount = data.RotateAmount / 1.1
                 end
             else
-                local hit = Isaac.Spawn(1000, 12, 0, entity.Position, NullVector, nil)
-                hit:ToEffect():SetTimeout(30)
-                hit.SpriteRotation = rng:RandomInt(360)
+                for i = 1, 4 do
+                    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.NAIL_PARTICLE, 0, entity.Position, RandomVector() * ((math.random() * 4) + 1), player)
+                end
             end
         end
     end
