@@ -35,14 +35,14 @@
 		<Item Name="Pig Blood" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Wrath of the Lamb" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Ritual Candle" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Yang" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Yin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Possessed Bombs" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="angel">
 		<Item Name="The Forbidden Fruit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Birdbath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Anamnesis" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Yin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Yang" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="secret">
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
