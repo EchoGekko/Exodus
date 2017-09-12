@@ -192,7 +192,7 @@ function Exodus:newGame(fromSave)
             CURSED_METRONOME = { HasCursedMetronome = false },
             MYSTERIOUS_MUSTACHE = { HasMysteriousMustache = false, ItemCount = 0, CoinCount = 0 },
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false, Placed = true, AppearFrame = nil },
-            GLUTTONYS_STOMACH = { Parts = 0 },
+            GLUTTONYS_STOMACH = { Parts = 0, RenderBar = Sprite() },
             ASTRO_BABY = { UsedBox = 0 },
             LIL_RUNE = { UsedBox = 0, State = "Purple" },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
@@ -264,9 +264,13 @@ function Exodus:newGame(fromSave)
                 OMINOUS_LANTERN = { id = ItemId.OMINOUS_LANTERN, frames = 0, Charge = 0 }
             }
         }
+        
+        ---<<PRE-START VARIABLE HANDLING>>---
         ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Load("gfx/effects/Pseudobulbar Icon.anm2", true)
         ItemVariables.PSEUDOBULBAR_AFFECT.Icon:Play("Idle", true)
-
+        
+        ItemVariables.GLUTTONYS_STOMACH.RenderBar:Load("gfx/effects/Gluttony Stomach Bar.anm2", true)
+        
         ItemVariables.SLING.Icon:Load("gfx/effects/Sling_marker_effect.anm2", true)
         ItemVariables.SLING.Icon:Play("Idle", true)
         
@@ -2031,7 +2035,7 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.dadsBootsCache)
 
---<<<GLUTTYONY'S STOMACH>>>--
+--<<<GLUTTONY'S STOMACH>>>--
 function Exodus:gluttonysStomachUpdate()
     local player = Isaac.GetPlayer(0)
     
@@ -2040,14 +2044,13 @@ function Exodus:gluttonysStomachUpdate()
             if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_HEART and player.Position:Distance(entity.Position) <= 32 then
                 local sprite = entity:GetSprite()
                 
-                if sprite:IsPlaying("Idle") then
+                if sprite:IsPlaying("Idle") then 
+                    local parts
+                    local effect
                     
-                    local parts = 1
-                    local effect = Entities.PART_UP.variant
-
                     if entity.SubType == HeartSubType.HEART_HALF then
-                        local parts = 1
-                        local effect = Entities.PART_UP.variant
+                        parts = 1
+                        effect = Entities.PART_UP.variant
                     elseif entity.SubType == HeartSubType.HEART_FULL then
                         parts = 2
                         effect = Entities.PART_UP_UP.variant
@@ -2059,7 +2062,7 @@ function Exodus:gluttonysStomachUpdate()
                     end
                     
                     ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts + parts
-                        
+                    
                     local heart = entity:ToPickup()
                     heart:PlayPickupSound()
                     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, 0, entity.Position, Vector(0, 0), entity)
@@ -2071,12 +2074,26 @@ function Exodus:gluttonysStomachUpdate()
     end
     
     if ItemVariables.GLUTTONYS_STOMACH.Parts >= 8 then
-        ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts - 4
+        ItemVariables.GLUTTONYS_STOMACH.Parts = ItemVariables.GLUTTONYS_STOMACH.Parts - 8
         player:AddMaxHearts(2, false)
     end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.gluttonysStomachUpdate)
+
+function Exodus:gluttonysStomachRender()
+    local player = Isaac.GetPlayer(0)
+    local Hearts = player:GetMaxHearts() / 2
+    local Bar = ItemVariables.GLUTTONYS_STOMACH.RenderBar
+    
+    if player:HasCollectible(ItemId.GLUTTONYS_STOMACH) then
+        Bar.Scale = Vector(1.3, 1.3)
+        Bar:SetFrame("Heart", math.min(8, ItemVariables.GLUTTONYS_STOMACH.Parts))
+        Bar:Render(Vector(36 + (12 * ((Hearts % 7) + math.floor(Hearts / 7))), 12 + (11 * math.floor(Hearts / 7))), Vector(0, 0), Vector(0, 0))
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.gluttonysStomachRender)
 
 --<<<FORGET ME LATER>>>--
 function Exodus:forgetMeLaterUpdate()
@@ -2167,7 +2184,6 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.pigBloodUpdate)
 
 --<<<YIN AND YANG>>>--
-
 function Exodus:yinyangUpdate()
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(ItemId.YIN) or player:HasCollectible(ItemId.YANG) then
