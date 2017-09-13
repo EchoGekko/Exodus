@@ -2083,10 +2083,11 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.gluttonysStomachUpdate)
 
 function Exodus:gluttonysStomachRender()
     local player = Isaac.GetPlayer(0)
+    local playerType = player:GetPlayerType()
     local Hearts = player:GetMaxHearts() / 2
     local Bar = ItemVariables.GLUTTONYS_STOMACH.RenderBar
     
-    if player:HasCollectible(ItemId.GLUTTONYS_STOMACH) then
+    if player:HasCollectible(ItemId.GLUTTONYS_STOMACH) and playerType ~= PlayerType.PLAYER_THELOST and playerType ~= PlayerType.PLAYER_KEEPER then
         Bar.Scale = Vector(1.3, 1.3)
         Bar:SetFrame("Heart", math.min(8, ItemVariables.GLUTTONYS_STOMACH.Parts))
         Bar:Render(Vector(36 + (12 * ((Hearts % 7) + math.floor(Hearts / 7))), 12 + (11 * math.floor(Hearts / 7))), Vector(0, 0), Vector(0, 0))
