@@ -2951,7 +2951,7 @@ function Exodus:sunUpdate(sun)
         sun.SpawnerType = 0
     end
 
-    sun.OrbitDistance = Vector(50, 50)
+    sun.OrbitDistance = Vector(64, 64)
     
     if player:HasTrinket(TrinketType.TRINKET_CHILD_LEASH) then
         sun.OrbitDistance = sun.OrbitDistance / 2
@@ -2996,7 +2996,7 @@ function Exodus:shadowUpdate(shadow)
         shadow.SpawnerType = 0
     end
 
-    shadow.OrbitDistance = Vector(50, 50)
+    shadow.OrbitDistance = Vector(64, 64)
     
     if player:HasTrinket(TrinketType.TRINKET_CHILD_LEASH) then
         shadow.OrbitDistance = shadow.OrbitDistance / 2
