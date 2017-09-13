@@ -58,6 +58,7 @@ local ItemId = {
     RITUAL_CANDLE = Isaac.GetItemIdByName("Ritual Candle"),
     ASTRO_BABY = Isaac.GetItemIdByName("Astro Baby"),
     LIL_RUNE = Isaac.GetItemIdByName("Lil' Rune"),
+	SUNDIAL = Isaac.GetItemIdByName("Sundial"),
     
     ---<<TRINKETS>>---
     GRID_WORM = Isaac.GetTrinketIdByName("Grid Worm"),
@@ -104,6 +105,8 @@ local Entities = {
     CANDLE = getEntity("Candle"),
     ASTRO_BABY = getEntity("Astro Baby"),
     LIL_RUNE = getEntity("Lil Rune"),
+	SUN = getEntity("Sundial Sun"),
+	SHADOW = getEntity("Sundial Shadow"),
     
     ---<<ENEMIES>>---
     POISON_MASTERMIND = getEntity("Poison Mastermind"),
@@ -2898,6 +2901,126 @@ function Exodus:hungryHippoUpdate(hippo)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.hungryHippoUpdate, Entities.HUNGRY_HIPPO.variant)
+
+--<<<SUNDIAL>>>--
+function Exodus:sundialCache(player, flag)
+    if flag == CacheFlag.CACHE_FAMILIARS and player:HasCollectible(ItemId.SUNDIAL) then
+        player:CheckFamiliar(Entities.SUN.variant, player:GetCollectibleNum(ItemId.SUNDIAL), rng)
+		player:CheckFamiliar(Entities.SHADOW.variant, player:GetCollectibleNum(ItemId.SUNDIAL), rng)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.sundialCache)
+
+function Exodus:sunInit(sun)
+    local player = Isaac.GetPlayer(0)
+    
+    sun.OrbitLayer = 98
+    sun.Position = sun:GetOrbitPosition(player.Position + player.Velocity)
+    sun.Visible = false
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.sunInit, Entities.SUN.variant)
+
+function Exodus:shadowInit(shadow)
+    local player = Isaac.GetPlayer(0)
+    
+    shadow.OrbitLayer = 98
+    shadow.Position = shadow:GetOrbitPosition(player.Position + player.Velocity)
+    shadow.Visible = false
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.shadowInit, Entities.SHADOW.variant)
+
+function Exodus:sunUpdate(sun)
+    local player = Isaac.GetPlayer(0)
+    
+    if sun.FrameCount >= 1 then
+        sun.Visible = true
+    else
+        sun.Visible = false
+    end
+    
+	if math.random(12) == 1 then
+		Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
+	end
+
+    if sun.FrameCount == 1 then
+        sun.SpawnerVariant = 0
+        sun.SpawnerType = 0
+    end
+
+    sun.OrbitDistance = Vector(50, 50)
+    
+    if player:HasTrinket(TrinketType.TRINKET_CHILD_LEASH) then
+        sun.OrbitDistance = sun.OrbitDistance / 2
+    end
+    
+    sun.OrbitSpeed = 0.02
+
+    if not Exodus:PlayerIsMoving() then
+        sun.Position = sun:GetOrbitPosition(player.Position + player.Velocity)
+    end
+    
+    sun.Velocity = sun:GetOrbitPosition(player.Position + player.Velocity) - sun.Position
+    sun.GridCollisionClass = 0
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
+			if sun.Position:Distance(entity.Position) < 24 and entity:IsFlying() then
+				entity:AddBurn(EntityRef(sun), 100, 1)
+				entity:TakeDamage(1, 0, EntityRef(sun), 3)
+				if math.random(4) == 1 then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
+				end
+			end
+        end
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.sunUpdate, Entities.SUN.variant)
+
+function Exodus:shadowUpdate(shadow)
+    local player = Isaac.GetPlayer(0)
+	local sprite = shadow:GetSprite()
+    
+    if shadow.FrameCount >= 1 then
+        shadow.Visible = true
+    else
+        shadow.Visible = false
+    end
+    
+    if shadow.FrameCount == 1 then
+        shadow.SpawnerVariant = 0
+        shadow.SpawnerType = 0
+    end
+
+    shadow.OrbitDistance = Vector(50, 50)
+    
+    if player:HasTrinket(TrinketType.TRINKET_CHILD_LEASH) then
+        shadow.OrbitDistance = shadow.OrbitDistance / 2
+    end
+    
+    shadow.OrbitSpeed = 0.02
+
+    if not Exodus:PlayerIsMoving() then
+        shadow.Position = shadow:GetOrbitPosition(player.Position + player.Velocity)
+    end
+    
+    shadow.Velocity = shadow:GetOrbitPosition(player.Position + player.Velocity) - shadow.Position
+    shadow.GridCollisionClass = 0
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+		if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
+			if shadow.Position:Distance(entity.Position) < 24 and not entity:IsFlying() then
+				entity:AddFear(EntityRef(shadow), 100)
+				entity:TakeDamage(1, 0, EntityRef(shadow), 3)
+			end
+		end
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.shadowUpdate, Entities.SHADOW.variant)
 
 --<<<ASTRO BABY>>>--
 function Exodus:astroBabyCache(player, flag)

@@ -20,6 +20,7 @@
 		<Item Name="Buttrot" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sling" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop">
 		<Item Name="Win Streak" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
@@ -57,6 +58,7 @@
 	<Pool Name="challenge">
 	</Pool>
 	<Pool Name="goldenChest">
+		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="redChest">
 	</Pool>
@@ -94,6 +96,7 @@
 		<Item Name="Buttrot" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sling" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="dungeon">
 	</Pool>
@@ -118,22 +121,70 @@
 		<Item Name="Buttrot" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sling" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedBoss">
 	</Pool>
 	<Pool Name="greedShop">
+		<Item Name="Beehive" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Sad Tears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Busted Pipe" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Tech Y" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Paper Cut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Cobalt Necklace" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Dad's Boots" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Big Scissors" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Welcome Mat" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Baseball Mitt" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="The Pseudobulbar Affect" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Mutant Clover" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Hungry Hippo" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Astro Baby" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Buttrot" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Sling" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Win Streak" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Mysterious Mustache" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Welcome Mat" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Ominous Lantern" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Sling" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedCurse">
+		<Item Name="Cursed Metronome" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Ominous Lantern" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Ritual Candle" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Possessed Bombs" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedDevil">
+		<Item Name="Unholy Mantle" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Pig Blood" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Wrath of the Lamb" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Ritual Candle" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Yin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Possessed Bombs" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedAngel">
+		<Item Name="The Forbidden Fruit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Birdbath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Anamnesis" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Yang" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedLibrary">
 	</Pool>
 	<Pool Name="greedSecret">
+		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Mysterious Mustache" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Cursed Metronome" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Mutant Clover" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Ominous Lantern" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedGoldenChest">
+		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="bombBum">
 		<Item Name="Possessed Bombs" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>

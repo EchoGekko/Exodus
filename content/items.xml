@@ -38,6 +38,7 @@
 	<familiar description="Light them up" gfx="Ritual Candle.png" name="Ritual Candle" devilprice="2"/>
 	<familiar description="Lil' planet" gfx="Astro Baby.png" name="Astro Baby" cache="familiars" />
 	<familiar description="Miniral" gfx="Lil Rune.png" name="Lil' Rune" cache="familiars" />
+	<familiar description="Day after day" gfx="Sundial.png" name="Sundial" cache="familiars"/>
 	
 	<!-- Trinkets -->
 	<trinket description="Eeek Ooop" gfx="Grid Worm.png" name="Grid Worm" cache="range"/>

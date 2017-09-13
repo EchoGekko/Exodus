@@ -20,6 +20,14 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 
+    <entity anm2path="familiar/Sun.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Sundial Sun" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="39194">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+
+    <entity anm2path="familiar/Shadow.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Sundial Shadow" numGridCollisionPoints="12" shadowSize="24" stageHP="0" variant="39195">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+
     <entity anm2path="monsters/Poison Mastermind.anm2" reroll="true" baseHP="62" boss="0" champion="1" collisionDamage="2" collisionMass="30" collisionRadius="26" friction="1" id="57" name="Poison Mastermind" numGridCollisionPoints="12" shadowSize="42" stageHP="0" variant="9900" portrait="46">
         <gibs amount="12" blood="1" bone="0" eye="0" gut="1" large="1" />
         <preload id="32" variant="0" />
