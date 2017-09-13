@@ -59,7 +59,6 @@
 	<Pool Name="challenge">
 	</Pool>
 	<Pool Name="goldenChest">
-		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="redChest">
 	</Pool>
@@ -186,7 +185,6 @@
 		<Item Name="Ominous Lantern" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedGoldenChest">
-		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="bombBum">
 		<Item Name="Possessed Bombs" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
