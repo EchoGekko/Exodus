@@ -2970,7 +2970,7 @@ function Exodus:sunUpdate(sun)
         if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
 			if sun.Position:Distance(entity.Position) < 24 and entity:IsFlying() then
 				entity:AddBurn(EntityRef(sun), 100, 1)
-				entity:TakeDamage(1, 0, EntityRef(sun), 3)
+				entity:TakeDamage(2, 0, EntityRef(sun), 3)
 				if math.random(4) == 1 then
 					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
 				end
@@ -3015,7 +3015,7 @@ function Exodus:shadowUpdate(shadow)
 		if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
 			if shadow.Position:Distance(entity.Position) < 24 and not entity:IsFlying() then
 				entity:AddFear(EntityRef(shadow), 100)
-				entity:TakeDamage(1, 0, EntityRef(shadow), 3)
+				entity:TakeDamage(2, 0, EntityRef(shadow), 3)
 			end
 		end
 	end
