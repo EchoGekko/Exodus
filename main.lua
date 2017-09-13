@@ -2381,8 +2381,8 @@ Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.wotlUse, ItemId.WRATH_OF_THE
 
 function Exodus:wotlCache(player, cacheFlag)
     local damageBonus = 0.5 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Damage
-    local speedBonus = 0.15 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Speed
-    local rangeBonus = 2.5 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Range
+    local speedBonus = 0.1 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Speed
+    local rangeBonus = 2 * ItemVariables.WRATH_OF_THE_LAMB.Stats.Range
     local fireDelayBonus = ItemVariables.WRATH_OF_THE_LAMB.Stats.FireDelay
     
     if cacheFlag == CacheFlag.CACHE_DAMAGE then
