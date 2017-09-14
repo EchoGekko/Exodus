@@ -41,6 +41,7 @@ local ItemId = {
     SLING = Isaac.GetItemIdByName("Sling"),
     YIN = Isaac.GetItemIdByName("Yin"),
     YANG = Isaac.GetItemIdByName("Yang"),
+	DEJA_VU = Isaac.GetItemIdByName("Deja Vu"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -2759,6 +2760,34 @@ function Exodus:sadTearsCache(player, flag)
 end
     
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.sadTearsCache)
+
+--<<<DEJA VU>>>--
+function Exodus:dejaVuUpdate()
+    local player = Isaac.GetPlayer(0)
+    
+    if player:HasCollectible(ItemId.DEJA_VU) then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance == nil and entity:IsDead() then
+                entity:GetData().ReturnChance = 50 + player.Luck
+				if rng:RandomInt(100) < entity:GetData().ReturnChance then
+					local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+					tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+                else
+					entity:GetData().ReturnChance = 0
+				end
+            elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance ~= nil and entity:IsDead() then
+				if rng:RandomInt(100) < entity:GetData().ReturnChance then
+					local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+					tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+                else
+					entity:GetData().ReturnChance = 0
+				end
+			end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.dejaVuUpdate)
 
 --<<<HUNGRY HIPPO>>>--
 function Exodus:hungryHippoCache(player, flag)
