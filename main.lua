@@ -41,7 +41,7 @@ local ItemId = {
     SLING = Isaac.GetItemIdByName("Sling"),
     YIN = Isaac.GetItemIdByName("Yin"),
     YANG = Isaac.GetItemIdByName("Yang"),
-	DEJA_VU = Isaac.GetItemIdByName("Deja Vu"),
+    DEJA_VU = Isaac.GetItemIdByName("Deja Vu"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -59,7 +59,7 @@ local ItemId = {
     RITUAL_CANDLE = Isaac.GetItemIdByName("Ritual Candle"),
     ASTRO_BABY = Isaac.GetItemIdByName("Astro Baby"),
     LIL_RUNE = Isaac.GetItemIdByName("Lil' Rune"),
-	SUNDIAL = Isaac.GetItemIdByName("Sundial"),
+    SUNDIAL = Isaac.GetItemIdByName("Sundial"),
     
     ---<<TRINKETS>>---
     GRID_WORM = Isaac.GetTrinketIdByName("Grid Worm"),
@@ -106,8 +106,8 @@ local Entities = {
     CANDLE = getEntity("Candle"),
     ASTRO_BABY = getEntity("Astro Baby"),
     LIL_RUNE = getEntity("Lil Rune"),
-	SUN = getEntity("Sundial Sun"),
-	SHADOW = getEntity("Sundial Shadow"),
+    SUN = getEntity("Sundial Sun"),
+    SHADOW = getEntity("Sundial Shadow"),
     
     ---<<ENEMIES>>---
     POISON_MASTERMIND = getEntity("Poison Mastermind"),
@@ -2769,20 +2769,20 @@ function Exodus:dejaVuUpdate()
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance == nil and entity:IsDead() then
                 entity:GetData().ReturnChance = 50 + player.Luck
-				if rng:RandomInt(100) < entity:GetData().ReturnChance then
-					local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
-					tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+                if rng:RandomInt(100) < entity:GetData().ReturnChance then
+                    local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+                    tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
                 else
-					entity:GetData().ReturnChance = 0
-				end
+                    entity:GetData().ReturnChance = 0
+                end
             elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance ~= nil and entity:IsDead() then
-				if rng:RandomInt(100) < entity:GetData().ReturnChance then
-					local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
-					tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+                if rng:RandomInt(100) < entity:GetData().ReturnChance then
+                    local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+                    tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
                 else
-					entity:GetData().ReturnChance = 0
-				end
-			end
+                    entity:GetData().ReturnChance = 0
+                end
+            end
         end
     end
 end
@@ -2936,7 +2936,7 @@ Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.hungryHippoUpdate, En
 function Exodus:sundialCache(player, flag)
     if flag == CacheFlag.CACHE_FAMILIARS and player:HasCollectible(ItemId.SUNDIAL) then
         player:CheckFamiliar(Entities.SUN.variant, player:GetCollectibleNum(ItemId.SUNDIAL), rng)
-		player:CheckFamiliar(Entities.SHADOW.variant, player:GetCollectibleNum(ItemId.SUNDIAL), rng)
+        player:CheckFamiliar(Entities.SHADOW.variant, player:GetCollectibleNum(ItemId.SUNDIAL), rng)
     end
 end
 
@@ -2971,9 +2971,9 @@ function Exodus:sunUpdate(sun)
         sun.Visible = false
     end
     
-	if math.random(12) == 1 then
-		Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
-	end
+    if math.random(12) == 1 then
+        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
+    end
 
     if sun.FrameCount == 1 then
         sun.SpawnerVariant = 0
@@ -2997,22 +2997,22 @@ function Exodus:sunUpdate(sun)
 
     for i, entity in pairs(Isaac.GetRoomEntities()) do
         if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
-			if sun.Position:Distance(entity.Position) < 24 and entity:IsFlying() then
-				entity:AddBurn(EntityRef(sun), 100, 1)
-				entity:TakeDamage(2, 0, EntityRef(sun), 3)
-				if math.random(4) == 1 then
-					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
-				end
-			end
+            if sun.Position:Distance(entity.Position) < 24 and entity:IsFlying() then
+                entity:AddBurn(EntityRef(sun), 100, 1)
+                entity:TakeDamage(2, 0, EntityRef(sun), 3)
+                if math.random(4) == 1 then
+                    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
+                end
+            end
         end
-	end
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.sunUpdate, Entities.SUN.variant)
 
 function Exodus:shadowUpdate(shadow)
     local player = Isaac.GetPlayer(0)
-	local sprite = shadow:GetSprite()
+    local sprite = shadow:GetSprite()
     
     if shadow.FrameCount >= 1 then
         shadow.Visible = true
@@ -3041,13 +3041,13 @@ function Exodus:shadowUpdate(shadow)
     shadow.GridCollisionClass = 0
 
     for i, entity in pairs(Isaac.GetRoomEntities()) do
-		if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
-			if shadow.Position:Distance(entity.Position) < 24 and not entity:IsFlying() then
-				entity:AddFear(EntityRef(shadow), 100)
-				entity:TakeDamage(2, 0, EntityRef(shadow), 3)
-			end
-		end
-	end
+        if entity:IsActiveEnemy() and entity:IsVulnerableEnemy() then
+            if shadow.Position:Distance(entity.Position) < 24 and not entity:IsFlying() then
+                entity:AddFear(EntityRef(shadow), 100)
+                entity:TakeDamage(2, 0, EntityRef(shadow), 3)
+            end
+        end
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.shadowUpdate, Entities.SHADOW.variant)
@@ -3875,19 +3875,25 @@ function Exodus:dragonBreathUpdate()
         end
         
         if entity.Type == Entities.FIREBALL.id and entity.Variant == Entities.FIREBALL.variant then
+            if math.random(3) == 1 then
+                Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(entity.Position.X, entity.Position.Y - 12), RandomVector() * ((math.random() * 4) + 1), player)
+            end
+
             entity.Velocity = entity.Velocity * 1.01
             entity.SpriteRotation = entity.Velocity:GetAngleDegrees() - 90
             
             if entity:IsDead() or entity.FrameCount > 100 then
                 entity:Die()
-                
-                local vel = entity.Velocity:Rotated(-45, 45):Resized(10)
-                
-                if entity:CollidesWithGrid() then
-                    vel = vel:Rotated(180)
-                end
-                
-                local fire2 = Isaac.Spawn(Entities.FIREBALL_2.id, Entities.FIREBALL_2.variant, 0, entity.Position, vel, entity):ToTear()
+
+                for i, entityburn in pairs(Isaac.GetRoomEntities()) do
+					if entityburn:IsActiveEnemy() and entityburn:IsVulnerableEnemy() then
+						if entityburn.Position:Distance(entity.Position) < 48 then
+							entityburn:AddBurn(EntityRef(entity), 100, 1)
+						end
+					end
+				end
+
+                local fire2 = Isaac.Spawn(Entities.FIREBALL_2.id, Entities.FIREBALL_2.variant, 0, entity.Position, entity.Velocity, entity):ToTear()
                 fire2.TearFlags = player.TearFlags | TearFlags.TEAR_PIERCING
                 fire2.FallingAcceleration = -0.1
                 fire2.CollisionDamage = player.Damage * 2
