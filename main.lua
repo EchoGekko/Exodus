@@ -4255,7 +4255,8 @@ function Exodus:wingleaderEntityUpdate(wingleader)
     local player = Isaac.GetPlayer(0)
     local sprite = wingleader:GetSprite()
     local data = wingleader:GetData()
-    wingleader.Velocity = (player.Position - wingleader.Position):Resized(4)
+
+    wingleader.Velocity = (player.Position - wingleader.Position):Resized(data.wingSpeed)
     if wingleader.FrameCount > 47 and data.Done == nil then
         sprite:Play("Idle", false)
         data.Done = true
@@ -4269,6 +4270,7 @@ function Exodus:wingleaderEntityUpdate(wingleader)
         if rng:RandomInt(120) == 1 then
             data.orbitDistance = 34
             data.orbitDirection = 1
+            data.wingSpeed = 0
             sprite:Play("Puff", false)
         else
             sprite:Play("Idle", false)
@@ -4276,11 +4278,12 @@ function Exodus:wingleaderEntityUpdate(wingleader)
     else
         if data.orbitDirection == 1 then
             data.orbitDistance = data.orbitDistance + 2
+            data.wingSpeed = data.wingSpeed + 0.02
             if data.orbitDistance > 128 then
                 data.orbitDirection = 0
             elseif data.orbitDistance > 62 then
-				sprite:Play("Idle", false)
-			end
+                sprite:Play("Idle", false)
+            end
         else
             data.orbitDistance = data.orbitDistance - 1
         end
@@ -4293,7 +4296,8 @@ function Exodus:wingleaderInit(wingleader)
     wingleader.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
     wingleader.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
     wingleader:GetData().orbitDistance = 32
-    winglewingleader:GetData().orbitDirection = 0
+    wingleader:GetData().orbitDirection = 0
+    wingleader:GetData().wingSpeed = 1
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Exodus.wingleaderInit, Entities.WINGLEADER.id)
