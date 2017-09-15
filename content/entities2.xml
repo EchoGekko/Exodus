@@ -61,7 +61,7 @@
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 
-    <entity anm2path="monsters/Wingleader.anm2" reroll="true" baseHP="20" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="642" name="Wingleader" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="0" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
+    <entity anm2path="monsters/Wingleader.anm2" reroll="true" baseHP="16" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="642" name="Wingleader" numGridCollisionPoints="12" shadowSize="14" stageHP="5" variant="0" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 
