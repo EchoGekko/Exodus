@@ -133,6 +133,7 @@ local Entities = {
     HATEFUL_FLY = getEntity("Hateful Fly"),
     HATEFUL_FLY_GHOST = getEntity("Hateful Fly Ghost"),
     HOTHEAD = getEntity("Hothead"),
+    WINGLEADER = getEntity("Wingleader"),
     
     ---<<OTHERS>>---
     BIRDBATH = getEntity("Birdbath"),
@@ -3886,12 +3887,12 @@ function Exodus:dragonBreathUpdate()
                 entity:Die()
 
                 for i, entityburn in pairs(Isaac.GetRoomEntities()) do
-					if entityburn:IsActiveEnemy() and entityburn:IsVulnerableEnemy() then
-						if entityburn.Position:Distance(entity.Position) < 48 then
-							entityburn:AddBurn(EntityRef(entity), 100, 1)
-						end
-					end
-				end
+                    if entityburn:IsActiveEnemy() and entityburn:IsVulnerableEnemy() then
+                        if entityburn.Position:Distance(entity.Position) < 48 then
+                            entityburn:AddBurn(EntityRef(entity), 100, 1)
+                        end
+                    end
+                end
 
                 local fire2 = Isaac.Spawn(Entities.FIREBALL_2.id, Entities.FIREBALL_2.variant, 0, entity.Position, entity.Velocity, entity):ToTear()
                 fire2.TearFlags = player.TearFlags | TearFlags.TEAR_PIERCING
@@ -4196,7 +4197,7 @@ function Exodus:dankDipEntityUpdate(dip)
         local sprite = dip:GetSprite()
         
         if sprite:IsPlaying("Move") then
-          dip.Velocity = dip.Velocity:Rotated(5):Resized(6) + (player.Position - dip.Position):Normalized()
+            dip.Velocity = dip.Velocity:Rotated(5):Resized(6) + (player.Position - dip.Position):Normalized()
         end
         
         if dip:IsDead() then
@@ -4219,6 +4220,83 @@ function Exodus:dankDipEntityUpdate(dip)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.dankDipEntityUpdate, Entities.DANK_DIP.id)
+
+--<<<WINGLEADER>>>--
+function Exodus:wingleaderUpdate(fly)
+    local player = Isaac.GetPlayer(0)
+    local data = fly:GetData()
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == Entities.WINGLEADER.id then
+            if fly.Position:DistanceSquared(entity.Position) <= 16384 then
+                if not data.lockedToParent then
+                    data.lockedToParent = true
+                    data.orbitAngle = math.floor((fly.Position - entity.Position):GetAngleDegrees())
+                    fly.Velocity = Vector(0, 0)
+                else
+                    data.orbitAngle = data.orbitAngle + 5
+                    if data.orbitAngle >= 360 then
+                        data.orbitAngle = data.orbitAngle % 360
+                    elseif data.orbitAngle < 0 then
+                        data.orbitAngle = 360 - (data.orbitAngle % 360)
+                    end
+                    fly.Velocity = Vector(0, 0)
+                    fly.Position = entity.Position + Vector(entity:GetData().orbitDistance, 0):Rotated(data.orbitAngle)
+                end
+            else
+                fly.Velocity = fly.Velocity:Rotated(5):Resized(6) + (entity.Position - fly.Position):Normalized()
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.wingleaderUpdate, EntityType.ENTITY_ATTACKFLY)
+
+function Exodus:wingleaderEntityUpdate(wingleader)
+    local player = Isaac.GetPlayer(0)
+    local sprite = wingleader:GetSprite()
+    local data = wingleader:GetData()
+    wingleader.Velocity = (player.Position - wingleader.Position):Resized(4)
+    if wingleader.FrameCount > 47 and data.Done == nil then
+        sprite:Play("Idle", false)
+        data.Done = true
+    end
+    if wingleader.Position.X < player.Position.X then
+        sprite.FlipX = true
+    else
+        sprite.FlipX = false
+    end
+    if data.orbitDistance == 32 then
+        if rng:RandomInt(120) == 1 then
+            data.orbitDistance = 34
+            data.orbitDirection = 1
+            sprite:Play("Puff", false)
+        else
+            sprite:Play("Idle", false)
+        end
+    else
+        if data.orbitDirection == 1 then
+            data.orbitDistance = data.orbitDistance + 2
+            if data.orbitDistance > 128 then
+                data.orbitDirection = 0
+            elseif data.orbitDistance > 62 then
+				sprite:Play("Idle", false)
+			end
+        else
+            data.orbitDistance = data.orbitDistance - 1
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.wingleaderEntityUpdate, Entities.WINGLEADER.id)
+
+function Exodus:wingleaderInit(wingleader)
+    wingleader.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+    wingleader.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
+    wingleader:GetData().orbitDistance = 32
+    winglewingleader:GetData().orbitDirection = 0
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Exodus.wingleaderInit, Entities.WINGLEADER.id)
 
 --<<<BOTH SHROOMMEN>>>--
 function Exodus:shroommanUpdate()
