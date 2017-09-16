@@ -773,6 +773,8 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ritualCandleUpdate)
 
 function Exodus:randomiseCandleSprites()
+    local count = 1
+    
     for i, entity in pairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == Entities.CANDLE.variant then
             local data = entity:GetData()
@@ -781,8 +783,9 @@ function Exodus:randomiseCandleSprites()
                 local sprite = entity:GetSprite()
                 
                 data.RandomSpritesheet = true
-                sprite:ReplaceSpritesheet(0, "gfx/familiar/candle" .. math.random(1, 5) .. ".png")
+                sprite:ReplaceSpritesheet(0, "gfx/familiar/candle" .. math.min(count, 5) .. ".png")
                 sprite:LoadGraphics()
+                count = count + 1
             end
         end
     end
