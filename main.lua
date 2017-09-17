@@ -70,7 +70,7 @@ local ItemId = {
     BROKEN_GLASSES = Isaac.GetTrinketIdByName("Broken Glasses"),
     BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul"),
     CLAUSTROPHOBIA = Isaac.GetTrinketIdByName("Claustrophobia"),
-    FLYDER = Isaac.GetItemIdByName("Flyder")
+    FLYDER = Isaac.GetTrinketIdByName("Flyder")
 }
 
 local function getEntity(stringName, intSubtype)
@@ -206,6 +206,7 @@ function Exodus:newGame(fromSave)
             BUTTROT = { HasButtrot = false },
             CLAUSTROPHOBIA = { Triggered = false },
             SLING = { Icon = Sprite() },
+            HOLY_WATER = { Splashed = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -3608,6 +3609,32 @@ function Exodus:breadUpdate()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.breadUpdate)
+
+--<<<HOLY WATER>>>--
+function Exodus:holyWaterDamage(target, amount, flags, source, cdtimer)
+    local player = Isaac.GetPlayer(0)
+    local chance = game:GetRoom():GetDevilRoomChance()
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_HOLY_WATER) and not ItemVariables.HOLY_WATER.Splashed then
+        ItemVariables.HOLY_WATER.Splashed = true
+        if player:GetSoulHearts() > 0 then
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
+            player:AddSoulHearts(-1)
+			return false
+        else
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
+            player:AddHearts(-1)
+			return false
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.holyWaterDamage, EntityType.ENTITY_PLAYER)
+
+function Exodus:holyWaterRoom()
+    ItemVariables.HOLY_WATER.Splashed = false
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.holyWaterRoom)
 
 --<<<COBALT NECKLACE>>>--
 function Exodus.setScoreDisplay()
