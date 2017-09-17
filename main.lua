@@ -3600,6 +3600,30 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.ladderCache)
 
+--<<<FIRE MIND>>>--
+function Exodus:fireMindUpdate()
+    local player = Isaac.GetPlayer(0)
+
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) then
+        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+		player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+        player:EvaluateItems()
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.fireMindUpdate)
+
+function Exodus:fireMindCache(player, flag)
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) and flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage + 0.5
+    end
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) and flag == CacheFlag.CACHE_SHOTSPEED then
+        player.ShotSpeed = player.ShotSpeed + 0.35
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.fireMindCache)
+
 --<<<MOLDY BREAD>>>--
 function Exodus:breadUpdate()
     local player = Isaac.GetPlayer(0)
