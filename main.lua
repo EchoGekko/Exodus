@@ -2094,8 +2094,10 @@ function Exodus:gluttonysStomachRender()
     local playerType = player:GetPlayerType()
     local Hearts = player:GetMaxHearts() / 2
     local Bar = ItemVariables.GLUTTONYS_STOMACH.RenderBar
+    local level = game:GetLevel()
+    local room = level:GetCurrentRoom()
     
-    if player:HasCollectible(ItemId.GLUTTONYS_STOMACH) and playerType ~= PlayerType.PLAYER_THELOST and playerType ~= PlayerType.PLAYER_KEEPER then
+    if player:HasCollectible(ItemId.GLUTTONYS_STOMACH) and playerType ~= PlayerType.PLAYER_THELOST and playerType ~= PlayerType.PLAYER_KEEPER and (level:GetCurses() & LevelCurse.CURSE_OF_THE_UNKNOWN ~= LevelCurse.CURSE_OF_THE_UNKNOWN) and (room:GetType() ~= RoomType.ROOM_BOSS or room:GetFrameCount() >= 1) then
         Bar.Scale = Vector(1.3, 1.3)
         Bar:SetFrame("Heart", math.min(8, ItemVariables.GLUTTONYS_STOMACH.Parts))
         Bar:Render(Vector(36 + (12 * ((Hearts % 7) + math.floor(Hearts / 7))), 12 + (11 * math.floor(Hearts / 7))), Vector(0, 0), Vector(0, 0))
