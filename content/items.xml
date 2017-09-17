@@ -22,6 +22,7 @@
 	<passive description="Negativity" name="Yin" gfx="Yin.png" cache="firedelay" blackhearts="2" devilprice="2"/>
 	<passive description="Positivity" name="Yang" gfx="Yang.png" cache="damage" soulhearts="2"/>
 	<passive description="Already occurred" name="Deja Vu" gfx="Deja Vu.png" />
+	<passive description="Everything you know is a lie" name="Flyder" gfx="Flyder.png" />
 	
 	<!-- Active Items -->
 	<active description="Tree of knowledge" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
