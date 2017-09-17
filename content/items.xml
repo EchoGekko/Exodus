@@ -4,7 +4,7 @@
 	<passive description="Even they are crying" name="Sad Tears" gfx="Sad Tears.png" cache="shotspeed"/>
 	<passive description="Leaky tears" name="Busted Pipe" gfx="Busted Pipe.png" />
 	<passive description="Satanic defence" name="Unholy Mantle" gfx="Unholy Mantle.png" devilprice="2"/>
-	<passive description="Tech bubble" name="Tech Y"  gfx="TechY.png" cache="firedelay"/>
+	<passive description="Tech bubble" name="Tech 360"  gfx="Tech 360.png" cache="firedelay"/>
 	<passive description="Ouch!" name="Paper Cut" gfx="Paper Cut.png"/>
 	<passive description="I still can't remember" name="Forget Me Later" gfx="Forget Me Later.png"/>
 	<passive description="Charged fireballs" name="Dragon Breath" gfx="Dragon Breath.png" cache="firedelay"/>

@@ -24,7 +24,7 @@ local ItemId = {
     SAD_TEARS = Isaac.GetItemIdByName("Sad Tears"),
     BUSTED_PIPE = Isaac.GetItemIdByName("Busted Pipe"),
     UNHOLY_MANTLE = Isaac.GetItemIdByName("Unholy Mantle"),
-    TECH_Y = Isaac.GetItemIdByName("Tech Y"),
+    TECH_360 = Isaac.GetItemIdByName("Tech 360"),
     PAPER_CUT = Isaac.GetItemIdByName("Paper Cut"),
     FORGET_ME_LATER = Isaac.GetItemIdByName("Forget Me Later"),
     DRAGON_BREATH = Isaac.GetItemIdByName("Dragon Breath"),
@@ -160,7 +160,7 @@ local CostumeId = {
     BEEHIVE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Beehive.anm2"),
     BUSTED_PIPE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Busted Pipe.anm2"),
     UNHOLY_MANTLE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Unholy Mantle.anm2"),
-    TECH_Y = Isaac.GetCostumeIdByPath("gfx/characters/costume_TechY.anm2"),
+    TECH_360 = Isaac.GetCostumeIdByPath("gfx/characters/costume_TechY.anm2"),
     PAPER_CUT = Isaac.GetCostumeIdByPath("gfx/characters/costume_Paper Cut.anm2"),
     DRAGON_BREATH = Isaac.GetCostumeIdByPath("gfx/characters/costume_Dragon Breath.anm2"),
     PIG_BLOOD = Isaac.GetCostumeIdByPath("gfx/characters/costume_Pig Blood.anm2"),
@@ -188,7 +188,7 @@ function Exodus:newGame(fromSave)
             BEEHIVE = { HasBeehive = false, ColourIsBlack = false },
             BUSTED_PIPE = { HasBustedPipe = false },
             UNHOLY_MANTLE = { HasUnholyMantle = false, HasEffect = true },
-            TECH_Y = { HasTechY = false },
+            TECH_360 = { HasTech360 = false },
             PAPER_CUT = { HasPaperCut = false },
             FORGET_ME_LATER = { HasForgetMeLater = false, NumberFloors = 0 },
             DRAGON_BREATH = { HasDragonBreath = false, Charge = 0, ChargeDirection = NullVector },
@@ -581,7 +581,7 @@ function Exodus:ShootFireball(position, vector)
     fire.SpriteRotation = fire.Velocity:GetAngleDegrees() - 90
 end
 
-function Exodus:GetTechYSize()
+function Exodus:GetTech360Size()
     local size = 1
     local player = Isaac.GetPlayer(0)
     
@@ -2688,15 +2688,15 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.tragicMushroomUse, ItemId.TRAGIC_MUSHROOM)
 
---<<<TECH Y>>>--
-function Exodus:techYUpdate()
+--<<<TECH 360>>>--
+function Exodus:tech360Update()
     local player = Isaac.GetPlayer(0)
     local entities = Isaac.GetRoomEntities()
     
-    if player:HasCollectible(ItemId.TECH_Y) then
-        if not ItemVariables.TECH_Y.HasTechY then
-            ItemVariables.TECH_Y.HasTechY = true
-            player:AddNullCostume(CostumeId.TECH_Y)
+    if player:HasCollectible(ItemId.TECH_360) then
+        if not ItemVariables.TECH_360.HasTech360 then
+            ItemVariables.TECH_360.HasTech360 = true
+            player:AddNullCostume(CostumeId.TECH_360)
 			player:AddCacheFlags(CacheFlag.CACHE_RANGE)
 			player:EvaluateItems()
         end
@@ -2704,7 +2704,7 @@ function Exodus:techYUpdate()
         for i, entity in pairs(entities) do 
             local data = entity:GetData()
             
-            if entity.Type == EntityType.ENTITY_LASER and data.TechY and data.LudoTear == nil then
+            if entity.Type == EntityType.ENTITY_LASER and data.Tech360 and data.LudoTear == nil then
                 entity.Position = player.Position
                 entity.Velocity = player.Velocity
             end
@@ -2715,11 +2715,11 @@ function Exodus:techYUpdate()
 					local laser = player:FireTechXLaser(entity.Position, entity.Velocity, math.abs(player.TearHeight * 3))
 					laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
 					laser.Color = player.TearColor
-					laser:GetData().TechY = true
+					laser:GetData().Tech360 = true
 					laser:GetData().LudoTear = entity
 					entity.SpawnerType = EntityType.ENTITY_TEAR
 				end
-			elseif entity.Type == EntityType.ENTITY_LASER and data.TechY and data.LudoTear ~= nil then
+			elseif entity.Type == EntityType.ENTITY_LASER and data.Tech360 and data.LudoTear ~= nil then
 				entity.Position = entity:GetData().LudoTear.Position
 				if entity.FrameCount % 50 == 0 then
 					for u = 1, 6 do
@@ -2738,12 +2738,12 @@ function Exodus:techYUpdate()
                 local laser = player:FireTechXLaser(player.Position, player.Velocity, 1)
                 laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
                 laser.Color = player.TearColor
-                laser:GetData().TechY = true
+                laser:GetData().Tech360 = true
                 entity.SpawnerType = EntityType.ENTITY_TEAR
             end
       
             if entity.Type == EntityType.ENTITY_LASER and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant == 2 and 
-            (data.TechY or player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X)) then
+            (data.Tech360 or player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X)) then
                 entity.Color = player.TearColor
                 entity = entity:ToLaser()
                     
@@ -2761,7 +2761,7 @@ function Exodus:techYUpdate()
                     if player:HasCollectible(CollectibleType.COLLECTIBLE_ANTI_GRAVITY) and entity.FrameCount < 80 then
                         entity.Radius = 10
                     else
-                        entity.Radius = entity.Radius + Exodus:GetTechYSize()
+                        entity.Radius = entity.Radius + Exodus:GetTech360Size()
                     end
                 end
             
@@ -2771,29 +2771,29 @@ function Exodus:techYUpdate()
                     local laser = player:FireTechXLaser(entity.Position, RandomVector() * (entity.Radius / 20), entity.Radius)
                     laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
                     laser.Color = player.TearColor
-                    laser:GetData().TechY = true
+                    laser:GetData().Tech360 = true
                     laser:GetData().TechX = true
                 end
             end
         end
-    elseif ItemVariables.TECH_Y.HasTechY then
-        ItemVariables.TECH_Y.HasTechY = false
-        player:TryRemoveNullCostume(CostumeId.TECH_Y)
+    elseif ItemVariables.TECH_360.HasTech360 then
+        ItemVariables.TECH_360.HasTech360 = false
+        player:TryRemoveNullCostume(CostumeId.TECH_360)
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.techYUpdate)
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.tech360Update)
 
-function Exodus:techYCache(player, flag)
-    if player:HasCollectible(ItemId.TECH_Y) and flag == CacheFlag.CACHE_FIREDELAY then
+function Exodus:tech360Cache(player, flag)
+    if player:HasCollectible(ItemId.TECH_360) and flag == CacheFlag.CACHE_FIREDELAY then
         player.MaxFireDelay = player.MaxFireDelay * 3 - 2
     end
-    if player:HasCollectible(ItemId.TECH_Y) and flag == CacheFlag.CACHE_RANGE then
+    if player:HasCollectible(ItemId.TECH_360) and flag == CacheFlag.CACHE_RANGE then
         player.TearHeight = player.TearHeight * 1.25
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.techYCache)
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.tech360Cache)
 
 --<<<SAD TEARS>>>--
 function Exodus:sadTearsUpdate()
