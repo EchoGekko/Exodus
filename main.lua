@@ -42,7 +42,6 @@ local ItemId = {
     YIN = Isaac.GetItemIdByName("Yin"),
     YANG = Isaac.GetItemIdByName("Yang"),
     DEJA_VU = Isaac.GetItemIdByName("Deja Vu"),
-	FLYDER = Isaac.GetItemIdByName("Flyder"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -70,7 +69,8 @@ local ItemId = {
     PURPLE_MOON = Isaac.GetTrinketIdByName("Purple Moon"),
     BROKEN_GLASSES = Isaac.GetTrinketIdByName("Broken Glasses"),
     BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul"),
-    CLAUSTROPHOBIA = Isaac.GetTrinketIdByName("Claustrophobia")
+    CLAUSTROPHOBIA = Isaac.GetTrinketIdByName("Claustrophobia"),
+    FLYDER = Isaac.GetItemIdByName("Flyder")
 }
 
 local function getEntity(stringName, intSubtype)
@@ -1484,6 +1484,29 @@ function Exodus:trinketUpdate()
                 end
                 
                 player:AddBlueFlies(amount, player.Position, nil)
+            end
+        end
+    end
+    
+    ---<<FLYDER>>---
+    if player:HasTrinket(ItemId.FLYDER) then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.BLUE_SPIDER and entity.FrameCount < 3 and entity:GetData().DontSwitch == nil then
+                entity:Remove()
+                local fly = player:AddBlueFlies(1, player.Position, player)
+                fly:GetData().DontSwitch = true
+            elseif entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.BLUE_FLY and entity.FrameCount < 3 and entity:GetData().DontSwitch == nil then
+                entity:Remove()
+                local spider = player:AddBlueSpider(entity.Position)
+                spider:GetData().DontSwitch = true
+            elseif entity.Type == EntityType.ENTITY_SPIDER and player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) and entity.FrameCount < 3 and entity:GetData().DontSwitch == nil then
+                entity:Remove()
+                local fly = Isaac.Spawn(EntityType.ENTITY_ATTACKFLY, 0, 0, entity.Position, entity.Velocity, nil)
+                fly:GetData().DontSwitch = true
+            elseif entity.Type == EntityType.ENTITY_ATTACKFLY and player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) and entity.FrameCount < 3 and entity:GetData().DontSwitch == nil then
+                entity:Remove()
+                local spider = Isaac.Spawn(EntityType.ENTITY_SPIDER, 0, 0, entity.Position, entity.Velocity, nil)
+                spider:GetData().DontSwitch = true
             end
         end
     end
@@ -3585,26 +3608,6 @@ function Exodus:breadUpdate()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.breadUpdate)
-
---<<<FLYDER>>>--
-function Exodus:flyderUpdate()
-    local player = Isaac.GetPlayer(0)
-    if player:HasCollectible(ItemId.FLYDER) then
-		for i, entity in pairs(Isaac.GetRoomEntities()) do
-			if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.BLUE_SPIDER and entity.FrameCount < 3 and entity:GetData().DontSwitch == nil then
-				entity:Remove()
-				local fly = player:AddBlueFlies(1, player.Position, player)
-				fly:GetData().DontSwitch = true
-			elseif entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.BLUE_FLY and entity.FrameCount < 3 and entity:GetData().DontSwitch == nil then
-				entity:Remove()
-				local spider = player:AddBlueSpider(entity.Position)
-				spider:GetData().DontSwitch = true
-			end
-		end
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.flyderUpdate)
 
 --<<<COBALT NECKLACE>>>--
 function Exodus.setScoreDisplay()
