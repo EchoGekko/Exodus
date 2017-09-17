@@ -135,6 +135,7 @@ local Entities = {
     HATEFUL_FLY_GHOST = getEntity("Hateful Fly Ghost"),
     HOTHEAD = getEntity("Hothead"),
     WINGLEADER = getEntity("Wingleader"),
+    BROOD = getEntity("Brood"),
     
     ---<<OTHERS>>---
     BIRDBATH = getEntity("Birdbath"),
@@ -287,7 +288,7 @@ function Exodus:newGame(fromSave)
         
         EntityVariables = {
             ---<<ENEMIES>>---
-            FLYERBALL = { Fires = {} },
+            FLYERBALL = { Fires = {} }
         }
         
         local player = Isaac.GetPlayer(0)
@@ -3619,11 +3620,11 @@ function Exodus:holyWaterDamage(target, amount, flags, source, cdtimer)
         if player:GetSoulHearts() > 0 then
             player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
             player:AddSoulHearts(-1)
-			return false
+            return false
         else
             player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
             player:AddHearts(-1)
-			return false
+            return false
         end
     end
 end
@@ -4613,6 +4614,86 @@ function Exodus:blockageEntityUpdate(entity)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.blockageEntityUpdate, Entities.BLOCKAGE.id)
+
+--<<<BROOD>>>--
+local broodbehaviors = {}
+
+function broodbehaviors.init(npc, data)
+    local sprite = npc:GetSprite()
+    if sprite:IsFinished("Appear") then
+        data.state = "preidle"
+    end
+end
+
+function broodbehaviors.preidle(npc, data)
+    local sprite = npc:GetSprite()
+    data.counter = 0
+    data.state = "idle"
+    sprite:Play("Idle", true)
+end
+
+function broodbehaviors.idle(npc, data)
+    data.counter = data.counter + 1
+    npc.Velocity = npc.Velocity * 0.8
+    if data.counter > 30 and math.random() > 1.5-data.counter/60 then
+        data.state = "prewalk"
+    end
+end
+
+function broodbehaviors.prewalk(npc, data)
+    local sprite = npc:GetSprite()
+    data.state = "walk"
+    local ang = math.random()*math.pi*2
+    data.dir = Vector(math.sin(ang), math.cos(ang))
+    data.duration = math.random()*40+10
+    data.counter = 0
+    sprite:Play("Walk")
+end
+
+function broodbehaviors.walk(npc, data)
+    data.counter = data.counter + 1
+
+    npc.Velocity = npc.Velocity * 0.6 + data.dir * 2
+
+    if data.counter > data.duration then
+        data.counter = 0
+        data.state = "preidle"
+    end
+end
+
+function broodUpdate(_, npc)
+    if not npc:Exists() or npc:IsDead() then return end
+
+    local data = npc:GetData()
+    local f = broodbehaviors[data.state]
+    if not f then
+        Isaac.DebugString("Missing brood behavior: "..data.state)
+        return
+    end
+
+    if npc:HasMortalDamage() then
+        local pos = npc.Position
+        for i = 1, math.random(5)+7 do
+            EntityNPC.ThrowSpider(pos, npc, pos+RandomVector()*100*(math.random()*0.7+0.3), false, 0)
+        end
+        return
+    end
+
+    f(npc, data)
+end
+
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, broodUpdate, Entities.BROOD.id)
+
+function broodInit(_, npc)
+    local data = npc:GetData()
+    local sprite = npc:GetSprite()
+
+    data.state = "init"
+
+    sprite:Play("Appear", true)
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, broodInit, Entities.BROOD.id)
 
 --<<<CLOSTER>>>--
 function Exodus:closterEntityUpdate(entity)
