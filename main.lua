@@ -148,9 +148,9 @@ local Entities = {
 
 for i, entity in pairs(Entities) do
     if entity.id == -1 then
-        Isaac.DebugString("Exodus ERROR: Could not find a type for entity " .. entity.name)
+        error("Could not find a type for entity " .. entity.name, 1)
     elseif entity.variant == -1 then
-        Isaac.DebugString("Exodus ERROR: Could not find a variant for entity " .. entity.name)
+        error("Could not find a variant for entity " .. entity.name, 1)
     end
 end
 
