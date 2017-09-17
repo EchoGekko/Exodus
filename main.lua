@@ -2697,16 +2697,41 @@ function Exodus:techYUpdate()
         if not ItemVariables.TECH_Y.HasTechY then
             ItemVariables.TECH_Y.HasTechY = true
             player:AddNullCostume(CostumeId.TECH_Y)
+			player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+			player:EvaluateItems()
         end
     
         for i, entity in pairs(entities) do 
             local data = entity:GetData()
             
-            if entity.Type == EntityType.ENTITY_LASER and data.TechY == true then
+            if entity.Type == EntityType.ENTITY_LASER and data.TechY and data.LudoTear == nil then
                 entity.Position = player.Position
                 entity.Velocity = player.Velocity
             end
-      
+
+			if entity.Type == EntityType.ENTITY_TEAR and entity.Visible then
+				if entity:ToTear().TearFlags & 1<<57 ~= 0 then
+					entity.Visible = false
+					local laser = player:FireTechXLaser(entity.Position, entity.Velocity, math.abs(player.TearHeight * 3))
+					laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
+					laser.Color = player.TearColor
+					laser:GetData().TechY = true
+					laser:GetData().LudoTear = entity
+					entity.SpawnerType = EntityType.ENTITY_TEAR
+				end
+			elseif entity.Type == EntityType.ENTITY_LASER and data.TechY and data.LudoTear ~= nil then
+				entity.Position = entity:GetData().LudoTear.Position
+				if entity.FrameCount % 50 == 0 then
+					for u = 1, 6 do
+						local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (60 + rng:RandomInt(11) - 5)), false, false)
+						laser.TearFlags = laser.TearFlags | TearFlags.TEAR_SPECTRAL
+						laser.Color = player.TearColor
+						laser.DisableFollowParent = true
+					end
+				end
+				return
+			end
+
             if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= TearVariant.CHAOS_CARD and entity.Variant ~= TearVariant.BOBS_HEAD and entity.SpawnerType == EntityType.ENTITY_PLAYER then
                 entity:Remove()
                 
@@ -2762,6 +2787,9 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.techYUpdate)
 function Exodus:techYCache(player, flag)
     if player:HasCollectible(ItemId.TECH_Y) and flag == CacheFlag.CACHE_FIREDELAY then
         player.MaxFireDelay = player.MaxFireDelay * 3 - 2
+    end
+    if player:HasCollectible(ItemId.TECH_Y) and flag == CacheFlag.CACHE_RANGE then
+        player.TearHeight = player.TearHeight * 1.25
     end
 end
 
@@ -3313,7 +3341,7 @@ function Exodus:beehiveUpdate()
     local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.BEEHIVE) then
-        if player.FrameCount % (math.random(14, 16)) == 0 then
+        if player.FrameCount % (math.random(18, 20)) == 0 then
             local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_BLACK, 0, player.Position, NullVector, player)
             creep:SetColor(Color(0, 0, 0, 1, math.random(200, 250), math.random(150, 200), math.random(0, 10)), -1, 1, false, false)
         end
@@ -3623,6 +3651,33 @@ function Exodus:fireMindCache(player, flag)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.fireMindCache)
+
+--<<<LUCKY FOOT + LUCK TOE>>>--
+function Exodus:luckUpdate()
+    local player = Isaac.GetPlayer(0)
+
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_LUCKY_FOOT) then
+        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+        player:EvaluateItems()
+    end
+    if player:HasTrinket(TrinketType.TRINKET_LUCKY_TOE) then
+        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+        player:EvaluateItems()
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.luckUpdate)
+
+function Exodus:luckCache(player, flag)
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_LUCKY_FOOT) and flag == CacheFlag.CACHE_LUCK then
+        player.Luck = player.Luck + 2
+    end
+    if player:HasTrinket(TrinketType.TRINKET_LUCKY_TOE) and flag == CacheFlag.CACHE_LUCK then
+        player.Luck = player.Luck + 1
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.luckCache)
 
 --<<<MOLDY BREAD>>>--
 function Exodus:breadUpdate()
