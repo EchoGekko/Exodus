@@ -22,6 +22,7 @@
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Deja Vu" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Lil Rune" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop">
 		<Item Name="Win Streak" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
@@ -31,6 +32,8 @@
 		<Item Name="Sling" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="boss">
+		<Item Name="Fool's Gold" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Makeup Remover" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="devil">
 		<Item Name="Unholy Mantle" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -55,6 +58,7 @@
 		<Item Name="Mutant Clover" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Ominous Lantern" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Buttrot" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Lil Rune" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="library">
 	</Pool>
@@ -100,6 +104,7 @@
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Deja Vu" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Lil Rune" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="dungeon">
 	</Pool>
@@ -126,6 +131,7 @@
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Deja Vu" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Lil Rune" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedBoss">
 	</Pool>
@@ -152,6 +158,7 @@
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sundial" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Deja Vu" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Lil Rune" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Win Streak" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Mysterious Mustache" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Welcome Mat" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
@@ -188,6 +195,7 @@
 		<Item Name="Tragic Mushroom" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Mutant Clover" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Ominous Lantern" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Lil Rune" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedGoldenChest">
 	</Pool>

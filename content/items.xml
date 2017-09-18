@@ -22,6 +22,8 @@
 	<passive description="Negativity" name="Yin" gfx="Yin.png" cache="firedelay" blackhearts="2" devilprice="2"/>
 	<passive description="Positivity" name="Yang" gfx="Yang.png" cache="damage" soulhearts="2"/>
 	<passive description="Already occurred" name="Deja Vu" gfx="Deja Vu.png" />
+	<passive description="Heart of gold" name="Fool's Gold" gfx="Fools Gold.png" />
+	<passive description="Scariest face" name="Makeup Remover" gfx="Makeup Remover.png" />
 	
 	<!-- Active Items -->
 	<active description="Tree of knowledge" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
@@ -38,7 +40,7 @@
 	<familiar description="Yummy" gfx="Hungry Hippo.png" name="Hungry Hippo" cache="familiars"/>
 	<familiar description="Light them up" gfx="Ritual Candle.png" name="Ritual Candle" devilprice="2"/>
 	<familiar description="Lil' planet" gfx="Astro Baby.png" name="Astro Baby" cache="familiars" />
-	<familiar description="Miniral" gfx="Lil Rune.png" name="Lil' Rune" cache="familiars" />
+	<familiar description="Miniral" gfx="Lil Rune.png" name="Lil Rune" cache="familiars" />
 	<familiar description="Day after day" gfx="Sundial.png" name="Sundial" cache="familiars"/>
 	
 	<!-- Trinkets -->

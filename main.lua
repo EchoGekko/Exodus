@@ -42,6 +42,8 @@ local ItemId = {
     YIN = Isaac.GetItemIdByName("Yin"),
     YANG = Isaac.GetItemIdByName("Yang"),
     DEJA_VU = Isaac.GetItemIdByName("Deja Vu"),
+    FOOLS_GOLD = Isaac.GetItemIdByName("Fool's Gold"),
+    MAKEUP_REMOVER = Isaac.GetItemIdByName("Makeup Remover"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -58,7 +60,7 @@ local ItemId = {
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
     RITUAL_CANDLE = Isaac.GetItemIdByName("Ritual Candle"),
     ASTRO_BABY = Isaac.GetItemIdByName("Astro Baby"),
-    LIL_RUNE = Isaac.GetItemIdByName("Lil' Rune"),
+    LIL_RUNE = Isaac.GetItemIdByName("Lil Rune"),
     SUNDIAL = Isaac.GetItemIdByName("Sundial"),
     
     ---<<TRINKETS>>---
@@ -208,6 +210,7 @@ function Exodus:newGame(fromSave)
             CLAUSTROPHOBIA = { Triggered = false },
             SLING = { Icon = Sprite() },
             HOLY_WATER = { Splashed = false },
+			FOOLS_GOLD = { HasFoolsGold = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -288,7 +291,10 @@ function Exodus:newGame(fromSave)
         
         EntityVariables = {
             ---<<ENEMIES>>---
-            FLYERBALL = { Fires = {} }
+            FLYERBALL = { Fires = {} },
+			
+			---<<CHARACTERS>>---
+			KEEPER = { ThirdHeart = 2, CurrentCoins = 0 }
         }
         
         local player = Isaac.GetPlayer(0)
@@ -1350,6 +1356,69 @@ function Exodus:flyerballEntityUpdate(entity)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.flyerballEntityUpdate, Entities.FLYERBALL.id)
+
+--<<KEEPER>>--
+function Exodus:keeperRender(t)
+	local player = Isaac.GetPlayer(0)
+	local level = game:GetLevel()
+	local room = game:GetRoom()
+	if player:GetName() == "Keeper" and (level:GetCurses() & LevelCurse.CURSE_OF_THE_UNKNOWN ~= LevelCurse.CURSE_OF_THE_UNKNOWN) and (room:GetType() ~= RoomType.ROOM_BOSS or room:GetFrameCount() >= 1) then
+		local hearts = player:GetMaxHearts()/2
+		local sprite = Sprite()
+		sprite:Load("gfx/ui/ui_hearts.anm2", true)
+		if EntityVariables.KEEPER.ThirdHeart == 1 then
+			sprite:Play("CoinEmpty")
+			sprite:Update()
+			sprite:Render(Vector((hearts*12)+12*1+36,12), Vector(0,0), Vector(0,0))
+		elseif EntityVariables.KEEPER.ThirdHeart == 2 then
+			sprite:Play("CoinHeartFull")
+			sprite:Update()
+			sprite:Render(Vector((hearts*12)+12*1+36,12), Vector(0,0), Vector(0,0))
+		end
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.keeperRender)
+
+function Exodus:keeperUpdate(t)
+	local player = Isaac.GetPlayer(0)
+	local coins = player:GetNumCoins()
+	local hearts = player:GetHearts()
+	local maxhearts = player:GetMaxHearts()
+	if player:GetName() == "Keeper" then
+		if maxhearts == 4 and EntityVariables.KEEPER.ThirdHeart == 0 then
+			player:AddMaxHearts(-2, false)
+			EntityVariables.KEEPER.ThirdHeart = 2
+		end
+		if maxhearts == 0 and EntityVariables.KEEPER.ThirdHeart == 2 then
+			EntityVariables.KEEPER.ThirdHeart = 0
+			player:AddMaxHearts(2, false)
+			player:AddHearts(4)
+		end
+		if coins > EntityVariables.KEEPER.CurrentCoins then
+			if hearts == maxhearts and EntityVariables.KEEPER.ThirdHeart == 1 then
+				player:AddCoins(-1)
+				EntityVariables.KEEPER.ThirdHeart = 2
+			end
+		end
+	end
+	EntityVariables.KEEPER.CurrentCoins = coins
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.keeperUpdate)
+
+function Exodus:keeperHit(t)
+	local player = Isaac.GetPlayer(0)
+	if player:GetName() == "Keeper" then
+		if EntityVariables.KEEPER.ThirdHeart == 2 then
+			EntityVariables.KEEPER.ThirdHeart = 1
+			player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
+			return false
+		end
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType.ENTITY_PLAYER)
 
 --<<<TRINKETS>>>--
 function Exodus:trinketUpdate()
@@ -3689,6 +3758,29 @@ function Exodus:breadUpdate()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.breadUpdate)
+
+--<<<FOOL'S GOLD>>>--
+function Exodus:foolsGoldUpdate()
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.FOOLS_GOLD) and not ItemVariables.FOOLS_GOLD.HasFoolsGold then
+        player:AddGoldenHearts(1)
+        Isaac.Spawn(5, 20, 6, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+		ItemVariables.FOOLS_GOLD.HasFoolsGold = true
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.foolsGoldUpdate)
+
+--<<<MAKEUP REMOVER>>>--
+function Exodus:makeupRemoverInit(entity)
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.MAKEUP_REMOVER) and (entity:IsEnemy() or entity:IsBoss()) and entity:GetData().FaceScared == nil then
+        entity:GetData().FaceScared = true
+        entity.HitPoints = entity.HitPoints * 0.9
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Exodus.makeupRemoverInit)
 
 --<<<HOLY WATER>>>--
 function Exodus:holyWaterDamage(target, amount, flags, source, cdtimer)
