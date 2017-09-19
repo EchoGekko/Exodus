@@ -21,9 +21,9 @@
 	<passive description="Size matters" name="Sling" gfx="Sling.png"/>
 	<passive description="Negativity" name="Yin" gfx="Yin.png" cache="firedelay" blackhearts="2" devilprice="2"/>
 	<passive description="Positivity" name="Yang" gfx="Yang.png" cache="damage" soulhearts="2"/>
-	<passive description="Already occurred" name="Deja Vu" gfx="Deja Vu.png" />
-	<passive description="Heart of gold" name="Fool's Gold" gfx="Fools Gold.png" />
-	<passive description="Scariest face" name="Makeup Remover" gfx="Makeup Remover.png" />
+	<passive description="Already occurred" name="Deja Vu" gfx="Deja Vu.png"/>
+	<passive description="Heart of gold" name="Fool's Gold" gfx="Fools Gold.png"/>
+	<passive description="Scariest face" name="Makeup Remover" gfx="Makeup Remover.png"/>
 	
 	<!-- Active Items -->
 	<active description="Tree of knowledge" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
@@ -35,6 +35,7 @@
 	<active description="Science project" name="Mutant Clover" gfx="Mutant Clover.png" maxcharges="6"/>
 	<active description="All stats up, but..." name="Tragic Mushroom" gfx="Tragic Mushroom.png" maxcharges="0"/>
 	<active description="Recall your destiny" name="Anamnesis" gfx="Anamnesis.png" maxcharges="6" discharged="true"/>
+	<active description="Super jump" name="Hurdle Heels" gfx="Hurdle Heels.png" maxcharges="2"/>
 
 	<!-- Familiar Items -->
 	<familiar description="Yummy" gfx="Hungry Hippo.png" name="Hungry Hippo" cache="familiars"/>

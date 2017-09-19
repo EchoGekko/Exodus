@@ -1,0 +1,5 @@
+<sounds root="sfx/">
+	<sound name="Super Jump">
+		<sample weight="1" path="Super Jump.wav" />
+	</sound>
+</sounds>

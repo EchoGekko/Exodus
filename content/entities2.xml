@@ -226,13 +226,20 @@
 	<entity anm2path="effects/Pit Gibs.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Pit Gibs" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="1273">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
+
 	<entity anm2path="blight_tears.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="8" friction="1" id="2" name="Blight Tear" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="538978235">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
+
 	<entity anm2path="blight_splash.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="8" friction="1" id="1000" name="Blight Splash" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="538978236">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
+
 	<entity anm2path="blightstatuseffect.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Blight Status Effect" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="538978237">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+
+	<entity anm2path="Jump.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Hurdle Jump" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="3484192">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 </entities>
