@@ -2142,11 +2142,11 @@ function Exodus:hurdleHeelsUpdate()
 		if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 60 then
 			player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
 			ItemVariables.HURDLE_HEELS.Crosshair:Remove()
-			ItemVariables.HURDLE_HEELS.JumpState = 0
+			ItemVariables.HURDLE_HEELS.JumpState = 4
+			ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
 			player.Visible = true
 			player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
 			player:UseActiveItem(CollectibleType.COLLECTIBLE_WAIT_WHAT, false, false, false, false)
-			player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
 			player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
 			for i, entity in pairs(Isaac.GetRoomEntities()) do
 				if player.Position:Distance(entity.Position) < 64 and entity:IsVulnerableEnemy() then
@@ -2155,17 +2155,22 @@ function Exodus:hurdleHeelsUpdate()
 			end
 		end
 	end
+	if ItemVariables.HURDLE_HEELS.JumpState == 4 ItemVariables.HURDLE_HEELS.FrameUsed + 20 < game:GetFrameCount() then
+		ItemVariables.HURDLE_HEELS.JumpState == 0
+	end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.hurdleHeelsUpdate)
 
 function Exodus:hurdleHeelsUse()
     local player = Isaac.GetPlayer(0)
-    ItemVariables.HURDLE_HEELS.JumpState = 1
-    ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
-	player.Velocity = Vector(0,0)
-    player:UseActiveItem(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, true, false, false, false)
-	sfx:Play(SoundEffect.SOUND_SUPER_JUMP, 1, 0, false, 1)
+	if ItemVariables.HURDLE_HEELS.JumpState == 0 then
+		ItemVariables.HURDLE_HEELS.JumpState = 1
+		ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
+		player.Velocity = Vector(0,0)
+		player:UseActiveItem(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, true, false, false, false)
+		sfx:Play(SoundEffect.SOUND_SUPER_JUMP, 1, 0, false, 1)
+	end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.hurdleHeelsUse, ItemId.HURDLE_HEELS)
