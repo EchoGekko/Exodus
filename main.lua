@@ -2156,7 +2156,7 @@ function Exodus:hurdleHeelsUpdate()
 		end
 	end
 	if ItemVariables.HURDLE_HEELS.JumpState == 4 and ItemVariables.HURDLE_HEELS.FrameUsed + 20 < game:GetFrameCount() then
-		ItemVariables.HURDLE_HEELS.JumpState == 0
+		ItemVariables.HURDLE_HEELS.JumpState = 0
 	end
 end
 
