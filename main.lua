@@ -215,6 +215,7 @@ function Exodus:newGame(fromSave)
             MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
             CLAUSTROPHOBIA = { Triggered = false },
+            ROTTEN_PENNY = { HasQuarter = false, HasDollar = false },
             SLING = { Icon = Sprite() },
             HOLY_WATER = { Splashed = false },
             FOOLS_GOLD = { HasFoolsGold = false },
@@ -1486,11 +1487,11 @@ function Exodus:trinketUpdate()
         if not player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
             player:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK + EntityFlag.FLAG_NO_KNOCKBACK)
         end
-		
-		if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) and not (Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex)
-		or Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex))then
-			player.Velocity = Vector(0,0)
-		end
+        
+        if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) and not (Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex)
+        or Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex))then
+            player.Velocity = Vector(0,0)
+        end
     else
         if player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) and playerData.HasHadPetRock then
             player:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK + EntityFlag.FLAG_NO_KNOCKBACK)
@@ -1560,19 +1561,48 @@ function Exodus:trinketUpdate()
     
     ---<<ROTTEN PENNY>>---
     if player:HasTrinket(ItemId.ROTTEN_PENNY) then
+        if player:HasCollectible(CollectibleType.COLLECTIBLE_QUARTER) and not ItemVariables.ROTTEN_PENNY.HasQuarter then
+            ItemVariables.ROTTEN_PENNY.HasQuarter = true
+            if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+                player:AddBlueFlies(50, player.Position, nil)
+            else
+                player:AddBlueFlies(25, player.Position, nil)
+            end
+        end
+
+        if player:HasCollectible(CollectibleType.COLLECTIBLE_DOLLAR) and not ItemVariables.ROTTEN_PENNY.HasDollar then
+            ItemVariables.ROTTEN_PENNY.HasDollar = true
+            if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+                player:AddBlueFlies(198, player.Position, nil)
+            else
+                player:AddBlueFlies(99, player.Position, nil)
+            end
+        end
+
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COIN and entity:IsDead() and entity:GetData().HasSpawnedFly == nil then 
                 entity:GetData().HasSpawnedFly = true
                 local amount = 1
                 
-                if entity.SubType == CoinSubType.NICKEL then
+                if entity.SubType == CoinSubType.COIN_NICKEL then
                     amount = 5
                 elseif entity.SubType == CoinSubType.COIN_DIME then
                     amount = 10
                 elseif entity.SubType == CoinSubType.COIN_DOUBLEPACK then
                     amount = 2
                 elseif entity.SubType == CoinSubType.COIN_LUCKYPENNY then
-                    amount = 3
+                    if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+                        Isaac.Spawn(3, 43, 2, entity.Position, Vector(0,0), player)
+                        Isaac.Spawn(3, 43, 2, entity.Position, Vector(0,0), player)
+                        return
+                    else
+                        Isaac.Spawn(3, 43, 2, entity.Position, Vector(0,0), player)
+                        return
+                    end
+                end
+                
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+                    amount = amount * 2
                 end
                 
                 player:AddBlueFlies(amount, player.Position, nil)
