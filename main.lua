@@ -4657,9 +4657,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Exodus.wingleaderInit, Entitie
 --<<<BOTH SHROOMMEN>>>--
 function Exodus:shroommanUpdate()
     for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_PROJECTILE and entity.SpawnerType == Entities.DROWNED_SHROOMMAN.id and 
-            (entity.SpawnerVariant == Entities.DROWNED_SHROOMMAN.variant or
-            entity.SpawnerVariant == Entities.SCARY_SHROOMMAN.variant) then
+        if entity.Type == EntityType.ENTITY_PROJECTILE and entity.SpawnerType == Entities.DROWNED_SHROOMMAN.id and (entity.SpawnerVariant == Entities.DROWNED_SHROOMMAN.variant or entity.SpawnerVariant == Entities.SCARY_SHROOMMAN.variant) then
             entity:Remove()
         end
     end
@@ -4684,9 +4682,10 @@ function Exodus:shroommanEntityUpdate(shroom)
         if sprite:IsPlaying("Reveal") then
             if data.HasFarted ~= true then
                 for i = 1, 3 do
-                    local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_SLIPPERY_BROWN, 0, shroom.Position + Vector(30, 0):Rotated(i * math.random(110,120)), NullVector, shroom)
+                    local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_SLIPPERY_BROWN, 0, shroom.Position + Vector(30, 0):Rotated(i * math.random(110,120)), NullVector, shroom):ToEffect()
+                    creep.Scale = 2
+                    creep:Update()
                     creep.Color = Color(0.4, 0.4, 1, 1, 0, 0, 255)
-                    creep:ToEffect().Scale = 2
                 end
                 
                 data.HasFarted = true
