@@ -44,6 +44,7 @@ local ItemId = {
     DEJA_VU = Isaac.GetItemIdByName("Deja Vu"),
     FOOLS_GOLD = Isaac.GetItemIdByName("Fool's Gold"),
     MAKEUP_REMOVER = Isaac.GetItemIdByName("Makeup Remover"),
+    ARCADE_TOKEN = Isaac.GetItemIdByName("Arcade Token"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -55,7 +56,7 @@ local ItemId = {
     MUTANT_CLOVER = Isaac.GetItemIdByName("Mutant Clover"),
     TRAGIC_MUSHROOM = Isaac.GetItemIdByName("Tragic Mushroom"),
     ANAMNESIS = Isaac.GetItemIdByName("Anamnesis"),
-	HURDLE_HEELS = Isaac.GetItemIdByName("Hurdle Heels"),
+    HURDLE_HEELS = Isaac.GetItemIdByName("Hurdle Heels"),
     
     ---<<FAMILIARS>>---
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
@@ -104,7 +105,7 @@ local Entities = {
     PIT_GIBS = getEntity("Pit Gibs"),
     BLIGHT_SPLASH = getEntity("Blight Splash"),
     BLIGHT_STATUS_EFFECT = getEntity("Blight Status Effect"),
-	HURDLE_JUMP = getEntity("Hurdle Jump"),
+    HURDLE_JUMP = getEntity("Hurdle Jump"),
     
     ---<<FAMILIARS>>---
     HUNGRY_HIPPO = getEntity("Hungry Hippo"),
@@ -214,7 +215,8 @@ function Exodus:newGame(fromSave)
             CLAUSTROPHOBIA = { Triggered = false },
             SLING = { Icon = Sprite() },
             HOLY_WATER = { Splashed = false },
-			FOOLS_GOLD = { HasFoolsGold = false },
+            FOOLS_GOLD = { HasFoolsGold = false },
+            ARCADE_TOKEN = { HasArcadeToken = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -245,7 +247,7 @@ function Exodus:newGame(fromSave)
             BASEBALL_MITT = { Used = false, Lifted = true, BallsCaught = 0, UseDelay = 0 },
             PSEUDOBULBAR_AFFECT = { Icon = Sprite() },
             OMINOUS_LANTERN = { Fired = true, Lifted = false, Hid = false, LastEnemyHit = nil, FrameModifier = 300 },
-			HURDLE_HEELS = { JumpState = 0, FrameUsed = 0, Icon = Sprite() },
+            HURDLE_HEELS = { JumpState = 0, FrameUsed = 0, Icon = Sprite() },
             WRATH_OF_THE_LAMB = { 
                 Uses = {}, 
                 Stats = {
@@ -300,9 +302,9 @@ function Exodus:newGame(fromSave)
         EntityVariables = {
             ---<<ENEMIES>>---
             FLYERBALL = { Fires = {} },
-			
-			---<<CHARACTERS>>---
-			KEEPER = { ThirdHeart = 2, CurrentCoins = 0 }
+            
+            ---<<CHARACTERS>>---
+            KEEPER = { ThirdHeart = 2, CurrentCoins = 0 }
         }
         
         local player = Isaac.GetPlayer(0)
@@ -1367,63 +1369,63 @@ Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.flyerballEntityUpdate, Ent
 
 --<<KEEPER>>--
 function Exodus:keeperRender(t)
-	local player = Isaac.GetPlayer(0)
-	local level = game:GetLevel()
-	local room = game:GetRoom()
-	if player:GetName() == "Keeper" and (level:GetCurses() & LevelCurse.CURSE_OF_THE_UNKNOWN ~= LevelCurse.CURSE_OF_THE_UNKNOWN) and (room:GetType() ~= RoomType.ROOM_BOSS or room:GetFrameCount() >= 1) then
-		local hearts = player:GetMaxHearts()/2
-		local sprite = Sprite()
-		sprite:Load("gfx/ui/ui_hearts.anm2", true)
-		if EntityVariables.KEEPER.ThirdHeart == 1 then
-			sprite:Play("CoinEmpty")
-			sprite:Update()
-			sprite:Render(Vector((hearts*12)+12*1+36,12), Vector(0,0), Vector(0,0))
-		elseif EntityVariables.KEEPER.ThirdHeart == 2 then
-			sprite:Play("CoinHeartFull")
-			sprite:Update()
-			sprite:Render(Vector((hearts*12)+12*1+36,12), Vector(0,0), Vector(0,0))
-		end
-	end
+    local player = Isaac.GetPlayer(0)
+    local level = game:GetLevel()
+    local room = game:GetRoom()
+    if player:GetName() == "Keeper" and (level:GetCurses() & LevelCurse.CURSE_OF_THE_UNKNOWN ~= LevelCurse.CURSE_OF_THE_UNKNOWN) and (room:GetType() ~= RoomType.ROOM_BOSS or room:GetFrameCount() >= 1) then
+        local hearts = player:GetMaxHearts()/2
+        local sprite = Sprite()
+        sprite:Load("gfx/ui/ui_hearts.anm2", true)
+        if EntityVariables.KEEPER.ThirdHeart == 1 then
+            sprite:Play("CoinEmpty")
+            sprite:Update()
+            sprite:Render(Vector((hearts*12)+12*1+36,12), Vector(0,0), Vector(0,0))
+        elseif EntityVariables.KEEPER.ThirdHeart == 2 then
+            sprite:Play("CoinHeartFull")
+            sprite:Update()
+            sprite:Render(Vector((hearts*12)+12*1+36,12), Vector(0,0), Vector(0,0))
+        end
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.keeperRender)
 
 function Exodus:keeperUpdate(t)
-	local player = Isaac.GetPlayer(0)
-	local coins = player:GetNumCoins()
-	local hearts = player:GetHearts()
-	local maxhearts = player:GetMaxHearts()
-	if player:GetName() == "Keeper" then
-		if maxhearts == 4 and EntityVariables.KEEPER.ThirdHeart == 0 then
-			player:AddMaxHearts(-2, false)
-			EntityVariables.KEEPER.ThirdHeart = 2
-		end
-		if maxhearts == 0 and EntityVariables.KEEPER.ThirdHeart == 2 then
-			EntityVariables.KEEPER.ThirdHeart = 0
-			player:AddMaxHearts(2, false)
-			player:AddHearts(4)
-		end
-		if coins > EntityVariables.KEEPER.CurrentCoins then
-			if hearts == maxhearts and EntityVariables.KEEPER.ThirdHeart == 1 then
-				player:AddCoins(-1)
-				EntityVariables.KEEPER.ThirdHeart = 2
-			end
-		end
-	end
-	EntityVariables.KEEPER.CurrentCoins = coins
+    local player = Isaac.GetPlayer(0)
+    local coins = player:GetNumCoins()
+    local hearts = player:GetHearts()
+    local maxhearts = player:GetMaxHearts()
+    if player:GetName() == "Keeper" then
+        if maxhearts == 4 and EntityVariables.KEEPER.ThirdHeart == 0 then
+            player:AddMaxHearts(-2, false)
+            EntityVariables.KEEPER.ThirdHeart = 2
+        end
+        if maxhearts == 0 and EntityVariables.KEEPER.ThirdHeart == 2 then
+            EntityVariables.KEEPER.ThirdHeart = 0
+            player:AddMaxHearts(2, false)
+            player:AddHearts(4)
+        end
+        if coins > EntityVariables.KEEPER.CurrentCoins then
+            if hearts == maxhearts and EntityVariables.KEEPER.ThirdHeart == 1 then
+                player:AddCoins(-1)
+                EntityVariables.KEEPER.ThirdHeart = 2
+            end
+        end
+    end
+    EntityVariables.KEEPER.CurrentCoins = coins
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.keeperUpdate)
 
 function Exodus:keeperHit(t)
-	local player = Isaac.GetPlayer(0)
-	if player:GetName() == "Keeper" then
-		if EntityVariables.KEEPER.ThirdHeart == 2 then
-			EntityVariables.KEEPER.ThirdHeart = 1
-			player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
-			return false
-		end
-	end
+    local player = Isaac.GetPlayer(0)
+    if player:GetName() == "Keeper" then
+        if EntityVariables.KEEPER.ThirdHeart == 2 then
+            EntityVariables.KEEPER.ThirdHeart = 1
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
+            return false
+        end
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType.ENTITY_PLAYER)
@@ -2095,94 +2097,94 @@ function Exodus:hurdleHeelsUpdate()
         player:AddCacheFlags(CacheFlag.CACHE_SPEED)
         player:EvaluateItems()
     end
-	
-	if ItemVariables.HURDLE_HEELS.JumpState == 1 and ItemVariables.HURDLE_HEELS.FrameUsed + 8 < game:GetFrameCount() then
-		ItemVariables.HURDLE_HEELS.JumpState = 2
-		player.Visible = false
-		player:SetShootingCooldown(120)
-		player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-		ItemVariables.HURDLE_HEELS.Crosshair = Isaac.Spawn(1000, 30, 0, player.Position, Vector(0,0), player)
-		ItemVariables.HURDLE_HEELS.Crosshair.GridCollisionClass = GridCollisionClass.GRIDCOLL_NOPITS
-		ItemVariables.HURDLE_HEELS.Crosshair.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-	end
+    
+    if ItemVariables.HURDLE_HEELS.JumpState == 1 and ItemVariables.HURDLE_HEELS.FrameUsed + 8 < game:GetFrameCount() then
+        ItemVariables.HURDLE_HEELS.JumpState = 2
+        player.Visible = false
+        player:SetShootingCooldown(120)
+        player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+        ItemVariables.HURDLE_HEELS.Crosshair = Isaac.Spawn(1000, 30, 0, player.Position, Vector(0,0), player)
+        ItemVariables.HURDLE_HEELS.Crosshair.GridCollisionClass = GridCollisionClass.GRIDCOLL_NOPITS
+        ItemVariables.HURDLE_HEELS.Crosshair.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+    end
     
     if ItemVariables.HURDLE_HEELS.JumpState == 2 then
-		player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
-		if Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTUP, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y - 5)
-		end
-		if Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTDOWN, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y + 5)
-		end
-		if Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X - 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
-		end
-		if Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTRIGHT, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X + 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
-		end
-		if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 50 then
-			ItemVariables.HURDLE_HEELS.JumpState = 3
-		end
-	end
+        player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
+        if Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTUP, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y - 5)
+        end
+        if Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTDOWN, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y + 5)
+        end
+        if Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X - 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
+        end
+        if Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTRIGHT, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X + 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
+        end
+        if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 50 then
+            ItemVariables.HURDLE_HEELS.JumpState = 3
+        end
+    end
 
-	if ItemVariables.HURDLE_HEELS.JumpState == 3 then
-		player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
-		if Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y - 5)
-		end
-		if Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y + 5)
-		end
-		if Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X - 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
-		end
-		if Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex) then
-			ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X + 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
-		end
-		if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 60 then
-			player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
-			ItemVariables.HURDLE_HEELS.Crosshair:Remove()
-			ItemVariables.HURDLE_HEELS.JumpState = 4
-			ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
-			player.Visible = true
-			player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
-			player:UseActiveItem(CollectibleType.COLLECTIBLE_WAIT_WHAT, false, false, false, false)
-			player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
-			for i, entity in pairs(Isaac.GetRoomEntities()) do
-				if player.Position:Distance(entity.Position) < 64 and entity:IsVulnerableEnemy() then
-					entity:TakeDamage(player.Damage * 4, 0, EntityRef(player), 3)
-				end
-			end
-		end
-	end
-	if ItemVariables.HURDLE_HEELS.JumpState == 4 and ItemVariables.HURDLE_HEELS.FrameUsed + 20 < game:GetFrameCount() then
-		ItemVariables.HURDLE_HEELS.JumpState = 0
-	end
+    if ItemVariables.HURDLE_HEELS.JumpState == 3 then
+        player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
+        if Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y - 5)
+        end
+        if Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y + 5)
+        end
+        if Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X - 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
+        end
+        if Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex) then
+            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X + 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
+        end
+        if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 60 then
+            player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
+            ItemVariables.HURDLE_HEELS.Crosshair:Remove()
+            ItemVariables.HURDLE_HEELS.JumpState = 4
+            ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
+            player.Visible = true
+            player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_WAIT_WHAT, false, false, false, false)
+            player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
+            for i, entity in pairs(Isaac.GetRoomEntities()) do
+                if player.Position:Distance(entity.Position) < 64 and entity:IsVulnerableEnemy() then
+                    entity:TakeDamage(player.Damage * 4, 0, EntityRef(player), 3)
+                end
+            end
+        end
+    end
+    if ItemVariables.HURDLE_HEELS.JumpState == 4 and ItemVariables.HURDLE_HEELS.FrameUsed + 20 < game:GetFrameCount() then
+        ItemVariables.HURDLE_HEELS.JumpState = 0
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.hurdleHeelsUpdate)
 
 function Exodus:hurdleHeelsUse()
     local player = Isaac.GetPlayer(0)
-	if ItemVariables.HURDLE_HEELS.JumpState == 0 then
-		ItemVariables.HURDLE_HEELS.JumpState = 1
-		ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
-		player.Velocity = Vector(0,0)
-		player:UseActiveItem(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, true, false, false, false)
-		sfx:Play(SoundEffect.SOUND_SUPER_JUMP, 1, 0, false, 1)
-	end
+    if ItemVariables.HURDLE_HEELS.JumpState == 0 then
+        ItemVariables.HURDLE_HEELS.JumpState = 1
+        ItemVariables.HURDLE_HEELS.FrameUsed = game:GetFrameCount()
+        player.Velocity = Vector(0,0)
+        player:UseActiveItem(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, true, false, false, false)
+        sfx:Play(SoundEffect.SOUND_SUPER_JUMP, 1, 0, false, 1)
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.hurdleHeelsUse, ItemId.HURDLE_HEELS)
 
 function Exodus:hurdleHeelsRender()
-	local player = Isaac.GetPlayer(0)
-	if ItemVariables.HURDLE_HEELS.JumpState == 2 then
-		ItemVariables.HURDLE_HEELS.Icon:Render(game:GetRoom():WorldToScreenPosition(Vector(player.Position.X, player.Position.Y - ((ItemVariables.HURDLE_HEELS.Crosshair.FrameCount) * 32))), NullVector, NullVector)
-	end
-	if ItemVariables.HURDLE_HEELS.JumpState == 3 then
-		ItemVariables.HURDLE_HEELS.Icon:Render(game:GetRoom():WorldToScreenPosition(Vector(player.Position.X, player.Position.Y - ((ItemVariables.HURDLE_HEELS.Crosshair.FrameCount - 60) * -32))), NullVector, NullVector)
-	end
+    local player = Isaac.GetPlayer(0)
+    if ItemVariables.HURDLE_HEELS.JumpState == 2 then
+        ItemVariables.HURDLE_HEELS.Icon:Render(game:GetRoom():WorldToScreenPosition(Vector(player.Position.X, player.Position.Y - ((ItemVariables.HURDLE_HEELS.Crosshair.FrameCount) * 32))), NullVector, NullVector)
+    end
+    if ItemVariables.HURDLE_HEELS.JumpState == 3 then
+        ItemVariables.HURDLE_HEELS.Icon:Render(game:GetRoom():WorldToScreenPosition(Vector(player.Position.X, player.Position.Y - ((ItemVariables.HURDLE_HEELS.Crosshair.FrameCount - 60) * -32))), NullVector, NullVector)
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.hurdleHeelsRender)
@@ -2325,6 +2327,31 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.gluttonysStomachRender)
 
+--<<<ARCADE TOKEN>>>--
+function Exodus:arcadeTokenUpdate()
+    local player = Isaac.GetPlayer(0)
+    
+    if player:HasCollectible(ItemId.ARCADE_TOKEN) and not ItemVariables.ARCADE_TOKEN.HasArcadeToken then
+        ItemVariables.ARCADE_TOKEN.HasArcadeToken = true
+        Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+    end
+    
+    if player:HasCollectible(ItemId.ARCADE_TOKEN) and player:GetNumCoins() == 99 then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COIN and entity:IsDead() and entity:GetData().Collected == nil then
+                player:AddCoins(-99)
+                player:AddCollectible(CollectibleType.COLLECTIBLE_ONE_UP, 0, false)
+				entity:GetData().Collected = true
+                local coin = entity:ToPickup()
+                coin:PlayPickupSound()
+                entity:Remove()
+            end
+        end    
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.arcadeTokenUpdate)
+
 --<<<FORGET ME LATER>>>--
 function Exodus:forgetMeLaterUpdate()
     local player = Isaac.GetPlayer(0)
@@ -2393,6 +2420,9 @@ function Exodus:pigBloodUpdate()
         if not ItemVariables.PIG_BLOOD.HasPigBlood then
             ItemVariables.PIG_BLOOD.HasPigBlood = true
             player:AddNullCostume(CostumeId.PIG_BLOOD)
+			Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+			Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+			Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
         end
         
         if game:GetRoom():GetType() == RoomType.ROOM_DEVIL then
@@ -2890,8 +2920,8 @@ function Exodus:tech360Update()
         if not ItemVariables.TECH_360.HasTech360 then
             ItemVariables.TECH_360.HasTech360 = true
             player:AddNullCostume(CostumeId.TECH_360)
-			player:AddCacheFlags(CacheFlag.CACHE_RANGE)
-			player:EvaluateItems()
+            player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+            player:EvaluateItems()
         end
     
         for i, entity in pairs(entities) do 
@@ -2902,28 +2932,28 @@ function Exodus:tech360Update()
                 entity.Velocity = player.Velocity
             end
 
-			if entity.Type == EntityType.ENTITY_TEAR and entity.Visible then
-				if entity:ToTear().TearFlags & 1<<57 ~= 0 then
-					entity.Visible = false
-					local laser = player:FireTechXLaser(entity.Position, entity.Velocity, math.abs(player.TearHeight * 3))
-					laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
-					laser.Color = player.TearColor
-					laser:GetData().Tech360 = true
-					laser:GetData().LudoTear = entity
-					entity.SpawnerType = EntityType.ENTITY_TEAR
-				end
-			elseif entity.Type == EntityType.ENTITY_LASER and data.Tech360 and data.LudoTear ~= nil then
-				entity.Position = entity:GetData().LudoTear.Position
-				if entity.FrameCount % 50 == 0 then
-					for u = 1, 6 do
-						local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (60 + rng:RandomInt(11) - 5)), false, false)
-						laser.TearFlags = laser.TearFlags | TearFlags.TEAR_SPECTRAL
-						laser.Color = player.TearColor
-						laser.DisableFollowParent = true
-					end
-				end
-				return
-			end
+            if entity.Type == EntityType.ENTITY_TEAR and entity.Visible then
+                if entity:ToTear().TearFlags & 1<<57 ~= 0 then
+                    entity.Visible = false
+                    local laser = player:FireTechXLaser(entity.Position, entity.Velocity, math.abs(player.TearHeight * 3))
+                    laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
+                    laser.Color = player.TearColor
+                    laser:GetData().Tech360 = true
+                    laser:GetData().LudoTear = entity
+                    entity.SpawnerType = EntityType.ENTITY_TEAR
+                end
+            elseif entity.Type == EntityType.ENTITY_LASER and data.Tech360 and data.LudoTear ~= nil then
+                entity.Position = entity:GetData().LudoTear.Position
+                if entity.FrameCount % 50 == 0 then
+                    for u = 1, 6 do
+                        local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (60 + rng:RandomInt(11) - 5)), false, false)
+                        laser.TearFlags = laser.TearFlags | TearFlags.TEAR_SPECTRAL
+                        laser.Color = player.TearColor
+                        laser.DisableFollowParent = true
+                    end
+                end
+                return
+            end
 
             if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= TearVariant.CHAOS_CARD and entity.Variant ~= TearVariant.BOBS_HEAD and entity.SpawnerType == EntityType.ENTITY_PLAYER then
                 entity:Remove()
@@ -3471,7 +3501,24 @@ function Exodus:lilRuneUse()
     local player = Isaac.GetPlayer(0)
     if ItemVariables.LIL_RUNE.State == "Purple" and player:HasCollectible(ItemId.LIL_RUNE) then
         ItemVariables.LIL_RUNE.State = "Black"
-        player:UseCard(Card.RUNE_BLANK)
+		local rune = math.random(8)
+		if rune == 1 then
+			player:UseCard(Card.RUNE_ALGIZ)
+		elseif rune == 2 then
+			player:UseCard(Card.RUNE_HAGALAZ)
+		elseif rune == 3 then
+			player:UseCard(Card.RUNE_JERA)
+		elseif rune == 4 then
+			player:UseCard(Card.RUNE_PERTHRO)
+		elseif rune == 5 then
+			player:UseCard(Card.RUNE_EHWAZ)
+		elseif rune == 6 then
+			player:UseCard(Card.RUNE_ANSUZ)
+		elseif rune == 7 then
+			player:UseCard(Card.RUNE_DEGAZ)
+		else
+			player:UseCard(Card.RUNE_BERKANO)
+		end
     end
 end
 
@@ -3827,7 +3874,7 @@ function Exodus:fireMindUpdate()
 
     if player:HasCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) then
         player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-		player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
         player:EvaluateItems()
     end
 end
@@ -3889,7 +3936,7 @@ function Exodus:foolsGoldUpdate()
     if player:HasCollectible(ItemId.FOOLS_GOLD) and not ItemVariables.FOOLS_GOLD.HasFoolsGold then
         player:AddGoldenHearts(1)
         Isaac.Spawn(5, 20, 6, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
-		ItemVariables.FOOLS_GOLD.HasFoolsGold = true
+        ItemVariables.FOOLS_GOLD.HasFoolsGold = true
     end
 end
 
@@ -4124,7 +4171,8 @@ function Exodus:paperCutCostume()
         if not ItemVariables.PAPER_CUT.HasPaperCut then
             player:AddNullCostume(CostumeId.PAPER_CUT)
             ItemVariables.PAPER_CUT.HasPaperCut = true
-        end
+			Isaac.Spawn(5, 300, 0, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+		end
     elseif ItemVariables.UNHOLY_MANTLE.HasUnholyMantle then
         ItemVariables.UNHOLY_MANTLE.HasUnholyMantle = false
         player:TryRemoveNullCostume(CostumeId.PAPER_CUT)

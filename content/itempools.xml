@@ -3,7 +3,7 @@
 		<Item Name="Beehive" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sad Tears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Busted Pipe" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Tech Y" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Tech 360" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Paper Cut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -70,6 +70,7 @@
 	</Pool>
 	<Pool Name="beggar">
 		<Item Name="Gluttony's Stomach" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Arcade Token" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="demonBeggar">
 	</Pool>
@@ -85,7 +86,7 @@
 		<Item Name="Queen Bee" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Sad Tears" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Busted Pipe" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-		<Item Name="Tech Y" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Tech 360" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Paper Cut" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
@@ -112,7 +113,7 @@
 		<Item Name="Queen Bee" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sad Tears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Busted Pipe" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Tech Y" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Tech 360" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Paper Cut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -139,7 +140,7 @@
 		<Item Name="Beehive" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Sad Tears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Busted Pipe" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Tech Y" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Tech 360" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Paper Cut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
