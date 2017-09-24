@@ -3784,7 +3784,7 @@ function Exodus:buttrotUpdate()
                 end
             end
             if entities[i]:GetData().BlightedFrame ~= nil then
-                if entities[i]:GetData().BlightedFrame + 180 < game:GetFrameCount() then
+                if entities[i]:GetData().BlightedFrame + 90 < game:GetFrameCount() then
                     entities[i]:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
                     entities[i]:ClearEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
                     entities[i]:ClearEntityFlags(EntityFlag.FLAG_SLOW)
