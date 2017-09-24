@@ -1,5 +1,6 @@
 <costumes anm2root = "gfx/characters/">
 	<costume anm2path="costume_Beehive.anm2" type="none"/>
+	<costume anm2path="costume_Sad Tears.anm2" type="none"/>
 	<costume anm2path="costume_Busted Pipe.anm2" type="none"/>
 	<costume anm2path="costume_Unholy Mantle.anm2" type="none"/>
 	<costume anm2path="costume_TechY.anm2" type="none"/>

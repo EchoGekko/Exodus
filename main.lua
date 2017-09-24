@@ -163,6 +163,7 @@ end
 
 local CostumeId = {
     BEEHIVE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Beehive.anm2"),
+	SAD_TEARS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Sad Tears.anm2"),
     BUSTED_PIPE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Busted Pipe.anm2"),
     UNHOLY_MANTLE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Unholy Mantle.anm2"),
     TECH_360 = Isaac.GetCostumeIdByPath("gfx/characters/costume_TechY.anm2"),
@@ -193,6 +194,7 @@ function Exodus:newGame(fromSave)
         ItemVariables = {
             ---<<PASSIVES>>---
             BEEHIVE = { HasBeehive = false, ColourIsBlack = false },
+			SAD_TEARS = { HasSadTears = false },
             BUSTED_PIPE = { HasBustedPipe = false },
             UNHOLY_MANTLE = { HasUnholyMantle = false, HasEffect = true },
             TECH_360 = { HasTech360 = false },
@@ -3023,6 +3025,10 @@ function Exodus:sadTearsUpdate()
     local player = Isaac.GetPlayer(0)
     
     if player:HasCollectible(ItemId.SAD_TEARS) then
+        if not ItemVariables.SAD_TEARS.HasSadTears then
+            ItemVariables.SAD_TEARS.HasSadTears = true
+            player:AddNullCostume(CostumeId.SAD_TEARS)
+        end
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().IsSadTear ~= true then
                 if player.FireDelay == player.MaxFireDelay and rng:RandomInt(math.max(1, 5 - player.Luck)) == 0 and entity.FrameCount > 1 then
@@ -3038,7 +3044,10 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.sadTearsUpdate)
 
 function Exodus:sadTearsCache(player, flag)
     if player:HasCollectible(ItemId.SAD_TEARS) and flag == CacheFlag.CACHE_SHOTSPEED then
-        player.ShotSpeed = math.max(player.ShotSpeed - 0.4, 0.4)
+        player.ShotSpeed = math.max(player.ShotSpeed - 0.35, 0.4)
+    end
+    if player:HasCollectible(ItemId.SAD_TEARS) and flag == CacheFlag.CACHE_RANGE then
+        player.TearHeight = player.TearHeight - 2.5
     end
 end
     

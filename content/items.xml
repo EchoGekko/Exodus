@@ -1,7 +1,7 @@
 <items gfxroot="gfx/items/" version="1">
 	<!-- Passive Items -->
 	<passive description="Hive minded" name="Beehive" gfx="Beehive.png"/>
-	<passive description="Even they are crying" name="Sad Tears" gfx="Sad Tears.png" cache="shotspeed"/>
+	<passive description="Even they are crying" name="Sad Tears" gfx="Sad Tears.png" cache="shotspeed range"/>
 	<passive description="Leaky tears" name="Busted Pipe" gfx="Busted Pipe.png" />
 	<passive description="Satanic defence" name="Unholy Mantle" gfx="Unholy Mantle.png" devilprice="2"/>
 	<passive description="Tech bubble" name="Tech 360"  gfx="Tech 360.png" cache="firedelay"/>
