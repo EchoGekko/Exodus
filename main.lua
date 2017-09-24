@@ -4496,12 +4496,10 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.possessedBombUpdate)
 
 --<<<DROWNED CHARGER>>>--
 function Exodus:drownedChargerUpdate(entity)        
-    if entity.Variant == 1 then
-        entity.Velocity = entity.Velocity * 1.10
-        
+    if entity.Variant == 1 then 
         if entity.FrameCount == 1 then
-            entity.HitPoints = 12
-            entity.MaxHitPoints = 12
+            entity.HitPoints = 13
+            entity.MaxHitPoints = 14
         end
     end
 end
@@ -4685,7 +4683,7 @@ function Exodus:shroommanEntityUpdate(shroom)
                     local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_SLIPPERY_BROWN, 0, shroom.Position + Vector(30, 0):Rotated(i * math.random(110,120)), NullVector, shroom):ToEffect()
                     creep.Scale = 2
                     creep:Update()
-                    creep.Color = Color(0.4, 0.4, 1, 1, 0, 0, 255)
+                    creep.Color = Color(0.4, 0.4, 1, 1, 100, 255, 255)
                 end
                 
                 data.HasFarted = true
