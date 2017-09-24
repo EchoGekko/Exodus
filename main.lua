@@ -927,6 +927,8 @@ function Exodus:newScaredHeartLogic()
                     player:AddHearts(2)
                     data.Collected = true
                     data.CollectedFrames = 0
+                    local heart = entity:ToPickup()
+                    heart:PlayPickupSound()
                 end
                 
                 if data.CollectedFrames ~= nil then
