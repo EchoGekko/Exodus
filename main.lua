@@ -3266,6 +3266,10 @@ function Exodus:sunUpdate(sun)
     else
         sun.Visible = false
     end
+
+    if not player:HasCollectible(ItemId.SUNDIAL) then
+        sun:Remove()
+    end
     
     if math.random(12) == 1 then
         Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(sun.Position.X, sun.Position.Y - 8), RandomVector() * ((math.random() * 4) + 1), player)
@@ -3315,7 +3319,11 @@ function Exodus:shadowUpdate(shadow)
     else
         shadow.Visible = false
     end
-    
+
+    if not player:HasCollectible(ItemId.SUNDIAL) then
+        shadow:Remove()
+    end
+
     if shadow.FrameCount == 1 then
         shadow.SpawnerVariant = 0
         shadow.SpawnerType = 0
@@ -3372,6 +3380,10 @@ function Exodus:astroBabyFamiliarUpdate(astro)
     local sprite = astro:GetSprite()
     local data = astro:GetData()
     
+    if not player:HasCollectible(ItemId.ASTRO_BABY) then
+        astro:Remove()
+    end
+
     astro:FollowParent()
     
     for i, entity in pairs(Isaac.GetRoomEntities()) do
@@ -3491,7 +3503,11 @@ function Exodus:lilRuneFamiliarUpdate(rune)
     local player = Isaac.GetPlayer(0)
     local sprite = rune:GetSprite()
     local data = rune:GetData()
-    
+
+    if not player:HasCollectible(ItemId.LIL_RUNE) then
+        rune:Remove()
+    end
+
     rune:FollowParent()
     sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
 end
