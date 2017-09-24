@@ -163,7 +163,7 @@ end
 
 local CostumeId = {
     BEEHIVE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Beehive.anm2"),
-	SAD_TEARS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Sad Tears.anm2"),
+    SAD_TEARS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Sad Tears.anm2"),
     BUSTED_PIPE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Busted Pipe.anm2"),
     UNHOLY_MANTLE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Unholy Mantle.anm2"),
     TECH_360 = Isaac.GetCostumeIdByPath("gfx/characters/costume_TechY.anm2"),
@@ -194,7 +194,7 @@ function Exodus:newGame(fromSave)
         ItemVariables = {
             ---<<PASSIVES>>---
             BEEHIVE = { HasBeehive = false, ColourIsBlack = false },
-			SAD_TEARS = { HasSadTears = false },
+            SAD_TEARS = { HasSadTears = false },
             BUSTED_PIPE = { HasBustedPipe = false },
             UNHOLY_MANTLE = { HasUnholyMantle = false, HasEffect = true },
             TECH_360 = { HasTech360 = false },
@@ -764,7 +764,7 @@ function Exodus:ritualCandleUpdate()
             ItemVariables.RITUAL_CANDLE.Pentagram = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PENTAGRAM_BLACKPOWDER, 0, player.Position, NullVector, player)
             
             local sprite = ItemVariables.RITUAL_CANDLE.Pentagram:GetSprite()
-            sprite:Load("gfx/pentagram.anm2", true)
+            sprite:Load("gfx/effects/pentagram.anm2", true)
             sprite:Play("Idle", true)
             sprite:SetFrame("Idle", game:GetFrameCount() % 5)
             ItemVariables.RITUAL_CANDLE.Pentagram:ToEffect():FollowParent(player)
@@ -835,6 +835,10 @@ function Exodus:ritualCandleFamiliarUpdate(candle)
     local data = candle:GetData()
     local sprite = candle:GetSprite()
     local player = Isaac.GetPlayer(0)
+
+    if not player:HasCollectible(ItemId.RITUAL_CANDLE) then
+        candle:Remove()
+    end
     
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
         candle.OrbitDistance = Vector(150, 150)
@@ -2343,7 +2347,7 @@ function Exodus:arcadeTokenUpdate()
             if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COIN and entity:IsDead() and entity:GetData().Collected == nil then
                 player:AddCoins(-99)
                 player:AddCollectible(CollectibleType.COLLECTIBLE_ONE_UP, 0, false)
-				entity:GetData().Collected = true
+                entity:GetData().Collected = true
                 local coin = entity:ToPickup()
                 coin:PlayPickupSound()
                 entity:Remove()
@@ -2422,9 +2426,9 @@ function Exodus:pigBloodUpdate()
         if not ItemVariables.PIG_BLOOD.HasPigBlood then
             ItemVariables.PIG_BLOOD.HasPigBlood = true
             player:AddNullCostume(CostumeId.PIG_BLOOD)
-			Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
-			Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
-			Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 10, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
         end
         
         if game:GetRoom():GetType() == RoomType.ROOM_DEVIL then
@@ -3510,24 +3514,24 @@ function Exodus:lilRuneUse()
     local player = Isaac.GetPlayer(0)
     if ItemVariables.LIL_RUNE.State == "Purple" and player:HasCollectible(ItemId.LIL_RUNE) then
         ItemVariables.LIL_RUNE.State = "Black"
-		local rune = math.random(8)
-		if rune == 1 then
-			player:UseCard(Card.RUNE_ALGIZ)
-		elseif rune == 2 then
-			player:UseCard(Card.RUNE_HAGALAZ)
-		elseif rune == 3 then
-			player:UseCard(Card.RUNE_JERA)
-		elseif rune == 4 then
-			player:UseCard(Card.RUNE_PERTHRO)
-		elseif rune == 5 then
-			player:UseCard(Card.RUNE_EHWAZ)
-		elseif rune == 6 then
-			player:UseCard(Card.RUNE_ANSUZ)
-		elseif rune == 7 then
-			player:UseCard(Card.RUNE_DEGAZ)
-		else
-			player:UseCard(Card.RUNE_BERKANO)
-		end
+        local rune = math.random(8)
+        if rune == 1 then
+            player:UseCard(Card.RUNE_ALGIZ)
+        elseif rune == 2 then
+            player:UseCard(Card.RUNE_HAGALAZ)
+        elseif rune == 3 then
+            player:UseCard(Card.RUNE_JERA)
+        elseif rune == 4 then
+            player:UseCard(Card.RUNE_PERTHRO)
+        elseif rune == 5 then
+            player:UseCard(Card.RUNE_EHWAZ)
+        elseif rune == 6 then
+            player:UseCard(Card.RUNE_ANSUZ)
+        elseif rune == 7 then
+            player:UseCard(Card.RUNE_DEGAZ)
+        else
+            player:UseCard(Card.RUNE_BERKANO)
+        end
     end
 end
 
@@ -4180,8 +4184,8 @@ function Exodus:paperCutCostume()
         if not ItemVariables.PAPER_CUT.HasPaperCut then
             player:AddNullCostume(CostumeId.PAPER_CUT)
             ItemVariables.PAPER_CUT.HasPaperCut = true
-			Isaac.Spawn(5, 300, 0, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
-		end
+            Isaac.Spawn(5, 300, 0, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+        end
     elseif ItemVariables.UNHOLY_MANTLE.HasUnholyMantle then
         ItemVariables.UNHOLY_MANTLE.HasUnholyMantle = false
         player:TryRemoveNullCostume(CostumeId.PAPER_CUT)
