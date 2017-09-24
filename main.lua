@@ -2592,13 +2592,19 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Exodus.welcomeMatUpdate)
 
 function Exodus:welcomeMatNewRoom()
-    ItemVariables.WELCOME_MAT.Placed = false
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.WELCOME_MAT) then
+        ItemVariables.WELCOME_MAT.Placed = false
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.welcomeMatNewRoom)
 
 function Exodus:welcomeMatNewLevel()
-    ItemVariables.WELCOME_MAT.Placed = true
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.WELCOME_MAT) then
+        ItemVariables.WELCOME_MAT.Placed = true
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.welcomeMatNewLevel)
