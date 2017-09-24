@@ -1486,6 +1486,11 @@ function Exodus:trinketUpdate()
         if not player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
             player:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK + EntityFlag.FLAG_NO_KNOCKBACK)
         end
+		
+		if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) and not (Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex)
+		or Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex))then
+			player.Velocity = Vector(0,0)
+		end
     else
         if player:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) and playerData.HasHadPetRock then
             player:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK + EntityFlag.FLAG_NO_KNOCKBACK)
