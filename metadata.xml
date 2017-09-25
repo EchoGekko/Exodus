@@ -6,9 +6,9 @@
     <description>Test version for the Binding of Isaac: Exodus!
 
 [h1]Coders[/h1]
+[b]AstroPenguin642[/b]
 [b]Micromario[/b]
 [b]Exudias[/b]
-[b]AstroPenguin642[/b]
 [b]Jaketheboss888[/b]
 [b]Echo[/b]
 
@@ -21,8 +21,8 @@
 
 [h1]Special Thanks[/h1]
 [b]Ambassador Pineapple[/b]
-</description>
-    <version>1.14</version>
+[b]KubeRoot[/b]</description>
+    <version>1.15</version>
     <visibility>Private</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
