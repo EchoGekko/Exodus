@@ -45,6 +45,7 @@ local ItemId = {
     FOOLS_GOLD = Isaac.GetItemIdByName("Fool's Gold"),
     MAKEUP_REMOVER = Isaac.GetItemIdByName("Makeup Remover"),
     ARCADE_TOKEN = Isaac.GetItemIdByName("Arcade Token"),
+    HAND_OF_GREED = Isaac.GetItemIdByName("Hand of Greed"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -174,7 +175,9 @@ local CostumeId = {
     CURSED_METRONOME = Isaac.GetCostumeIdByPath("gfx/characters/costume_Cursed Metronome.anm2"),
     MYSTERIOUS_MUSTACHE = Isaac.GetCostumeIdByPath("gfx/characters/costume_Mysterious Mustache.anm2"),
     POSSESSED_BOMBS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Possessed Bombs.anm2"),
-    BUTTROT = Isaac.GetCostumeIdByPath("gfx/characters/costume_Buttrot.anm2")
+    BUTTROT = Isaac.GetCostumeIdByPath("gfx/characters/costume_Buttrot.anm2"),
+    KEEPER_HAND_OF_GREED = Isaac.GetCostumeIdByPath("gfx/characters/costume_Keeper Hand of Greed.anm2"),
+    HAND_OF_GREED = Isaac.GetCostumeIdByPath("gfx/characters/costume_Hand of Greed.anm2")
 }
 
 local MusicId = {
@@ -220,6 +223,7 @@ function Exodus:newGame(fromSave)
             HOLY_WATER = { Splashed = false },
             FOOLS_GOLD = { HasFoolsGold = false },
             ARCADE_TOKEN = { HasArcadeToken = false },
+            HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = nil, HasGreedHand = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -2485,6 +2489,108 @@ function Exodus:pigBloodUpdate()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.pigBloodUpdate)
+
+--<<<HAND OF GREED>>>--
+function Exodus:greedHandUpdate()
+    local player = Isaac.GetPlayer(0)
+    
+    if player:HasCollectible(ItemId.HAND_OF_GREED) then
+        if not ItemVariables.HAND_OF_GREED.HasGreedHand then
+            ItemVariables.HAND_OF_GREED.HasGreedHand = true
+            if player:GetName() == "Keeper" then
+                player:AddNullCostume(CostumeId.KEEPER_HAND_OF_GREED)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            else
+                player:AddNullCostume(CostumeId.HAND_OF_GREED)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+                Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            end
+        end
+
+        if game:GetRoom():GetType() == RoomType.ROOM_DEVIL then
+            for i, entity in pairs(Isaac.GetRoomEntities()) do
+                if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and entity:ToPickup().Price ~= nil then
+                    if entity:ToPickup().Price == PickupPrice.PRICE_ONE_HEART then
+                        local price = 15
+                        if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+                            price = 7
+                        end
+                        entity:ToPickup().Price = price
+                        if player:GetMaxHearts() < ItemVariables.HAND_OF_GREED.RedHearts and (entity:IsDead() or (player:GetActiveItem() == 0 and ItemVariables.HAND_OF_GREED.ActiveItem ~= 0)) then
+                            player:AddMaxHearts(2, false)
+                            player:AddHearts(2)
+                            if player:GetNumCoins() >= price then
+                                player:AddCoins(-price)
+                            else
+                                player:Die()
+                            end
+                        end
+                    elseif entity:ToPickup().Price == PickupPrice.PRICE_TWO_HEARTS then
+                        local price = 30
+                        if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+                            price = 15
+                        end
+                        entity:ToPickup().Price = price
+                        if player:GetMaxHearts() < ItemVariables.HAND_OF_GREED.RedHearts and (entity:IsDead() or (player:GetActiveItem() == 0 and ItemVariables.HAND_OF_GREED.ActiveItem ~= 0)) then
+                            player:AddMaxHearts(4, false)
+                            player:AddHearts(4)
+                            if player:GetNumCoins() >= price then
+                                player:AddCoins(-price)
+                            else
+                                player:Die()
+                            end
+                        end
+                    elseif entity:ToPickup().Price == PickupPrice.PRICE_THREE_SOULHEARTS then
+                        local price = 15
+                        if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+                            price = 7
+                        end
+                        entity:ToPickup().Price = price
+                        if player:GetSoulHearts() < ItemVariables.HAND_OF_GREED.SoulHearts and (entity:IsDead() or (player:GetActiveItem() == 0 and ItemVariables.HAND_OF_GREED.ActiveItem ~= 0)) then
+                            player:AddSoulHearts(6)
+                            if player:GetNumCoins() >= price then
+                                player:AddCoins(-price)
+                            else
+                                player:Die()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        ItemVariables.HAND_OF_GREED.RedHearts = player:GetMaxHearts()
+        ItemVariables.HAND_OF_GREED.SoulHearts = player:GetSoulHearts()
+        ItemVariables.HAND_OF_GREED.ActiveItem = player:GetActiveItem()
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.greedHandUpdate)
+
+function Exodus:greedHandNewLevel()
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.HAND_OF_GREED) then
+        if player:GetName() == "Keeper" then
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+        else
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            Isaac.Spawn(5, 20, 1, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.greedHandNewLevel)
 
 --<<<YIN AND YANG>>>--
 function Exodus:yinyangUpdate()

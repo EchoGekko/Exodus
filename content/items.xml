@@ -25,6 +25,7 @@
 	<passive description="Heart of gold" name="Fool's Gold" gfx="Fools Gold.png"/>
 	<passive description="Scariest face" name="Makeup Remover" gfx="Makeup Remover.png"/>
 	<passive description="Insert coin" name="Arcade Token" gfx="Arcade Token.png"/>
+	<passive description="Pay your respects" name="Hand of Greed" gfx="Hand of Greed.png"/>
 	
 	<!-- Active Items -->
 	<active description="Tree of knowledge" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>

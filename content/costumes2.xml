@@ -12,4 +12,6 @@
 	<costume anm2path="costume_Mysterious Mustache.anm2" type="none"/>
 	<costume anm2path="costume_Possessed Bombs.anm2" type="none"/>
 	<costume anm2path="costume_Buttrot.anm2" type="none"/>
+	<costume anm2path="costume_Hand of Greed.anm2" type="none"/>
+	<costume anm2path="costume_Keeper Hand of Greed.anm2" type="none"/>
 </costumes>
