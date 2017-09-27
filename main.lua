@@ -223,7 +223,7 @@ function Exodus:newGame(fromSave)
             HOLY_WATER = { Splashed = false },
             FOOLS_GOLD = { HasFoolsGold = false },
             ARCADE_TOKEN = { HasArcadeToken = false },
-            HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = nil, HasGreedHand = false },
+            HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = 0, HasGreedHand = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -2493,7 +2493,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.pigBloodUpdate)
 --<<<HAND OF GREED>>>--
 function Exodus:greedHandUpdate()
     local player = Isaac.GetPlayer(0)
-    
+
     if player:HasCollectible(ItemId.HAND_OF_GREED) then
         if not ItemVariables.HAND_OF_GREED.HasGreedHand then
             ItemVariables.HAND_OF_GREED.HasGreedHand = true
@@ -2522,51 +2522,25 @@ function Exodus:greedHandUpdate()
                             price = 7
                         end
                         entity:ToPickup().Price = price
-                        if player:GetMaxHearts() < ItemVariables.HAND_OF_GREED.RedHearts and (entity:IsDead() or (player:GetActiveItem() == 0 and ItemVariables.HAND_OF_GREED.ActiveItem ~= 0)) then
-                            player:AddMaxHearts(2, false)
-                            player:AddHearts(2)
-                            if player:GetNumCoins() >= price then
-                                player:AddCoins(-price)
-                            else
-                                player:Die()
-                            end
-                        end
                     elseif entity:ToPickup().Price == PickupPrice.PRICE_TWO_HEARTS then
                         local price = 30
                         if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
                             price = 15
                         end
                         entity:ToPickup().Price = price
-                        if player:GetMaxHearts() < ItemVariables.HAND_OF_GREED.RedHearts and (entity:IsDead() or (player:GetActiveItem() == 0 and ItemVariables.HAND_OF_GREED.ActiveItem ~= 0)) then
-                            player:AddMaxHearts(4, false)
-                            player:AddHearts(4)
-                            if player:GetNumCoins() >= price then
-                                player:AddCoins(-price)
-                            else
-                                player:Die()
-                            end
-                        end
                     elseif entity:ToPickup().Price == PickupPrice.PRICE_THREE_SOULHEARTS then
                         local price = 15
                         if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
                             price = 7
                         end
                         entity:ToPickup().Price = price
-                        if player:GetSoulHearts() < ItemVariables.HAND_OF_GREED.SoulHearts and (entity:IsDead() or (player:GetActiveItem() == 0 and ItemVariables.HAND_OF_GREED.ActiveItem ~= 0)) then
-                            player:AddSoulHearts(6)
-                            if player:GetNumCoins() >= price then
-                                player:AddCoins(-price)
-                            else
-                                player:Die()
-                            end
-                        end
                     end
                 end
             end
         end
-        ItemVariables.HAND_OF_GREED.RedHearts = player:GetMaxHearts()
+		ItemVariables.HAND_OF_GREED.RedHearts = player:GetMaxHearts()
         ItemVariables.HAND_OF_GREED.SoulHearts = player:GetSoulHearts()
-        ItemVariables.HAND_OF_GREED.ActiveItem = player:GetActiveItem()
+		ItemVariables.HAND_OF_GREED.ActiveItem = player:GetActiveItem()
     end
 end
 
@@ -2591,6 +2565,87 @@ function Exodus:greedHandNewLevel()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.greedHandNewLevel)
+
+local shopItems = {}
+function Exodus:ShopInfo()
+	local player = Isaac.GetPlayer(0)
+	local entities = Isaac.GetRoomEntities()
+	for i,entity in ipairs(entities) do
+		if entity.Type == EntityType.ENTITY_PICKUP then
+			local pickup = entity:ToPickup()
+			if pickup:IsShopItem() then
+				if shopItems[pickup.InitSeed] == nil then
+                    local shopItemInfo = {}
+                    local itemConfig = nil
+                    if pickup.Variant == PickupVariant.PICKUP_TRINKET then
+                        itemConfig = Isaac.GetItemConfig():GetTrinket(pickup.SubType)
+                    elseif pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE then
+                        itemConfig = Isaac.GetItemConfig():GetCollectible(pickup.SubType)
+                    end
+                    if itemConfig ~= nil then
+                        shopItemInfo.pickup = pickup
+                        shopItemInfo.variant = pickup.Variant
+                        shopItemInfo.subType = pickup.SubType
+                        shopItemInfo.value = pickup:GetCoinValue()
+                        shopItemInfo.price = pickup.Price
+                        shopItemInfo.devilPrice = itemConfig.DevilPrice
+                        shopItemInfo.name = itemConfig.Name
+                        shopItems[pickup.InitSeed] = shopItemInfo
+                    end
+                end
+			end
+		end
+	end
+    for initSeed,info in pairs(shopItems) do
+        if info.pickup:IsDead() == true or info.pickup:IsShopItem() == false or (info.pickup.Touched == true and info.subType ~= info.pickup.SubType) then
+			if info.price == 15 then
+                local price = 15
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+                    price = 7
+                end
+                player:AddMaxHearts(2, false)
+                player:AddHearts(2)
+                if player:GetNumCoins() >= price then
+                    player:AddCoins(-price)
+                else
+                    player:Die()
+                end
+            elseif info.price == 30 then
+                local price = 30
+				if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+					price = 15
+				end
+                player:AddMaxHearts(4, false)
+                player:AddHearts(4)
+                if player:GetNumCoins() >= price then
+                    player:AddCoins(-price)
+                else
+                    player:Die()
+                end
+            elseif info.price == 15 then
+                local price = 15
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+                    price = 7
+                end
+				player:AddSoulHearts(6)
+                if player:GetNumCoins() >= price then
+					player:AddCoins(-price)
+                else
+                    player:Die()
+                end
+			end
+            shopItems[initSeed] = nil
+        elseif info.pickup.Touched == false and info.subType ~= info.pickup.SubType then
+            shopItems[initSeed] = nil
+			-- Rerolled --
+        elseif info.pickup:Exists() == false or (info.pickup.Touched == false and info.subType ~= info.pickup.SubType) then
+            shopItems[initSeed] = nil
+			-- Doesn't Exist --
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ShopInfo)
 
 --<<<YIN AND YANG>>>--
 function Exodus:yinyangUpdate()
