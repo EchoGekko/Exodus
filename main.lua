@@ -2597,7 +2597,7 @@ function Exodus:ShopInfo()
 		end
 	end
     for initSeed,info in pairs(shopItems) do
-        if info.pickup:IsDead() == true or info.pickup:IsShopItem() == false or (info.pickup.Touched == true and info.subType ~= info.pickup.SubType) then
+        if (info.pickup:IsDead() == true or info.pickup:IsShopItem() == false or (info.pickup.Touched == true and info.subType ~= info.pickup.SubType)) and game:GetRoom():GetType() == RoomType.ROOM_DEVIL then
 			if info.price == 15 then
                 local price = 15
                 if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
@@ -2646,6 +2646,9 @@ function Exodus:ShopInfo()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ShopInfo)
+
+function Exodus:greedHandNewRoom() shopItems = {} return nil end
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.greedHandNewRoom)
 
 --<<<YIN AND YANG>>>--
 function Exodus:yinyangUpdate()
