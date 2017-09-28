@@ -1476,10 +1476,14 @@ function Exodus:trinketUpdate()
     ---<<BROKEN GLASSES>>---
     if player:HasTrinket(ItemId.BROKEN_GLASSES) then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity:IsVulnerableEnemy() then
-                if rng:RandomInt(200) == 1 then
-                    entity:AddConfusion(EntityRef(player), 120, false)
-                end
+            if entity:IsActiveEnemy() or entity.Type == EntityType.ENTITY_PICKUP then
+                entity:GetSprite().Color = Color(0, 0, 0, 1, 0, 0, 0)
+            elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().FromBrokenGlasses == nil then
+				if math.random(2) == 1 then
+					local tear = player:FireTear(Vector((entity.Position.X * 2) - player.Position.X, (entity.Position.Y * 2) - player.Position.Y), entity.Velocity, true, false, true)
+					tear:GetData().FromBrokenGlasses = true
+				end
+				entity:GetData().FromBrokenGlasses = true
             end
         end
     end
@@ -1770,40 +1774,7 @@ function Exodus:trinketNewRoom()
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.trinketNewRoom) 
-
-function Exodus:trinketInputAction(entity, hook, action)
-      if entity ~= nil then
-        local player = Isaac.GetPlayer(0)
-        local entPlayer = entity:ToPlayer()
-        
-        if entPlayer and player:HasTrinket(ItemId.BROKEN_GLASSES) and hook == InputHook.GET_ACTION_VALUE then
-            if action == ButtonAction.ACTION_LEFT then
-                return Input.GetActionValue(ButtonAction.ACTION_RIGHT, entPlayer.ControllerIndex)
-            elseif action == ButtonAction.ACTION_RIGHT then
-                return Input.GetActionValue(ButtonAction.ACTION_LEFT, entPlayer.ControllerIndex)
-            elseif action == ButtonAction.ACTION_UP then
-                return Input.GetActionValue(ButtonAction.ACTION_DOWN, entPlayer.ControllerIndex)
-            elseif action == ButtonAction.ACTION_DOWN then
-                return Input.GetActionValue(ButtonAction.ACTION_UP, entPlayer.ControllerIndex)
-            end
-            
-            if not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
-                if action == ButtonAction.ACTION_SHOOTLEFT then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTRIGHT, entPlayer.ControllerIndex)
-                elseif action == ButtonAction.ACTION_SHOOTRIGHT then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTLEFT, entPlayer.ControllerIndex)
-                elseif action == ButtonAction.ACTION_SHOOTUP then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTDOWN, entPlayer.ControllerIndex)
-                elseif action == ButtonAction.ACTION_SHOOTDOWN then
-                    return Input.GetActionValue(ButtonAction.ACTION_SHOOTUP, entPlayer.ControllerIndex)
-                end
-            end
-        end
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_INPUT_ACTION, Exodus.trinketInputAction)
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.trinketNewRoom)
 
 --<<<SUB ROOM CHARGE ITEMS>>>--
 function Exodus:subRoomChargeItemsUpdate()
@@ -2538,9 +2509,9 @@ function Exodus:greedHandUpdate()
                 end
             end
         end
-		ItemVariables.HAND_OF_GREED.RedHearts = player:GetMaxHearts()
+        ItemVariables.HAND_OF_GREED.RedHearts = player:GetMaxHearts()
         ItemVariables.HAND_OF_GREED.SoulHearts = player:GetSoulHearts()
-		ItemVariables.HAND_OF_GREED.ActiveItem = player:GetActiveItem()
+        ItemVariables.HAND_OF_GREED.ActiveItem = player:GetActiveItem()
     end
 end
 
@@ -2568,13 +2539,13 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.greedHandNewLevel)
 
 local shopItems = {}
 function Exodus:ShopInfo()
-	local player = Isaac.GetPlayer(0)
-	local entities = Isaac.GetRoomEntities()
-	for i,entity in ipairs(entities) do
-		if entity.Type == EntityType.ENTITY_PICKUP then
-			local pickup = entity:ToPickup()
-			if pickup:IsShopItem() then
-				if shopItems[pickup.InitSeed] == nil then
+    local player = Isaac.GetPlayer(0)
+    local entities = Isaac.GetRoomEntities()
+    for i,entity in ipairs(entities) do
+        if entity.Type == EntityType.ENTITY_PICKUP then
+            local pickup = entity:ToPickup()
+            if pickup:IsShopItem() then
+                if shopItems[pickup.InitSeed] == nil then
                     local shopItemInfo = {}
                     local itemConfig = nil
                     if pickup.Variant == PickupVariant.PICKUP_TRINKET then
@@ -2593,12 +2564,12 @@ function Exodus:ShopInfo()
                         shopItems[pickup.InitSeed] = shopItemInfo
                     end
                 end
-			end
-		end
-	end
+            end
+        end
+    end
     for initSeed,info in pairs(shopItems) do
         if (info.pickup:IsDead() == true or info.pickup:IsShopItem() == false or (info.pickup.Touched == true and info.subType ~= info.pickup.SubType)) and game:GetRoom():GetType() == RoomType.ROOM_DEVIL then
-			if info.price == 15 then
+            if info.price == 15 then
                 local price = 15
                 if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
                     price = 7
@@ -2612,9 +2583,9 @@ function Exodus:ShopInfo()
                 end
             elseif info.price == 30 then
                 local price = 30
-				if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
-					price = 15
-				end
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
+                    price = 15
+                end
                 player:AddMaxHearts(4, false)
                 player:AddHearts(4)
                 if player:GetNumCoins() >= price then
@@ -2627,20 +2598,20 @@ function Exodus:ShopInfo()
                 if player:HasCollectible(CollectibleType.COLLECTIBLE_STEAM_SALE) then
                     price = 7
                 end
-				player:AddSoulHearts(6)
+                player:AddSoulHearts(6)
                 if player:GetNumCoins() >= price then
-					player:AddCoins(-price)
+                    player:AddCoins(-price)
                 else
                     player:Die()
                 end
-			end
+            end
             shopItems[initSeed] = nil
         elseif info.pickup.Touched == false and info.subType ~= info.pickup.SubType then
             shopItems[initSeed] = nil
-			-- Rerolled --
+            -- Rerolled --
         elseif info.pickup:Exists() == false or (info.pickup.Touched == false and info.subType ~= info.pickup.SubType) then
             shopItems[initSeed] = nil
-			-- Doesn't Exist --
+            -- Doesn't Exist --
         end
     end
 end
