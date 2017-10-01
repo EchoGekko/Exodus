@@ -1,5 +1,5 @@
 <AnimatedActor>
-	<Info CreatedBy="Unknown" CreatedOn="02.09.2016 13:42:54" Version="1" Fps="30"/>
+	<Info CreatedBy="Unknown" CreatedOn="9/30/2017 5:19:49 PM" Version="2" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="Drowned Shroomman.png" Id="0"/>
@@ -71,7 +71,9 @@
 				</LayerAnimation>
 			</LayerAnimations>
 			<NullAnimations/>
-			<Triggers/>
+			<Triggers>
+				<Trigger EventId="0" AtFrame="3"/>
+			</Triggers>
 		</Animation>
 	</Animations>
 </AnimatedActor>
