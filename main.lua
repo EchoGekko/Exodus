@@ -177,7 +177,12 @@ local CostumeId = {
     POSSESSED_BOMBS = Isaac.GetCostumeIdByPath("gfx/characters/costume_Possessed Bombs.anm2"),
     BUTTROT = Isaac.GetCostumeIdByPath("gfx/characters/costume_Buttrot.anm2"),
     KEEPER_HAND_OF_GREED = Isaac.GetCostumeIdByPath("gfx/characters/costume_Keeper Hand of Greed.anm2"),
-    HAND_OF_GREED = Isaac.GetCostumeIdByPath("gfx/characters/costume_Hand of Greed.anm2")
+    HAND_OF_GREED = Isaac.GetCostumeIdByPath("gfx/characters/costume_Hand of Greed.anm2"),
+    MAKEUP_REMOVER = Isaac.GetCostumeIdByPath("gfx/characters/costume_MakeupRemover.anm2"),
+    MAKEUP_REMOVER_BLACK = Isaac.GetCostumeIdByPath("gfx/characters/costume_MakeupRemover_black.anm2"),
+    MAKEUP_REMOVER_BLUE = Isaac.GetCostumeIdByPath("gfx/characters/costume_MakeupRemover_blue.anm2"),
+    MAKEUP_REMOVER_GRAY = Isaac.GetCostumeIdByPath("gfx/characters/costume_MakeupRemover_grey.anm2"),
+    MAKEUP_REMOVER_WHITE = Isaac.GetCostumeIdByPath("gfx/characters/costume_MakeupRemover_white.anm2")
 }
 
 local MusicId = {
@@ -223,6 +228,7 @@ function Exodus:newGame(fromSave)
             HOLY_WATER = { Splashed = false },
             FOOLS_GOLD = { HasFoolsGold = false },
             ARCADE_TOKEN = { HasArcadeToken = false },
+            MAKEUP_REMOVER = { HasMakeupRemover = false },
             HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = 0, HasGreedHand = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
@@ -1479,11 +1485,11 @@ function Exodus:trinketUpdate()
             if entity:IsActiveEnemy() or entity.Type == EntityType.ENTITY_PICKUP then
                 entity:GetSprite().Color = Color(0, 0, 0, 1, 0, 0, 0)
             elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().FromBrokenGlasses == nil then
-				if math.random(2) == 1 then
-					local tear = player:FireTear(Vector((entity.Position.X * 2) - player.Position.X, (entity.Position.Y * 2) - player.Position.Y), entity.Velocity, true, false, true)
-					tear:GetData().FromBrokenGlasses = true
-				end
-				entity:GetData().FromBrokenGlasses = true
+                if math.random(2) == 1 then
+                    local tear = player:FireTear(Vector((entity.Position.X * 2) - player.Position.X, (entity.Position.Y * 2) - player.Position.Y), entity.Velocity, true, false, true)
+                    tear:GetData().FromBrokenGlasses = true
+                end
+                entity:GetData().FromBrokenGlasses = true
             end
         end
     end
@@ -4159,6 +4165,28 @@ function Exodus:makeupRemoverInit(entity)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Exodus.makeupRemoverInit)
+
+function Exodus:makeupRemoverUpdate()
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.MAKEUP_REMOVER) then
+        if not ItemVariables.MAKEUP_REMOVER.HasMakeupRemover then
+            ItemVariables.MAKEUP_REMOVER.HasMakeupRemover = true
+            if player:GetName() == "The Lost" then
+                player:AddNullCostume(CostumeId.MAKEUP_REMOVER_WHITE)
+            elseif player:GetName() == "Azazel" or player:GetName() == "Lilith" then
+                player:AddNullCostume(CostumeId.MAKEUP_REMOVER_BLACK)
+            elseif player:GetName() == "???" then
+                player:AddNullCostume(CostumeId.MAKEUP_REMOVER_BLUE)
+            elseif player:GetName() == "Keeper" or player:GetName() == "Apollyon" then
+                player:AddNullCostume(CostumeId.MAKEUP_REMOVER_GRAY)
+            else
+                player:AddNullCostume(CostumeId.MAKEUP_REMOVER)
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.makeupRemoverUpdate)
 
 --<<<HOLY WATER>>>--
 function Exodus:holyWaterDamage(target, amount, flags, source, cdtimer)
