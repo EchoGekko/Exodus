@@ -26,7 +26,11 @@
 	<passive description="Scariest face" name="Makeup Remover" gfx="Makeup Remover.png"/>
 	<passive description="Insert coin" name="Arcade Token" gfx="Arcade Token.png"/>
 	<passive description="Pay your respects" name="Hand of Greed" gfx="Hand of Greed.png"/>
-	
+	<passive description="Rim" name="Clock Piece 1" gfx="Clock Piece 1.png"/>
+	<passive description="Face" name="Clock Piece 2" gfx="Clock Piece 2.png"/>
+	<passive description="Hand" name="Clock Piece 3" gfx="Clock Piece 3.png"/>
+	<passive description="Hand" name="Clock Piece 4" gfx="Clock Piece 4.png"/>
+
 	<!-- Active Items -->
 	<active description="Tree of knowledge" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
 	<active description="Summon the arena" name="Wrath of the Lamb" gfx="Wrath of the Lamb.png" maxcharges="12" cache="all" devilprice="2"/>
