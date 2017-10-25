@@ -1461,6 +1461,9 @@ Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType
 
 function loop()
     EntityVariables.LOOPS.Loop = EntityVariables.LOOPS.Loop + 1
+    local seeds = game:GetSeeds()
+    local seed = seeds:GetNextSeed()
+    seeds:SetStartSeed(seed)
     Isaac.ExecuteCommand("stage 1")
 end
 
@@ -1506,14 +1509,17 @@ function Exodus:loopNewRoom()
     if EntityVariables.LOOPS.Loop > 0 then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsActiveEnemy() then
-                entity.MaxHitPoints = entity.MaxHitPoints * (EntityVariables.LOOPS.Loop + 1) * 1.25
-				entity.HitPoints = entity.MaxHitPoints
+                entity.MaxHitPoints = entity.MaxHitPoints * EntityVariables.LOOPS.Loop * 2.5
+                entity.HitPoints = entity.MaxHitPoints
+                if 1 == math.random(10) then
+                    game:RerollEnemy(entity)
+                end
                 if EntityVariables.LOOPS.Loop >= math.random(10) and entity:GetData().IsDuplicate == nil then
-                    for i = 1, EntityVariables.LOOPS.Loop do
+                    for i = 1, math.random(1, EntityVariables.LOOPS.Loop) do
                         dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 16), Vector(0,0), entity)
                         dup:GetData().IsDuplicate = true
-                        dup.MaxHitPoints = dup.MaxHitPoints * (EntityVariables.LOOPS.Loop + 1) * 1.25
-						dup.HitPoints = dup.MaxHitPoints
+                        dup.MaxHitPoints = dup.MaxHitPoints * EntityVariables.LOOPS.Loop * 2.5
+                        dup.HitPoints = dup.MaxHitPoints
                     end
                 end
             end
