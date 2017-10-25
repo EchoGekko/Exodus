@@ -46,6 +46,10 @@ local ItemId = {
     MAKEUP_REMOVER = Isaac.GetItemIdByName("Makeup Remover"),
     ARCADE_TOKEN = Isaac.GetItemIdByName("Arcade Token"),
     HAND_OF_GREED = Isaac.GetItemIdByName("Hand of Greed"),
+    CLOCK_PIECE_1 = Isaac.GetItemIdByName("Clock Piece 1"),
+    CLOCK_PIECE_2 = Isaac.GetItemIdByName("Clock Piece 2"),
+    CLOCK_PIECE_3 = Isaac.GetItemIdByName("Clock Piece 3"),
+    CLOCK_PIECE_4 = Isaac.GetItemIdByName("Clock Piece 4"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -149,6 +153,7 @@ local Entities = {
     BASEBALL = getEntity("Baseball"),
     SCARED_HEART = getEntity("Exodus Scared Heart", 653),
     WELCOME_MAT = getEntity("Welcome Mat"),
+    CLOCK_KEEPER = getEntity("Clock Keeper"),
     FIREBALL = getEntity("Fireball"),
     FIREBALL_2 = getEntity("Fireball 2"),
     BLIGHT_TEAR = getEntity("Blight Tear")
@@ -317,7 +322,10 @@ function Exodus:newGame(fromSave)
             FLYERBALL = { Fires = {} },
             
             ---<<CHARACTERS>>---
-            KEEPER = { ThirdHeart = 2, CurrentCoins = 0 }
+            KEEPER = { ThirdHeart = 2, CurrentCoins = 0 },
+            
+            ---<<BETTER LOOPS>>---
+            LOOPS = { Loop = 0 }
         }
         
         local player = Isaac.GetPlayer(0)
@@ -1448,6 +1456,94 @@ function Exodus:keeperHit(t)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType.ENTITY_PLAYER)
+
+--<<BETTER LOOPS>>--
+
+function loop()
+    EntityVariables.LOOPS.Loop = EntityVariables.LOOPS.Loop + 1
+    Isaac.ExecuteCommand("stage 1")
+end
+
+function Exodus:loopUpdate()
+    local player = Isaac.GetPlayer(0)
+    local room = game:GetRoom()
+    local level = game:GetLevel()
+    if room:IsClear() and room:GetType() == RoomType.ROOM_BOSS and player:HasCollectible(ItemId.CLOCK_PIECE_1) and player:HasCollectible(ItemId.CLOCK_PIECE_2) and player:HasCollectible(ItemId.CLOCK_PIECE_3) and player:HasCollectible(ItemId.CLOCK_PIECE_4) then
+        if Game():IsGreedMode() then
+            if level:GetStage() == 7 and room:GetRoomShape() == 4 then
+                loop()
+            end
+        else
+            if level:GetStage() == 11 then
+                loop()
+            elseif level:GetStage() == 10 then
+                if level:IsAltStage() then
+                    if not Player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then
+                        loop()
+                    end
+                else
+                    if not Player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then
+                        loop()
+                    end
+                end
+            elseif level:GetStage() == 12 then
+                if room:GetBossID() == 70 then
+                    loop()
+                end
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.loopUpdate)
+
+function Exodus:loopNewRoom()
+    local room = game:GetRoom()
+    if room:GetType() == RoomType.ROOM_CURSE and room:IsFirstVisit() then
+        keeper = Isaac.Spawn(Entities.CLOCK_KEEPER.id, Entities.CLOCK_KEEPER.variant, 0, Isaac.GetFreeNearPosition(Vector(320, 160), 32), Vector(0, 0), nil)
+        keeper:GetSprite():Play("Idle", true)
+    end
+    if EntityVariables.LOOPS.Loop > 0 then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity:IsActiveEnemy() then
+                entity.MaxHitPoints = entity.MaxHitPoints * (EntityVariables.LOOPS.Loop + 1) * 1.25
+				entity.HitPoints = entity.MaxHitPoints
+                if EntityVariables.LOOPS.Loop >= math.random(10) and entity:GetData().IsDuplicate == nil then
+                    for i = 1, EntityVariables.LOOPS.Loop do
+                        dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 16), Vector(0,0), entity)
+                        dup:GetData().IsDuplicate = true
+                        dup.MaxHitPoints = dup.MaxHitPoints * (EntityVariables.LOOPS.Loop + 1) * 1.25
+						dup.HitPoints = dup.MaxHitPoints
+                    end
+                end
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.loopNewRoom)
+
+function Exodus:loopKeeperBoom(keeper)
+    local player = Isaac.GetPlayer(0)
+    if keeper.Variant == Entities.CLOCK_KEEPER.variant then
+        item = ItemId.CLOCK_PIECE_1
+        if player:HasCollectible(ItemId.CLOCK_PIECE_1) then
+            item = ItemId.CLOCK_PIECE_2
+        end
+        if player:HasCollectible(ItemId.CLOCK_PIECE_2) then
+            item = ItemId.CLOCK_PIECE_3
+        end
+        if player:HasCollectible(ItemId.CLOCK_PIECE_3) then
+            item = ItemId.CLOCK_PIECE_4
+        end
+        if player:HasCollectible(ItemId.CLOCK_PIECE_4) then
+            item = itemPool:GetCollectible(ItemPoolType.POOL_CURSE, true, game:GetSeeds():GetStartSeed())
+        end
+        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, keeper.Position, Vector(0,0), keeper)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, Exodus.loopKeeperBoom, Entities.CLOCK_KEEPER.id)
 
 --<<<TRINKETS>>>--
 function Exodus:trinketUpdate()
