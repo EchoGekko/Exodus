@@ -1460,11 +1460,13 @@ Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType
 --<<BETTER LOOPS>>--
 
 function loop()
+    local player = Isaac.GetPlayer(0)
     EntityVariables.LOOPS.Loop = EntityVariables.LOOPS.Loop + 1
     local seeds = game:GetSeeds()
     local seed = seeds:GetNextSeed()
     seeds:SetStartSeed(seed)
     Isaac.ExecuteCommand("stage 1")
+    player:AnimateAppear()
 end
 
 function Exodus:loopUpdate()
