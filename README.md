@@ -1,15 +1,14 @@
 The Binding of Isaac: Exodus is a mod created by:
 
-Micromario (Coder)
-AstroPenguin642 (Coder, Items)
+AstroPenguin642 (Coder)
 Echo (Coder)
-Exudias (Coder, Enemies)
-Jaketheboss888 (Coder)
+Exudias (Coder)
+Micromario (Coder)
 
 Bustin Blotch (Spriter)
 CatnipOverdose (Spriter)
 TRPG (Spriter)
-Psychotic (Spriter, Backdrops)
+Psychotic (Backdrops)
 
 Ambassador Pineapple (Tester)
 KubeRoot (Special Thanks)
