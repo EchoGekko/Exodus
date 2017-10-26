@@ -2568,7 +2568,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.forgetMeLaterUpdate)
 
 --<<<THE FORBIDDEN FRUIT>>>--
 function Exodus:forbiddenFruitCache(player, flag)
-    if player:HasCollectible(ItemId.FORBIDDEN_FRUIT) and flag == CacheFlag.CACHE_DAMAGE then
+    if flag == CacheFlag.CACHE_DAMAGE then
         player.Damage = player.Damage + (math.floor((ItemVariables.FORBIDDEN_FRUIT.UseCount^0.7) * 100)) / 101
     end
 end
