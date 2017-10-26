@@ -153,6 +153,7 @@ local Entities = {
     BASEBALL = getEntity("Baseball"),
     SCARED_HEART = getEntity("Exodus Scared Heart", 653),
     WELCOME_MAT = getEntity("Welcome Mat"),
+    KEYHOLE = getEntity("Keyhole"),
     CLOCK_KEEPER = getEntity("Clock Keeper"),
     FIREBALL = getEntity("Fireball"),
     FIREBALL_2 = getEntity("Fireball 2"),
@@ -325,7 +326,7 @@ function Exodus:newGame(fromSave)
             KEEPER = { ThirdHeart = 2, CurrentCoins = 0 },
             
             ---<<BETTER LOOPS>>---
-            LOOPS = { Loop = 0 }
+            LOOPS = { Loop = 0, KeyFrame = 0, KeyPosition = Vector(0, 0) }
         }
         
         local player = Isaac.GetPlayer(0)
@@ -1473,6 +1474,43 @@ function Exodus:loopUpdate()
     local player = Isaac.GetPlayer(0)
     local room = game:GetRoom()
     local level = game:GetLevel()
+    if room:GetType() == RoomType.ROOM_SUPERSECRET then
+        if player.Position:Distance(EntityVariables.LOOPS.KeyPosition) < 128 and player:GetNumKeys() > 0 and EntityVariables.LOOPS.KeyFrame == nil then
+            player:AddKeys(-1)
+            for i, entity in pairs(Isaac.GetRoomEntities()) do
+                if entity.Type == Entities.KEYHOLE.id and entity.Variant == Entities.KEYHOLE.variant then
+                    if player:HasGoldenKey() then
+                        keyhole:GetSprite():Play("Open With GOLD", true)
+                    else
+                        keyhole:GetSprite():Play("Open", true)
+                    end
+                end
+            end
+            EntityVariables.LOOPS.KeyFrame = game:GetFrameCount() + 27
+        elseif EntityVariables.LOOPS.KeyFrame ~= nil then
+            if EntityVariables.LOOPS.KeyFrame ~= 0 and EntityVariables.LOOPS.KeyFrame <= game:GetFrameCount() then
+                for i, entity in pairs(Isaac.GetRoomEntities()) do
+                    if entity.Type == Entities.KEYHOLE.id and entity.Variant == Entities.KEYHOLE.variant then
+                        entity:Remove()
+                        Isaac.ExecuteCommand("goto s.curse.0")
+                    end
+                end
+            end
+        end
+    elseif EntityVariables.LOOPS.KeyFrame ~= nil then
+        if EntityVariables.LOOPS.KeyFrame ~= 0 and EntityVariables.LOOPS.KeyFrame <= game:GetFrameCount() then
+            room:SetClear()
+            for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+                local door = room:GetDoor(i)
+                if door ~= nil then
+                    door:SetRoomTypes(RoomType.ROOM_SACRIFICE, RoomType.ROOM_SACRIFICE)
+                end
+            end
+            keeper = Isaac.Spawn(Entities.CLOCK_KEEPER.id, Entities.CLOCK_KEEPER.variant, 0, Vector(320, 196), Vector(0, 0), nil)
+            keeper:GetSprite():Play("Idle", true)
+            EntityVariables.LOOPS.KeyFrame = 0
+        end
+    end
     if room:IsClear() and room:GetType() == RoomType.ROOM_BOSS and player:HasCollectible(ItemId.CLOCK_PIECE_1) and player:HasCollectible(ItemId.CLOCK_PIECE_2) and player:HasCollectible(ItemId.CLOCK_PIECE_3) and player:HasCollectible(ItemId.CLOCK_PIECE_4) then
         if Game():IsGreedMode() then
             if level:GetStage() == 7 and room:GetRoomShape() == 4 then
@@ -1503,11 +1541,8 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.loopUpdate)
 
 function Exodus:loopNewRoom()
+    local player = Isaac.GetPlayer(0)
     local room = game:GetRoom()
-    if room:GetType() == RoomType.ROOM_CURSE and room:IsFirstVisit() then
-        keeper = Isaac.Spawn(Entities.CLOCK_KEEPER.id, Entities.CLOCK_KEEPER.variant, 0, Isaac.GetFreeNearPosition(Vector(320, 160), 32), Vector(0, 0), nil)
-        keeper:GetSprite():Play("Idle", true)
-    end
     if EntityVariables.LOOPS.Loop > 0 then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsActiveEnemy() then
@@ -1524,6 +1559,37 @@ function Exodus:loopNewRoom()
                         dup.HitPoints = dup.MaxHitPoints
                     end
                 end
+            end
+        end
+    end
+    if room:GetType() == RoomType.ROOM_SUPERSECRET and room:IsFirstVisit() then
+        for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
+            local door = room:GetDoor(i)
+            if door ~= nil then
+                if door.Direction == Direction.DOWN and EntityVariables.LOOPS.KeyFrame == 0 then
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 32), Vector(0, 0), nil)
+                    keyhole:GetSprite():Play("Idle", true)
+                    EntityVariables.LOOPS.KeyFrame = nil
+					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                elseif door.Direction == Direction.UP and EntityVariables.LOOPS.KeyFrame == 0 then
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 508), Vector(0, 0), nil)
+                    keyhole:GetSprite():Play("Idle", true)
+					keyhole:GetSprite().Rotation = 180
+                    EntityVariables.LOOPS.KeyFrame = nil
+					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                elseif door.Direction == Direction.RIGHT and EntityVariables.LOOPS.KeyFrame == 0 then
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(32, 270), Vector(0, 0), nil)
+                    keyhole:GetSprite():Play("Idle", true)
+					keyhole:GetSprite().Rotation = 270
+                    EntityVariables.LOOPS.KeyFrame = nil
+					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                elseif door.Direction == Direction.LEFT and EntityVariables.LOOPS.KeyFrame == 0 then
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(928, 270), Vector(0, 0), nil)
+                    keyhole:GetSprite():Play("Idle", true)
+					keyhole:GetSprite().Rotation = 90
+                    EntityVariables.LOOPS.KeyFrame = nil
+					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+				end
             end
         end
     end
