@@ -871,13 +871,13 @@ function Exodus:ritualCandleFamiliarUpdate(candle)
     candle.Velocity = candle:GetOrbitPosition(player.Position + player.Velocity) - candle.Position
     
     for i, entity in pairs(Isaac.GetRoomEntities()) do 
-        if (entity.Type == EntityType.ENTITY_TEAR or (entity.Type == EntityType.ENTITY_FIREPLACE and (entity.Variant == 0 or entity.Variant == 1))) then
+        if (entity.Type == EntityType.ENTITY_TEAR or entity.Type == EntityType.ENTITY_KNIFE or (entity.Type == EntityType.ENTITY_FIREPLACE and (entity.Variant == 0 or entity.Variant == 1))) then
             if entity.Position:DistanceSquared(candle.Position) < (entity.Size + candle.Size)^2 then
                 if data.IsLit ~= true then
                     data.IsLit = true
                     sfx:Play(SoundEffect.SOUND_FIRE_RUSH, 1, 0, false, 1)
                 end
-                
+
                 data.LitTimer = 600
             end
         end
@@ -1570,26 +1570,26 @@ function Exodus:loopNewRoom()
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 32), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     EntityVariables.LOOPS.KeyFrame = nil
-					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
                 elseif door.Direction == Direction.UP and EntityVariables.LOOPS.KeyFrame == 0 then
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 508), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
-					keyhole:GetSprite().Rotation = 180
+                    keyhole:GetSprite().Rotation = 180
                     EntityVariables.LOOPS.KeyFrame = nil
-					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
                 elseif door.Direction == Direction.RIGHT and EntityVariables.LOOPS.KeyFrame == 0 then
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(32, 270), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
-					keyhole:GetSprite().Rotation = 270
+                    keyhole:GetSprite().Rotation = 270
                     EntityVariables.LOOPS.KeyFrame = nil
-					EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
                 elseif door.Direction == Direction.LEFT and EntityVariables.LOOPS.KeyFrame == 0 then
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(928, 270), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
-					keyhole:GetSprite().Rotation = 90
+                    keyhole:GetSprite().Rotation = 90
                     EntityVariables.LOOPS.KeyFrame = nil
-					EntityVariables.LOOPS.KeyPosition = keyhole.Position
-				end
+                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                end
             end
         end
     end
@@ -4129,6 +4129,11 @@ function Exodus:buttrotUpdate()
                     end
                 end
             end
+            if entities[i].Type == EntityType.ENTITY_BOMBDROP and entities[i].SpawnerType == 1 and entities[i]:GetData().IsButtrotBomb == nil then
+                entities[i]:GetSprite():Load("gfx/blight_bomb.anm2", true)
+                entities[i]:GetData().IsButtrotBomb = true
+                entities[i]:ToBomb().Flags = entities[i]:ToBomb().Flags | TearFlags.TEAR_SLOW
+            end
         end
     end
 end
@@ -4173,16 +4178,6 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, Exodus.buttrotTear)
 
-
-function Exodus:onBombInit(bomb)
-    local player = Isaac.GetPlayer(0)
-    if player:HasCollectible(ItemId.BUTTROT) then
-        bomb:GetSprite():Load("gfx/blight_bomb.anm2", true)
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_BOMB_INIT, Exodus.onBombInit)
-
 --<<<SLING + BUTTROT PRE_TEAR_COLLISION>>>--
 function Exodus:buttrotShatter(tear, target)
     local player = Isaac.GetPlayer(0)
@@ -4192,7 +4187,7 @@ function Exodus:buttrotShatter(tear, target)
             target:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
             target:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
             target:AddEntityFlags(EntityFlag.FLAG_SLOW)
-            target:SetColor(Color(0.75, 0.17, 0.46, 1, 0, 0, 0), 180, 1, false, false)    
+            target:SetColor(Color(0.75, 0.17, 0.46, 1, 0, 0, 0), 90, 1, false, false)    
             local arrow = Isaac.Spawn(1000, 538978237, 0, target.Position + Vector(0, target.Size), Vector(0,0), nil)
             arrow:GetData().parent = target
             target:GetData().BlightedFrame = game:GetFrameCount()
@@ -4911,6 +4906,8 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.birdbathEntityUpdate, Entities.BIRDBATH.id)
 
+
+--<<<POSSESSED BOMBS>>>--
 function Exodus:possessedBombUpdate()
     local player = Isaac.GetPlayer(0)
     
@@ -4926,7 +4923,7 @@ function Exodus:possessedBombUpdate()
             if bomb then
                 local data = bomb:GetData()
                 
-                if not data.isPossessed then
+                if not data.isPossessed and bomb.SpawnerType == 1 then
                     bomb.Flags = bomb.Flags | (TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_FEAR)
                     bomb.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_WALLS
                     bomb.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
