@@ -1499,7 +1499,6 @@ function Exodus:loopUpdate()
         end
     elseif EntityVariables.LOOPS.KeyFrame ~= nil then
         if EntityVariables.LOOPS.KeyFrame ~= 0 and EntityVariables.LOOPS.KeyFrame <= game:GetFrameCount() then
-            room:SetClear()
             for i = 0, DoorSlot.NUM_DOOR_SLOTS - 1 do
                 local door = room:GetDoor(i)
                 if door ~= nil then
@@ -1592,6 +1591,8 @@ function Exodus:loopNewRoom()
                 end
             end
         end
+    elseif EntityVariables.LOOPS.KeyFrame == nil then
+        EntityVariables.LOOPS.KeyFrame = 0
     end
 end
 
