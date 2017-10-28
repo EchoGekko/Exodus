@@ -146,7 +146,7 @@ local Entities = {
     HOTHEAD = getEntity("Hothead"),
     WINGLEADER = getEntity("Wingleader"),
     BROOD = getEntity("Brood"),
-	PATRIARCH = getEntity("Patriarch"),
+    PATRIARCH = getEntity("Patriarch"),
     
     ---<<OTHERS>>---
     BIRDBATH = getEntity("Birdbath"),
@@ -5045,27 +5045,27 @@ Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.dankDipEntityUpdate, Entit
 --<<<PATRIARCH>>>--
 function Exodus:patriarchUpdate(entity)
     local player = Isaac.GetPlayer(0)
-	
+    
     if entity.Variant == Entities.PATRIARCH.variant and entity.State == 8 and entity:GetData().HolyLightDirection == nil then
-		entity:GetData().ShotFrom = entity.Position
-		entity:GetData().HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
-		entity:GetData().BeamNumber = -5
-	end
-	
-	if entity:GetData().HolyLightDirection ~= nil and entity:GetData().BeamNumber >= 1 and entity:GetData().BeamNumber == math.floor(entity:GetData().BeamNumber) then
-		local lightpos = entity:GetData().ShotFrom + Vector(48 * entity:GetData().BeamNumber, 48 * entity:GetData().BeamNumber):Rotated(entity:GetData().HolyLightDirection)
-		entity:GetData().BeamNumber = entity:GetData().BeamNumber + 0.25
-		Isaac.Spawn(1000, 19, 0, lightpos, Vector(0,0), nil)
-		if entity:GetData().BeamNumber >= 8 then
-			entity:GetData().HolyLightDirection = nil
-			entity.State = 4
-		end
-	elseif entity:GetData().HolyLightDirection ~= nil then
-		if entity:GetData().BeamNumber - 0.25 == math.floor(entity:GetData().BeamNumber) then
-			entity:GetData().HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
-		end
-		entity:GetData().BeamNumber = entity:GetData().BeamNumber + 0.25
-	end
+        entity:GetData().ShotFrom = entity.Position
+        entity:GetData().HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
+        entity:GetData().BeamNumber = -5
+    end
+    
+    if entity:GetData().HolyLightDirection ~= nil and entity:GetData().BeamNumber >= 1 and entity:GetData().BeamNumber == math.floor(entity:GetData().BeamNumber) then
+        local lightpos = entity:GetData().ShotFrom + Vector(48 * entity:GetData().BeamNumber, 48 * entity:GetData().BeamNumber):Rotated(entity:GetData().HolyLightDirection)
+        entity:GetData().BeamNumber = entity:GetData().BeamNumber + 0.25
+        Isaac.Spawn(1000, 19, 0, lightpos, Vector(0,0), nil)
+        if entity:GetData().BeamNumber >= 8 then
+            entity:GetData().HolyLightDirection = nil
+            entity.State = 4
+        end
+    elseif entity:GetData().HolyLightDirection ~= nil then
+        if entity:GetData().BeamNumber - 0.25 == math.floor(entity:GetData().BeamNumber) then
+            entity:GetData().HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
+        end
+        entity:GetData().BeamNumber = entity:GetData().BeamNumber + 0.25
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.patriarchUpdate, Entities.PATRIARCH.id)
@@ -5901,7 +5901,7 @@ function Exodus:carrionPrinceEntityUpdate(entity)
     local room = game:GetRoom()
     
     local angle = (target.Position - entity.Position):GetAngleDegrees()
-    
+
     if entity.FrameCount <= 1 then
         entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
         entity.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_GROUND
@@ -5910,6 +5910,7 @@ function Exodus:carrionPrinceEntityUpdate(entity)
         entity:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
         entity:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
         data.BombTimer = -1
+        data.ChargeCooldown = 0
     end
     
     if entity.State >= 7 then
@@ -5986,18 +5987,26 @@ function Exodus:carrionPrinceEntityUpdate(entity)
             
             local dirAngle = (target.Position - entity.Position):GetAngleDegrees()
             
-            if dirAngle > 170 and dirAngle < 190 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Left
+            if entity:GetData().ChargeCooldown > 0 then
+                entity:GetData().ChargeCooldown = entity:GetData().ChargeCooldown - 1
+            end
+            
+            if dirAngle > 170 and dirAngle < 190 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) and entity:GetData().ChargeCooldown == 0 then -- Facing Left
                 entity.State = 3
                 sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_2, 1, 0, false, 1)
-            elseif dirAngle > -10 and dirAngle < 10 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Right
+                entity:GetData().ChargeCooldown = 300
+            elseif dirAngle > -10 and dirAngle < 10 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) and entity:GetData().ChargeCooldown == 0 then -- Facing Right
                 entity.State = 4
                 sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_1, 1, 0, false, 1)
-            elseif dirAngle < -80 and dirAngle > -100 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Up
+                entity:GetData().ChargeCooldown = 300
+            elseif dirAngle < -80 and dirAngle > -100 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) and entity:GetData().ChargeCooldown == 0 then -- Facing Up
                 entity.State = 5
                 sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0, 1, 0, false, 1)
-            elseif dirAngle > 80 and dirAngle < 100 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) then -- Facing Down
+                entity:GetData().ChargeCooldown = 300
+            elseif dirAngle > 80 and dirAngle < 100 and room:CheckLine(entity.Position, target.Position, 0, 10, false, false) and entity:GetData().ChargeCooldown == 0 then -- Facing Down
                 entity.State = 6
                 sfx:Play(SoundEffect.SOUND_MONSTER_ROAR_0, 1, 0, false, 1)
+                entity:GetData().ChargeCooldown = 300
             end
         end
         
