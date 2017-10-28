@@ -326,7 +326,7 @@ function Exodus:newGame(fromSave)
             KEEPER = { ThirdHeart = 2, CurrentCoins = 0 },
             
             ---<<BETTER LOOPS>>---
-            LOOPS = { Loop = 0, KeyFrame = 0, Keyhole = nil }
+            LOOPS = { Loop = 0, KeyFrame = 0, Keyhole = nil, IgnoreNegativeIndex = false, SSIndex = 0 }
         }
         
         local player = Isaac.GetPlayer(0)
@@ -372,8 +372,7 @@ function Exodus:SpawnRegister()
 end
 
 function Exodus:AddToRegister(entity)
-    table.insert(GameState.Register, 
-        {
+    table.insert(GameState.Register, {
             Room = game:GetLevel():GetCurrentRoomIndex(),
             Position = entity.Position,
             Entity = {Type = entity.Type, Variant = entity.Variant}
@@ -1492,6 +1491,8 @@ function Exodus:loopUpdate()
                 for i, entity in pairs(Isaac.GetRoomEntities()) do
                     if entity.Type == Entities.KEYHOLE.id and entity.Variant == Entities.KEYHOLE.variant then
                         entity:Remove()
+                        EntityVariables.LOOPS.IgnoreNegativeIndex = true
+                        EntityVariables.LOOPS.SSIndex = level:GetCurrentRoomIndex()
                         Isaac.ExecuteCommand("goto s.curse.0")
                     end
                 end
@@ -1542,6 +1543,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.loopUpdate)
 function Exodus:loopNewRoom()
     local player = Isaac.GetPlayer(0)
     local room = game:GetRoom()
+    local level = game:GetLevel()
     local bigRooms = { [RoomShape.ROOMSHAPE_2x2] = true, [RoomShape.ROOMSHAPE_LBL] = true, [RoomShape.ROOMSHAPE_LBR] = true, [RoomShape.ROOMSHAPE_LTL] = true, [RoomShape.ROOMSHAPE_LTR] = true }
     
     if EntityVariables.LOOPS.Loop > 0 then
@@ -1563,6 +1565,7 @@ function Exodus:loopNewRoom()
             end
         end
     end
+    
     if room:GetType() == RoomType.ROOM_SUPERSECRET and room:IsFirstVisit() then
         local mainDoor
         local checkDist = math.huge
@@ -1598,6 +1601,18 @@ function Exodus:loopNewRoom()
     elseif EntityVariables.LOOPS.KeyFrame == nil then
         EntityVariables.LOOPS.KeyFrame = 0
     end
+    
+    if room:GetType() == RoomType.ROOM_CURSE then
+        if not EntityVariables.LOOPS.IgnoreNegativeIndex and level:GetCurrentRoomDesc().GridIndex < 0 then
+            if EntityVariables.LOOPS.SSIndex and EntityVariables.LOOPS.SSIndex > 0 then
+                level:ChangeRoom(EntityVariables.LOOPS.SSIndex)
+            else
+                level:ChangeRoom(level:GetStartingRoomIndex())
+            end
+        end
+    end
+    
+    EntityVariables.LOOPS.IgnoreNegativeIndex = false
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.loopNewRoom)
