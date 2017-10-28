@@ -1569,25 +1569,25 @@ function Exodus:loopNewRoom()
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 32), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = Vector(320, 32)
                 elseif door.Direction == Direction.UP and EntityVariables.LOOPS.KeyFrame == 0 then
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 508), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     keyhole:GetSprite().Rotation = 180
                     EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = Vector(320, 508)
                 elseif door.Direction == Direction.RIGHT and EntityVariables.LOOPS.KeyFrame == 0 then
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(32, 270), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     keyhole:GetSprite().Rotation = 270
                     EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = Vector(32, 270)
                 elseif door.Direction == Direction.LEFT and EntityVariables.LOOPS.KeyFrame == 0 then
                     keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(928, 270), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     keyhole:GetSprite().Rotation = 90
                     EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = Vector(928, 270)
                 end
             end
         end
