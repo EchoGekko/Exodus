@@ -146,6 +146,7 @@ local Entities = {
     HOTHEAD = getEntity("Hothead"),
     WINGLEADER = getEntity("Wingleader"),
     BROOD = getEntity("Brood"),
+	PATRIARCH = getEntity("Patriarch"),
     
     ---<<OTHERS>>---
     BIRDBATH = getEntity("Birdbath"),
@@ -321,6 +322,7 @@ function Exodus:newGame(fromSave)
         EntityVariables = {
             ---<<ENEMIES>>---
             FLYERBALL = { Fires = {} },
+			PATRIARCH = { ShotFrom = nil, HolyLightDirection = nil, BeamNumber = 0 },
             
             ---<<CHARACTERS>>---
             KEEPER = { ThirdHeart = 2, CurrentCoins = 0 },
@@ -5040,6 +5042,32 @@ function Exodus:dankDipEntityUpdate(dip)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.dankDipEntityUpdate, Entities.DANK_DIP.id)
+
+--<<<PATRIARCH>>>--
+function Exodus:patriarchUpdate(entity)
+    local player = Isaac.GetPlayer(0)
+	
+    if entity.Variant == Entities.PATRIARCH.variant and entity.State == 8 and EntityVariables.PATRIARCH.HolyLightDirection == nil then
+		EntityVariables.PATRIARCH.ShotFrom = entity.Position
+		EntityVariables.PATRIARCH.HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
+		EntityVariables.PATRIARCH.BeamNumber = -10
+	end
+	
+	if EntityVariables.PATRIARCH.HolyLightDirection ~= nil and EntityVariables.PATRIARCH.BeamNumber >= 1 and EntityVariables.PATRIARCH.BeamNumber == math.floor(EntityVariables.PATRIARCH.BeamNumber) then
+		local lightpos = EntityVariables.PATRIARCH.ShotFrom + Vector(48 * EntityVariables.PATRIARCH.BeamNumber, 48 * EntityVariables.PATRIARCH.BeamNumber):Rotated(EntityVariables.PATRIARCH.HolyLightDirection)
+		EntityVariables.PATRIARCH.BeamNumber = EntityVariables.PATRIARCH.BeamNumber + 0.5
+		Isaac.Spawn(1000, 19, 0, lightpos, Vector(0,0), nil)
+		if EntityVariables.PATRIARCH.BeamNumber >= 8 then
+			EntityVariables.PATRIARCH.HolyLightDirection = nil
+			entity.State = 4
+		end
+	elseif EntityVariables.PATRIARCH.HolyLightDirection ~= nil then
+		EntityVariables.PATRIARCH.HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
+		EntityVariables.PATRIARCH.BeamNumber = EntityVariables.PATRIARCH.BeamNumber + 0.5
+	end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.patriarchUpdate, Entities.PATRIARCH.id)
 
 --<<<WINGLEADER>>>--
 function Exodus:wingleaderUpdate(fly)
