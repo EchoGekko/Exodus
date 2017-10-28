@@ -5050,20 +5050,22 @@ function Exodus:patriarchUpdate(entity)
     if entity.Variant == Entities.PATRIARCH.variant and entity.State == 8 and EntityVariables.PATRIARCH.HolyLightDirection == nil then
 		EntityVariables.PATRIARCH.ShotFrom = entity.Position
 		EntityVariables.PATRIARCH.HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
-		EntityVariables.PATRIARCH.BeamNumber = -10
+		EntityVariables.PATRIARCH.BeamNumber = -5
 	end
 	
 	if EntityVariables.PATRIARCH.HolyLightDirection ~= nil and EntityVariables.PATRIARCH.BeamNumber >= 1 and EntityVariables.PATRIARCH.BeamNumber == math.floor(EntityVariables.PATRIARCH.BeamNumber) then
 		local lightpos = EntityVariables.PATRIARCH.ShotFrom + Vector(48 * EntityVariables.PATRIARCH.BeamNumber, 48 * EntityVariables.PATRIARCH.BeamNumber):Rotated(EntityVariables.PATRIARCH.HolyLightDirection)
-		EntityVariables.PATRIARCH.BeamNumber = EntityVariables.PATRIARCH.BeamNumber + 0.5
+		EntityVariables.PATRIARCH.BeamNumber = EntityVariables.PATRIARCH.BeamNumber + 0.25
 		Isaac.Spawn(1000, 19, 0, lightpos, Vector(0,0), nil)
 		if EntityVariables.PATRIARCH.BeamNumber >= 8 then
 			EntityVariables.PATRIARCH.HolyLightDirection = nil
 			entity.State = 4
 		end
 	elseif EntityVariables.PATRIARCH.HolyLightDirection ~= nil then
-		EntityVariables.PATRIARCH.HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
-		EntityVariables.PATRIARCH.BeamNumber = EntityVariables.PATRIARCH.BeamNumber + 0.5
+		if EntityVariables.PATRIARCH.BeamNumber - 0.25 == math.floor(EntityVariables.PATRIARCH.BeamNumber) then
+			EntityVariables.PATRIARCH.HolyLightDirection = (player.Position - entity.Position):GetAngleDegrees() - 48
+		end
+		EntityVariables.PATRIARCH.BeamNumber = EntityVariables.PATRIARCH.BeamNumber + 0.25
 	end
 end
 
