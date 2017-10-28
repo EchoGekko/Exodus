@@ -5,6 +5,7 @@
 		<Item Name="Busted Pipe" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Tech 360" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Paper Cut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="The Forbidden Fruit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Forget Me Later" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dragon Breath" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Cobalt Necklace" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
