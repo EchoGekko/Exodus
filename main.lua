@@ -1475,7 +1475,7 @@ function Exodus:loopUpdate()
     local room = game:GetRoom()
     local level = game:GetLevel()
     if room:GetType() == RoomType.ROOM_SUPERSECRET then
-        if player.Position:DistanceSquared(EntityVariables.LOOPS.KeyPosition) < 128^2 and player:GetNumKeys() > 0 and EntityVariables.LOOPS.KeyFrame == nil then
+        if player.Position:Distance(EntityVariables.LOOPS.KeyPosition) < 128 and player:GetNumKeys() > 0 and EntityVariables.LOOPS.KeyFrame == nil then
             player:AddKeys(-1)
             for i, entity in pairs(Isaac.GetRoomEntities()) do
                 if entity.Type == Entities.KEYHOLE.id and entity.Variant == Entities.KEYHOLE.variant then
@@ -1566,29 +1566,28 @@ function Exodus:loopNewRoom()
             local door = room:GetDoor(i)
             if door ~= nil then
                 if door.Direction == Direction.DOWN and EntityVariables.LOOPS.KeyFrame == 0 then
-                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, door.Position, Vector(0, 0), nil)
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 32), Vector(0, 0), nil)
+                    keyhole:GetSprite():Play("Idle", true)
+                    EntityVariables.LOOPS.KeyFrame = nil
+                    EntityVariables.LOOPS.KeyPosition = Vector(320, 32)
+                elseif door.Direction == Direction.UP and EntityVariables.LOOPS.KeyFrame == 0 then
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(320, 508), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     keyhole:GetSprite().Rotation = 180
                     EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
-                elseif door.Direction == Direction.UP and EntityVariables.LOOPS.KeyFrame == 0 then
-                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, door.Position, Vector(0, 0), nil)
-                    keyhole:GetSprite():Play("Idle", true)
-                    keyhole:GetSprite().Rotation = 0
-                    EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = Vector(320, 508)
                 elseif door.Direction == Direction.RIGHT and EntityVariables.LOOPS.KeyFrame == 0 then
-                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, door.Position, Vector(0, 0), nil)
-                    keyhole:GetSprite():Play("Idle", true)
-                    keyhole:GetSprite().Rotation = 90
-                    EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
-                elseif door.Direction == Direction.LEFT and EntityVariables.LOOPS.KeyFrame == 0 then
-                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, door.Position, Vector(0, 0), nil)
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(32, 270), Vector(0, 0), nil)
                     keyhole:GetSprite():Play("Idle", true)
                     keyhole:GetSprite().Rotation = 270
                     EntityVariables.LOOPS.KeyFrame = nil
-                    EntityVariables.LOOPS.KeyPosition = keyhole.Position
+                    EntityVariables.LOOPS.KeyPosition = Vector(32, 270)
+                elseif door.Direction == Direction.LEFT and EntityVariables.LOOPS.KeyFrame == 0 then
+                    keyhole = Isaac.Spawn(Entities.KEYHOLE.id, Entities.KEYHOLE.variant, 0, Vector(928, 270), Vector(0, 0), nil)
+                    keyhole:GetSprite():Play("Idle", true)
+                    keyhole:GetSprite().Rotation = 90
+                    EntityVariables.LOOPS.KeyFrame = nil
+                    EntityVariables.LOOPS.KeyPosition = Vector(928, 270)
                 end
             end
         end
