@@ -3314,7 +3314,7 @@ function Exodus:tech360Update()
             end
 
             if entity.Type == EntityType.ENTITY_TEAR and entity.Visible then
-                if entity:ToTear().TearFlags & 1<<57 ~= 0 then
+                if entity:ToTear().TearFlags & TearFlags.TEAR_LUDOVICO ~= 0 then
                     entity.Visible = false
                     local laser = player:FireTechXLaser(entity.Position, entity.Velocity, math.abs(player.TearHeight * 3))
                     laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
@@ -3802,7 +3802,7 @@ function Exodus:astroBabyFamiliarUpdate(astro)
             
             local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, astro.Position, dir, astro):ToTear()
             local tearData = tear:GetData()
-			tear.CollisionDamage = 3
+            tear.CollisionDamage = 3
             tearData.IsFromAstroBaby = true
             tearData.Parent = astro
             tearData.RotateAmount = 30
@@ -3870,9 +3870,9 @@ function Exodus:lilRuneInit(rune)
     rune.IsFollower = true
   
     local sprite = rune:GetSprite()
-	local data = rune:GetData()
+    local data = rune:GetData()
     sprite:Play("PurpleDown")
-	data.FireDelay = 20
+    data.FireDelay = 20
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.lilRuneInit, Entities.LIL_RUNE.variant)
@@ -3888,12 +3888,12 @@ function Exodus:lilRuneFamiliarUpdate(rune)
 
     rune:FollowParent()
 
-	local isblankrune = false
+    local isblankrune = false
 
-	if ItemVariables.LIL_RUNE.RuneType == 10 then
-		isblankrune = true
-		ItemVariables.LIL_RUNE.RuneType = rng:RandomInt(9)
-	end
+    if ItemVariables.LIL_RUNE.RuneType == 10 then
+        isblankrune = true
+        ItemVariables.LIL_RUNE.RuneType = rng:RandomInt(9)
+    end
 
     for i, entity in pairs(Isaac.GetRoomEntities()) do
         local data = entity:GetData()
@@ -3907,24 +3907,24 @@ function Exodus:lilRuneFamiliarUpdate(rune)
         end
     end
 
-	if player:HasCollectible(ItemId.LIL_RUNE) and ItemVariables.LIL_RUNE.RuneType == 3 then
-		for i, entity in pairs(Isaac.GetRoomEntities()) do
-			if entity:IsEnemy() and entity:IsDead() and entity:GetData().RuneSplitted == nil and entity:ToNPC().ParentNPC == nil and entity.Type ~= EntityType.ENTITY_SWARM and rng:RandomInt(8) == 1 then
-				entity:GetData().RuneSplitted = true
-				if entity:ToNPC().ChildNPC ~= nil then
-					entity:ToNPC().ChildNPC:Kill()
-				end
-				local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
-				dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
-				dup.MaxHitPoints = dup.MaxHitPoints / 2
-				local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
-				dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
-				dup.MaxHitPoints = dup.MaxHitPoints / 2
-			elseif entity:IsEnemy() and entity:IsDead() and entity:GetData().RuneSplitted == nil then
-				entity:GetData().RuneSplitted = true
-			end
-		end
-	end
+    if player:HasCollectible(ItemId.LIL_RUNE) and ItemVariables.LIL_RUNE.RuneType == 3 then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity:IsEnemy() and entity:IsDead() and entity:GetData().RuneSplitted == nil and entity:ToNPC().ParentNPC == nil and entity.Type ~= EntityType.ENTITY_SWARM and rng:RandomInt(8) == 1 then
+                entity:GetData().RuneSplitted = true
+                if entity:ToNPC().ChildNPC ~= nil then
+                    entity:ToNPC().ChildNPC:Kill()
+                end
+                local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
+                dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
+                dup.MaxHitPoints = dup.MaxHitPoints / 2
+                local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
+                dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
+                dup.MaxHitPoints = dup.MaxHitPoints / 2
+            elseif entity:IsEnemy() and entity:IsDead() and entity:GetData().RuneSplitted == nil then
+                entity:GetData().RuneSplitted = true
+            end
+        end
+    end
 
     if data.FireDelay == 0 then
         if player:GetFireDirection() > -1 then
@@ -3932,81 +3932,81 @@ function Exodus:lilRuneFamiliarUpdate(rune)
             local dir = Vector(0,0)
             
             if player:GetHeadDirection() == Direction.DOWN then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "DownShoot", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "DownShoot", true)
                 dir = Vector(0, 10) + (rune.Velocity / 3)
             elseif player:GetHeadDirection() == Direction.LEFT then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "LeftShoot", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "LeftShoot", true)
                 dir = Vector(-10, 0) + (rune.Velocity / 3)
             elseif player:GetHeadDirection() == Direction.RIGHT then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "RightShoot", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "RightShoot", true)
                 dir = Vector(10, 0) + (rune.Velocity / 3)
             elseif player:GetHeadDirection() == Direction.UP then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "UpShoot", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "UpShoot", true)
                 dir = Vector(0, -10) + (rune.Velocity / 3)
             end
             
             local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, rune.Position, dir, rune):ToTear()
             local tearData = tear:GetData()
-			tear.CollisionDamage = 3
-			if ItemVariables.LIL_RUNE.RuneType == 2 and rng:RandomInt(6) == 1 then
-				tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EXPLOSIVE
-			elseif ItemVariables.LIL_RUNE.RuneType == 3 then
-				tear.TearFlags = tear.TearFlags + TearFlags.TEAR_SPLIT
-			elseif ItemVariables.LIL_RUNE.RuneType == 5 then
-				tear.TearFlags = tear.TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_SPECTRAL + TearFlags.TEAR_PIERCING
-			elseif ItemVariables.LIL_RUNE.RuneType == 6 then
-				local tear2 = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, rune.Position, dir, rune):ToTear()
-				local tearData2 = tear2:GetData()
-				tear2.CollisionDamage = 3
-				if player:GetHeadDirection() == Direction.DOWN then
-					tear.Position = tear.Position + Vector(-8, 0)
-					tear2.Position = tear2.Position + Vector(8, 0)
-				elseif player:GetHeadDirection() == Direction.LEFT then
-					tear.Position = tear.Position + Vector(0, -8)
-					tear2.Position = tear2.Position + Vector(0, 8)
-				elseif player:GetHeadDirection() == Direction.RIGHT then
-					tear.Position = tear.Position + Vector(0, 8)
-					tear2.Position = tear2.Position + Vector(0, -8)
-				else
-					tear.Position = tear.Position + Vector(8, 0)
-					tear2.Position = tear2.Position + Vector(-8, 0)
-				end
-				tearData2.IsFromLilRune = true
-			elseif ItemVariables.LIL_RUNE.RuneType == 8 and rng:RandomInt(2) == 1 then
-				tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EGG
-			elseif ItemVariables.LIL_RUNE.RuneType == 9 then
-				tear.TearFlags = tear.TearFlags + TearFlags.TEAR_HORN
-			end
+            tear.CollisionDamage = 3
+            if ItemVariables.LIL_RUNE.RuneType == 2 and rng:RandomInt(6) == 1 then
+                tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EXPLOSIVE
+            elseif ItemVariables.LIL_RUNE.RuneType == 3 then
+                tear.TearFlags = tear.TearFlags + TearFlags.TEAR_SPLIT
+            elseif ItemVariables.LIL_RUNE.RuneType == 5 then
+                tear.TearFlags = tear.TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_SPECTRAL + TearFlags.TEAR_PIERCING
+            elseif ItemVariables.LIL_RUNE.RuneType == 6 then
+                local tear2 = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, rune.Position, dir, rune):ToTear()
+                local tearData2 = tear2:GetData()
+                tear2.CollisionDamage = 3
+                if player:GetHeadDirection() == Direction.DOWN then
+                    tear.Position = tear.Position + Vector(-8, 0)
+                    tear2.Position = tear2.Position + Vector(8, 0)
+                elseif player:GetHeadDirection() == Direction.LEFT then
+                    tear.Position = tear.Position + Vector(0, -8)
+                    tear2.Position = tear2.Position + Vector(0, 8)
+                elseif player:GetHeadDirection() == Direction.RIGHT then
+                    tear.Position = tear.Position + Vector(0, 8)
+                    tear2.Position = tear2.Position + Vector(0, -8)
+                else
+                    tear.Position = tear.Position + Vector(8, 0)
+                    tear2.Position = tear2.Position + Vector(-8, 0)
+                end
+                tearData2.IsFromLilRune = true
+            elseif ItemVariables.LIL_RUNE.RuneType == 8 and rng:RandomInt(2) == 1 then
+                tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EGG
+            elseif ItemVariables.LIL_RUNE.RuneType == 9 then
+                tear.TearFlags = tear.TearFlags + TearFlags.TEAR_HORN
+            end
             tearData.IsFromLilRune = true
-		else
+        else
             if player:GetHeadDirection() == Direction.DOWN then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
             elseif player:GetHeadDirection() == Direction.LEFT then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
             elseif player:GetHeadDirection() == Direction.RIGHT then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
             elseif player:GetHeadDirection() == Direction.UP then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
             end
-		end
-	else
-		data.FireDelay = data.FireDelay - 1
-		if data.FireDelay < 15 then
+        end
+    else
+        data.FireDelay = data.FireDelay - 1
+        if data.FireDelay < 15 then
             if player:GetHeadDirection() == Direction.DOWN then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
             elseif player:GetHeadDirection() == Direction.LEFT then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
             elseif player:GetHeadDirection() == Direction.RIGHT then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
             elseif player:GetHeadDirection() == Direction.UP then
-				sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
+                sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
             end
-		end
-	end
+        end
+    end
 
-	if isblankrune then
-		ItemVariables.LIL_RUNE.RuneType = 10
-	end
+    if isblankrune then
+        ItemVariables.LIL_RUNE.RuneType = 10
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.lilRuneFamiliarUpdate, Entities.LIL_RUNE.variant)
@@ -4024,36 +4024,36 @@ function Exodus:lilRuneUse(rune)
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(ItemId.LIL_RUNE) then
         if rune == Card.RUNE_ALGIZ then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 1
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 1
         elseif rune == Card.RUNE_HAGALAZ then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 2
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 2
         elseif rune == Card.RUNE_JERA then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 3
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 3
         elseif rune == Card.RUNE_PERTHRO then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 4
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 4
         elseif rune == Card.RUNE_EHWAZ then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 5
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 5
         elseif rune == Card.RUNE_ANSUZ then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 6
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 6
         elseif rune == Card.RUNE_DAGAZ then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 7
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 7
         elseif rune == Card.RUNE_BERKANO then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 8
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 8
         elseif rune == Card.RUNE_BLACK then
-			ItemVariables.LIL_RUNE.State = "Black"
-			ItemVariables.LIL_RUNE.RuneType = 9
+            ItemVariables.LIL_RUNE.State = "Black"
+            ItemVariables.LIL_RUNE.RuneType = 9
         elseif rune == Card.RUNE_BLANK then
-			ItemVariables.LIL_RUNE.State = "Purple"
-			ItemVariables.LIL_RUNE.RuneType = 10
-		end
+            ItemVariables.LIL_RUNE.State = "Purple"
+            ItemVariables.LIL_RUNE.RuneType = 10
+        end
     end
 end
 
@@ -4272,7 +4272,7 @@ function Exodus:buttrotUpdate()
                 local tear = entities[i]:ToTear()
                 local flags = tear.TearFlags
                 local sprite = tear:GetSprite()
-                if flags & 1<<57 ~= 0 then
+                if flags & TearFlags.TEAR_LUDOVICO ~= 0 then
                     tear.TearFlags = tear.TearFlags | TearFlags.TEAR_SLOW
                     tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
                     sprite:Play("Shroom6")
@@ -4293,7 +4293,7 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.buttrotUpdate)
 
 function Exodus.getSize(scale, flags)
-    if flags & 1<<57 ~= 0 then
+    if flags & TearFlags.TEAR_LUDOVICO ~= 0 then
         return 6
     elseif scale < 0.675 then
         return 1
@@ -4333,31 +4333,33 @@ Exodus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, Exodus.buttrotTear)
 --<<<SLING + BUTTROT + LIL RUNE PRE_TEAR_COLLISION>>>--
 function Exodus:buttrotShatter(tear, target)
     local player = Isaac.GetPlayer(0)
-	local isblankrune = false
-	if ItemVariables.LIL_RUNE.RuneType == 10 then
-		isblankrune = true
-		ItemVariables.LIL_RUNE.RuneType = rng:RandomInt(9)
-	end
-	if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 2 and target:IsVulnerableEnemy() then
-		for i, entity in pairs(Isaac.GetRoomEntities()) do
-			if entity:IsVulnerableEnemy() and entity ~= target then
-				entity:TakeDamage(tear.CollisionDamage / 2, 0, EntityRef(tear), 3)
-			end
-		end
-	end
-	if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 4 and target:IsVulnerableEnemy() then
-	    if 1 == math.random(10) then
+    local isblankrune = false
+    if ItemVariables.LIL_RUNE.RuneType == 10 then
+        isblankrune = true
+        ItemVariables.LIL_RUNE.RuneType = rng:RandomInt(9)
+    end
+    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 2 and target:IsVulnerableEnemy() then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity:IsVulnerableEnemy() and entity ~= target then
+                entity:TakeDamage(tear.CollisionDamage / 2, 0, EntityRef(tear), 3)
+            end
+        end
+    end
+    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 4 and target:IsVulnerableEnemy() then
+        if 1 == math.random(10) then
             game:RerollEnemy(target)
         end
-	end
-	if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 7 and target:IsActiveEnemy() then
-	    Isaac.Spawn(1000, EffectVariant.PLAYER_CREEP_HOLYWATER_TRAIL, 0, tear.Position, Vector(0,0), tear)
-	end
-	if isblankrune then
-		ItemVariables.LIL_RUNE.RuneType = 10
-	end
+    end
+    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 7 and target:IsActiveEnemy() then
+        Isaac.Spawn(1000, EffectVariant.PLAYER_CREEP_HOLYWATER_TRAIL, 0, tear.Position, Vector(0,0), tear)
+    end
+    if isblankrune then
+        ItemVariables.LIL_RUNE.RuneType = 10
+    end
     if target:IsVulnerableEnemy() and tear.Variant == Entities.BLIGHT_TEAR.variant then
-        game:ButterBeanFart(target.Position, 64, target, true)
+        if tear.TearFlags & TearFlags.TEAR_LUDOVICO == 0 or rng:RandomInt(15) == 1 then
+            game:ButterBeanFart(target.Position, 64, target, true)
+        end
         if not target:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
             target:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
             target:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
