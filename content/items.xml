@@ -16,7 +16,7 @@
 	<passive description="Running with them!" name="Big Scissors" gfx="Big Scissors.png" cache="speed"/>
 	<passive description="No place like home" name="Welcome Mat" gfx="Welcome Mat.png"/>
 	<passive description="Rewards overeating" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png"/>
-	<passive description="Controlled bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="1"/>
+	<passive description="Controlled bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
 	<passive description="Blight shot" name="Buttrot" gfx="Buttrot.png"/>
 	<passive description="Size matters" name="Sling" gfx="Sling.png"/>
 	<passive description="Negativity" name="Yin" gfx="Yin.png" cache="firedelay" blackhearts="2" devilprice="2"/>
