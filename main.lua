@@ -1550,7 +1550,7 @@ function Exodus:loopNewRoom()
     if EntityVariables.LOOPS.Loop > 0 then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsActiveEnemy() then
-                entity.MaxHitPoints = entity.MaxHitPoints * EntityVariables.LOOPS.Loop * 2.5
+                entity.MaxHitPoints = entity.MaxHitPoints&^(EntityVariables.LOOPS.Loop + 1) / EntityVariables.LOOPS.Loop
                 entity.HitPoints = entity.MaxHitPoints
                 if 1 == math.random(10) then
                     game:RerollEnemy(entity)
@@ -1559,7 +1559,7 @@ function Exodus:loopNewRoom()
                     for i = 1, math.random(1, EntityVariables.LOOPS.Loop) do
                         dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 16), Vector(0,0), entity)
                         dup:GetData().IsDuplicate = true
-                        dup.MaxHitPoints = dup.MaxHitPoints * EntityVariables.LOOPS.Loop * 2.5
+                        dup.MaxHitPoints = entity.MaxHitPoints&^(EntityVariables.LOOPS.Loop + 1) / EntityVariables.LOOPS.Loop
                         dup.HitPoints = dup.MaxHitPoints
                     end
                 end
