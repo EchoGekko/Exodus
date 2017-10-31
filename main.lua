@@ -3903,14 +3903,25 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 for i = 1, 4 do
                     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.NAIL_PARTICLE, 0, entity.Position, RandomVector() * ((math.random() * 4) + 1), player)
                 end
+            elseif ItemVariables.LIL_RUNE.RuneType == 1 then
+                for i, shot in pairs(Isaac.GetRoomEntities()) do
+                    if shot.Type == EntityType.ENTITY_PROJECTILE then
+                        if shot.Position:Distance(entity.Position) < 12 then
+                            shot:Kill()
+                            entity:Kill()
+                        end
+                    end
+                end
             end
         end
-    end
-
-    if player:HasCollectible(ItemId.LIL_RUNE) and ItemVariables.LIL_RUNE.RuneType == 3 then
-        for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity:IsEnemy() and entity:IsDead() and entity:GetData().RuneSplitted == nil and entity:ToNPC().ParentNPC == nil and entity.Type ~= EntityType.ENTITY_SWARM and rng:RandomInt(8) == 1 then
-                entity:GetData().RuneSplitted = true
+        if ItemVariables.LIL_RUNE.RuneType == 1 and entity.Type == EntityType.ENTITY_PROJECTILE then
+            if entity.Position:Distance(rune.Position) < 16 then
+                entity:Kill()
+            end
+        end
+        if ItemVariables.LIL_RUNE.RuneType == 3 then
+            if entity:IsEnemy() and entity:IsDead() and data.RuneSplitted == nil and entity:ToNPC().ParentNPC == nil and entity.Type ~= EntityType.ENTITY_SWARM and rng:RandomInt(8) == 1 then
+                data.RuneSplitted = true
                 if entity:ToNPC().ChildNPC ~= nil then
                     entity:ToNPC().ChildNPC:Kill()
                 end
@@ -3920,8 +3931,8 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
                 dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
                 dup.MaxHitPoints = dup.MaxHitPoints / 2
-            elseif entity:IsEnemy() and entity:IsDead() and entity:GetData().RuneSplitted == nil then
-                entity:GetData().RuneSplitted = true
+            elseif entity:IsEnemy() and entity:IsDead() and data.RuneSplitted == nil then
+                data.RuneSplitted = true
             end
         end
     end
