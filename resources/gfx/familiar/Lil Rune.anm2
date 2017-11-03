@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="3/11/2017 3:34:26 AM" Version="124" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="11/3/2017 6:29:20 AM" Version="125" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="..\..\My Games\Binding of Isaac Afterbirth+ Mods\exodus\resources\gfx\familiar\Lil Rune.png" Id="0"/>
+			<Spritesheet Path="Lil Rune.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="body" Id="0" SpritesheetId="0"/>
