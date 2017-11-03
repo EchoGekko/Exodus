@@ -3906,9 +3906,9 @@ function Exodus:lilRuneFamiliarUpdate(rune)
         elseif ItemVariables.LIL_RUNE.RuneType == 8 and ItemVariables.LIL_RUNE.PlayAnim then
             sprite:Play("BerkanoTransform", false)
         elseif ItemVariables.LIL_RUNE.RuneType == 9 and ItemVariables.LIL_RUNE.PlayAnim then
-            sprite:Play("AlgizTransform", false)
+            sprite:Play("BlackTransform", false)
         elseif ItemVariables.LIL_RUNE.RuneType == 10 and ItemVariables.LIL_RUNE.PlayAnim then
-            sprite:Play("AlgizTransform", false)
+            sprite:Play("BlankTransform", false)
         end
         ItemVariables.LIL_RUNE.PlayAnim = false
     end
@@ -3937,10 +3937,10 @@ function Exodus:lilRuneFamiliarUpdate(rune)
     elseif sprite:IsFinished("BerkanoTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
         ItemVariables.LIL_RUNE.PlayAnim = nil
         sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
-    elseif sprite:IsFinished("AlgizTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+    elseif sprite:IsFinished("BlackTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
         ItemVariables.LIL_RUNE.PlayAnim = nil
         sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
-    elseif sprite:IsFinished("AlgizTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+    elseif sprite:IsFinished("BlankTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
         ItemVariables.LIL_RUNE.PlayAnim = nil
         sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
     end
