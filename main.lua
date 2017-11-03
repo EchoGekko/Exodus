@@ -3954,18 +3954,28 @@ function Exodus:lilRuneFamiliarUpdate(rune)
 
     for i, entity in pairs(Isaac.GetRoomEntities()) do
         local data = entity:GetData()
-        
-        if entity.Type == EntityType.ENTITY_TEAR and data.IsFromLilRune == true then
-            if entity:IsDead() then
-                for i = 1, 4 do
-                    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.NAIL_PARTICLE, 0, entity.Position, RandomVector() * ((math.random() * 4) + 1), player)
+
+        if entity.Type == EntityType.ENTITY_TEAR then
+            if data.IsFromLilRune == true then
+                if entity:IsDead() then
+                    for i = 1, 4 do
+                        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.NAIL_PARTICLE, 0, entity.Position, RandomVector() * ((math.random() * 4) + 1), player)
+                    end
+                elseif ItemVariables.LIL_RUNE.RuneType == 1 then
+                    for i, shot in pairs(Isaac.GetRoomEntities()) do
+                        if shot.Type == EntityType.ENTITY_PROJECTILE then
+                            if shot.Position:Distance(entity.Position) < 12 then
+                                shot:Kill()
+                                entity:Kill()
+                            end
+                        end
+                    end
                 end
-            elseif ItemVariables.LIL_RUNE.RuneType == 1 then
-                for i, shot in pairs(Isaac.GetRoomEntities()) do
-                    if shot.Type == EntityType.ENTITY_PROJECTILE then
-                        if shot.Position:Distance(entity.Position) < 12 then
-                            shot:Kill()
-                            entity:Kill()
+            elseif ItemVariables.RuneType == 5 then
+                for i, fam in pairs(Isaac.GetRoomEntities()) do
+                    if fam.Type == EntityType.ENTITY_FAMILIAR and fam.Variant == Entities.LIL_RUNE.variant then
+                        if shot.Position:Distance(entity.Position) < 24 then
+                            entity:ToTear().TearFlags = entity:ToTear().TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_SPECTRAL + TearFlags.TEAR_PIERCING
                         end
                     end
                 end
@@ -4080,6 +4090,16 @@ function Exodus:lilRuneNewRoom()
     ItemVariables.LIL_RUNE.UsedBox = 0
     player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
     player:EvaluateItems()
+    if ItemVariables.LIL_RUNE.RuneType == 7 then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity:IsEnemy() then
+                if entity:ToNPC():IsChampion() then
+                    entity:Remove()
+                    Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, entity.Position, Vector(0,0), entity)
+                end
+            end
+        end
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.lilRuneNewRoom)
