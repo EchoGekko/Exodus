@@ -12,10 +12,10 @@
 	<passive description="Tastes like apples" name="Pig Blood" gfx="Pig Blood.png"/>
 	<passive description="Squish" name="Dad's Boots" gfx="Dad's Boots.png" cache="speed"/>
 	<passive description="Where did it come from?" name="Mysterious Mustache" gfx="Mysterious Mustache.png"/>
-	<passive description="Tick tock" name="Cursed Metronome" gfx="Cursed Metronome.png" cache="luck"/>
+	<passive description="Tock tick" name="Cursed Metronome" gfx="Cursed Metronome.png" cache="luck"/>
 	<passive description="Running with them!" name="Big Scissors" gfx="Big Scissors.png" cache="speed"/>
 	<passive description="No place like home" name="Welcome Mat" gfx="Welcome Mat.png"/>
-	<passive description="Feed me more!" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png"/>
+	<passive description="Part from your heart" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png"/>
 	<passive description="Controlled bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
 	<passive description="Blight shot" name="Buttrot" gfx="Buttrot.png"/>
 	<passive description="Size matters" name="Sling" gfx="Sling.png"/>

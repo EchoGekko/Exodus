@@ -3802,36 +3802,36 @@ function Exodus:astroBabyFamiliarUpdate(astro)
             
             local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, astro.Position, dir, astro):ToTear()
             local tearData = tear:GetData()
-            tear.CollisionDamage = 3
+            if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                tear.CollisionDamage = 6
+            else
+                tear.CollisionDamage = 3
+            end
             tearData.IsFromAstroBaby = true
             tearData.Parent = astro
             tearData.RotateAmount = 30
             tear.FallingAcceleration = -0.1
             tear.FallingSpeed = 0
         else
-            if player:GetMovementDirection() == Direction.UP then
-                sprite:Play("IdleUp", true)
-            elseif player:GetMovementDirection() == Direction.LEFT then
-                sprite:Play("IdleSide2", true)
-            elseif player:GetMovementDirection() == Direction.RIGHT then
-                sprite:Play("IdleSide", true)
-            else
-                sprite:Play("IdleDown", true)
-            end
+            sprite:Play("IdleDown", true)
         end
     else
         data.FireDelay = data.FireDelay - 1
-        
-        if data.FireDelay <= 7 and player:GetFireDirection() == -1 then
-            if player:GetMovementDirection() == Direction.UP then
-                sprite:Play("IdleUp", true)
-            elseif player:GetMovementDirection() == Direction.LEFT then
-                sprite:Play("IdleSide2", true)
-            elseif player:GetMovementDirection() == Direction.RIGHT then
-                sprite:Play("IdleSide", true)
-            else
-                sprite:Play("IdleDown", true)
+
+        if player:GetFireDirection() > -1 then
+            if data.FireDelay < 7 then
+                if player:GetHeadDirection() == Direction.UP then
+                    sprite:Play("IdleUp", true)
+                elseif player:GetHeadDirection() == Direction.LEFT then
+                    sprite:Play("IdleSide2", true)
+                elseif player:GetHeadDirection() == Direction.RIGHT then
+                    sprite:Play("IdleSide", true)
+                else
+                    sprite:Play("IdleDown", true)
+                end
             end
+        else
+            sprite:Play("IdleDown", true)
         end
     end
 end
@@ -3888,6 +3888,63 @@ function Exodus:lilRuneFamiliarUpdate(rune)
 
     rune:FollowParent()
 
+    if ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        if ItemVariables.LIL_RUNE.RuneType == 1 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("AlgizTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 2 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("HaglazTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 3 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("JeraTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 4 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("PerthroTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 5 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("EhwazTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 6 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("AnsuzTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 7 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("DagazTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 8 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("BerkanoTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 9 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("AlgizTransform", false)
+        elseif ItemVariables.LIL_RUNE.RuneType == 10 and ItemVariables.LIL_RUNE.PlayAnim then
+            sprite:Play("AlgizTransform", false)
+        end
+        ItemVariables.LIL_RUNE.PlayAnim = false
+    end
+    
+    if sprite:IsFinished("AlgizTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("HaglazTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("JeraTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("PerthroTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("EhwazTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("AnsuzTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("DagazTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("BerkanoTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("AlgizTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    elseif sprite:IsFinished("AlgizTransform") and ItemVariables.LIL_RUNE.PlayAnim ~= nil then
+        ItemVariables.LIL_RUNE.PlayAnim = nil
+        sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+    end
+
     local isblankrune = false
 
     if ItemVariables.LIL_RUNE.RuneType == 10 then
@@ -3937,7 +3994,7 @@ function Exodus:lilRuneFamiliarUpdate(rune)
         end
     end
 
-    if data.FireDelay == 0 then
+    if data.FireDelay == 0 and ItemVariables.LIL_RUNE.PlayAnim == nil then
         if player:GetFireDirection() > -1 then
             data.FireDelay = 20
             local dir = Vector(0,0)
@@ -3990,28 +4047,24 @@ function Exodus:lilRuneFamiliarUpdate(rune)
             end
             tearData.IsFromLilRune = true
         else
-            if player:GetHeadDirection() == Direction.DOWN then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
-            elseif player:GetHeadDirection() == Direction.LEFT then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
-            elseif player:GetHeadDirection() == Direction.RIGHT then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
-            elseif player:GetHeadDirection() == Direction.UP then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
-            end
+            sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
         end
-    else
+    elseif ItemVariables.LIL_RUNE.PlayAnim == nil then
         data.FireDelay = data.FireDelay - 1
-        if data.FireDelay < 15 then
-            if player:GetHeadDirection() == Direction.DOWN then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
-            elseif player:GetHeadDirection() == Direction.LEFT then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
-            elseif player:GetHeadDirection() == Direction.RIGHT then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
-            elseif player:GetHeadDirection() == Direction.UP then
-                sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
+        if player:GetFireDirection() > -1 then
+            if data.FireDelay < 15 then
+                if player:GetHeadDirection() == Direction.DOWN then
+                    sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
+                elseif player:GetHeadDirection() == Direction.LEFT then
+                    sprite:Play(ItemVariables.LIL_RUNE.State .. "Left", true)
+                elseif player:GetHeadDirection() == Direction.RIGHT then
+                    sprite:Play(ItemVariables.LIL_RUNE.State .. "Right", true)
+                elseif player:GetHeadDirection() == Direction.UP then
+                    sprite:Play(ItemVariables.LIL_RUNE.State .. "Up", true)
+                end
             end
+        else
+            sprite:Play(ItemVariables.LIL_RUNE.State .. "Down", true)
         end
     end
 
@@ -4037,33 +4090,43 @@ function Exodus:lilRuneUse(rune)
         if rune == Card.RUNE_ALGIZ then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 1
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_HAGALAZ then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 2
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_JERA then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 3
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_PERTHRO then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 4
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_EHWAZ then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 5
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_ANSUZ then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 6
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_DAGAZ then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 7
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_BERKANO then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 8
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_BLACK then
             ItemVariables.LIL_RUNE.State = "Black"
             ItemVariables.LIL_RUNE.RuneType = 9
+            ItemVariables.LIL_RUNE.PlayAnim = true
         elseif rune == Card.RUNE_BLANK then
             ItemVariables.LIL_RUNE.State = "Purple"
             ItemVariables.LIL_RUNE.RuneType = 10
+            ItemVariables.LIL_RUNE.PlayAnim = true
         end
     end
 end
