@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="9/26/2017 4:09:31 AM" Version="115" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="11/3/2017 12:13:24 AM" Version="116" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="costumes\costume_Keeper Hand of Greed.png" Id="0"/>
+			<Spritesheet Path="costumes\Alt palettes\costume_Keeper Hand of Greed.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="body1" Id="0" SpritesheetId="0"/>
