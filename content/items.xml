@@ -3,8 +3,8 @@
 	<passive description="Hive minded" name="Beehive" gfx="Beehive.png"/>
 	<passive description="Even they are crying" name="Sad Tears" gfx="Sad Tears.png" cache="shotspeed range"/>
 	<passive description="Leaky shot" name="Busted Pipe" gfx="Busted Pipe.png" />
-	<passive description="Satanic defence" name="Unholy Mantle" gfx="Unholy Mantle.png" devilprice="2"/>
-	<passive description="Tech bubble" name="Tech 360"  gfx="Tech 360.png" cache="firedelay"/>
+	<passive description="Satanic offense" name="Unholy Mantle" gfx="Unholy Mantle.png" devilprice="2"/>
+	<passive description="Revolutionary technology" name="Tech 360"  gfx="Tech 360.png" cache="firedelay"/>
 	<passive description="Ouch!" name="Paper Cut" gfx="Paper Cut.png"/>
 	<passive description="I still can't remember" name="Forget Me Later" gfx="Forget Me Later.png"/>
 	<passive description="Charged fireballs" name="Dragon Breath" gfx="Dragon Breath.png" cache="firedelay"/>
@@ -28,8 +28,8 @@
 	<passive description="Pay your respects" name="Hand of Greed" gfx="Hand of Greed.png"/>
 	<passive description="Rim" name="Clock Piece 1" gfx="Clock Piece 1.png"/>
 	<passive description="Face" name="Clock Piece 2" gfx="Clock Piece 2.png"/>
-	<passive description="Hand" name="Clock Piece 3" gfx="Clock Piece 3.png"/>
-	<passive description="Hand" name="Clock Piece 4" gfx="Clock Piece 4.png"/>
+	<passive description="Big Hand" name="Clock Piece 3" gfx="Clock Piece 3.png"/>
+	<passive description="Small Hand" name="Clock Piece 4" gfx="Clock Piece 4.png"/>
 
 	<!-- Active Items -->
 	<active description="The ultimate sacrifice" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
