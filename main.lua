@@ -4900,30 +4900,10 @@ function Exodus:dragonBreathUpdate()
     local room = game:GetRoom()
     
     if player:HasCollectible(ItemId.DRAGON_BREATH) then
-        if ItemVariables.DRAGON_BREATH.Charge >= 10 then
-            player:SetColor(Color(1 + math.abs(math.sin(player.FrameCount / 5) * 2), 1, 1, 1, math.abs(math.ceil(math.cos(player.FrameCount / 5) * 50)), 0, 0), -1, 1, false, false)
-        else
-            player:SetColor(Color(1, 1, 1, 1, 0, 0, 0), -1, 1, false, false)
-        end
-        
-        local bar
         
         if not ItemVariables.DRAGON_BREATH.HasDragonBreath then
-            bar = Isaac.Spawn(Entities.CHARGE_BAR.id, Entities.CHARGE_BAR.variant, 0, player.Position, NullVector, player)
-            bar:GetData().IsFireball = true
-            bar.Visible = false
             player:AddNullCostume(CostumeId.DRAGON_BREATH)
             ItemVariables.DRAGON_BREATH.HasDragonBreath = true
-        end
-        
-        player.FireDelay = 10
-        
-        if ItemVariables.DRAGON_BREATH.Charge >= 10 then
-            if player:GetFireDirection() > -1 then
-                ItemVariables.DRAGON_BREATH.ChargeDirection = player:GetShootingJoystick()
-            else
-                Exodus:FireFire(ItemVariables.DRAGON_BREATH.ChargeDirection, false, false, false)
-            end
         end
         
         if room:GetFrameCount() == 1 then
@@ -4939,85 +4919,92 @@ function Exodus:dragonBreathUpdate()
         else
             ItemVariables.DRAGON_BREATH.Charge = -1
         end
-    elseif ItemVariables.DRAGON_BREATH.HasDragonBreath then
-        ItemVariables.DRAGON_BREATH.HasDragonBreath = false
-        player:TryRemoveNullCostume(CostumeId.DRAGON_BREATH)
-    end
     
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == Entities.FIREBALL_2.id and entity.Variant == Entities.FIREBALL_2.variant then
-            entity.SpriteRotation = entity.FrameCount * 8
-            
-            if entity.FrameCount > player.TearHeight * -1 then
-                entity:Die()
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity.Type == EntityType.ENTITY_TEAR and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant ~= Entities.FIREBALL.variant and entity.Variant ~= Entities.FIREBALL_2.variant then
+                Exodus:FireFire(player:GetShootingJoystick(), false, false, false)
+                entity:Remove()
             end
-            
-            if entity:IsDead() then
-                if player:HasCollectible(CollectibleType.COLLECTIBLE_PYROMANIAC) and player.Position:DistanceSquared(entity.Position) < 70^2 and not player:HasFullHearts() then
-                    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEART, 0, player.Position, NullVector, entity)
-                    player:AddHearts(2)
+
+            if entity.Type == Entities.FIREBALL_2.id and entity.Variant == Entities.FIREBALL_2.variant then
+                entity.SpriteRotation = entity.FrameCount * 8
+                
+                if entity.FrameCount > player.TearHeight * -1 then
+                    entity:Die()
                 end
                 
-                if not player:HasCollectible(CollectibleType.COLLECTIBLE_IPECAC) then
-                    Isaac.Explode(entity.Position, nil, player.Damage * 7)
+                if entity:IsDead() then
+                    if player:HasCollectible(CollectibleType.COLLECTIBLE_PYROMANIAC) and player.Position:DistanceSquared(entity.Position) < 70^2 and not player:HasFullHearts() then
+                        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEART, 0, player.Position, NullVector, entity)
+                        player:AddHearts(2)
+                    end
+                    
+                    if not player:HasCollectible(CollectibleType.COLLECTIBLE_IPECAC) then
+                        Isaac.Explode(entity.Position, nil, player.Damage * 7)
+                    end
                 end
             end
-        end
-        
-        if entity.Type == Entities.FIREBALL.id and entity.Variant == Entities.FIREBALL.variant then
-            if math.random(3) == 1 then
-                Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(entity.Position.X, entity.Position.Y - 12), RandomVector() * ((math.random() * 4) + 1), player)
+
+            if entity.Type == EntityType.ENTITY_EFFECT and entity.Variant == 51 then
+                entity.Velocity = entity.Velocity / 1.25
+                if entity:GetData().Putout ~= nil and entity.FrameCount > 6 then
+                    entity:Remove()
+                end
             end
 
-            entity.Velocity = entity.Velocity * 1.01
-            entity.SpriteRotation = entity.Velocity:GetAngleDegrees() - 90
-            
-            if entity:IsDead() or entity.FrameCount > 100 then
-                entity:Die()
+            if entity.Type == Entities.FIREBALL.id and entity.Variant == Entities.FIREBALL.variant then
+                if math.random(3) == 1 then
+                    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(entity.Position.X, entity.Position.Y - 12), RandomVector() * ((math.random() * 4) + 1), player)
+                end
 
-                for i, entityburn in pairs(Isaac.GetRoomEntities()) do
-                    if entityburn:IsActiveEnemy() and entityburn:IsVulnerableEnemy() then
-                        if entityburn.Position:Distance(entity.Position) < 48 then
-                            entityburn:AddBurn(EntityRef(entity), 100, 1)
+                local fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(140, 220)) / 2), entity)
+                fire:GetData().Putout = true
+                fire:GetSprite():Play("FireStage03", true)
+
+                if math.random(4) == 1 then
+                    fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(0, 360)) / 2), entity)
+                    fire:GetData().Putout = true
+                    fire:GetSprite():Play("FireStage03", true)
+                end
+
+                entity.Velocity = entity.Velocity * 1.01
+                entity.SpriteRotation = entity.Velocity:GetAngleDegrees() - 90
+
+                if entity:IsDead() or entity.FrameCount > 100 then
+                    entity:Die()
+
+                    for i, entityburn in pairs(Isaac.GetRoomEntities()) do
+                        if entityburn:IsActiveEnemy() and entityburn:IsVulnerableEnemy() then
+                            if entityburn.Position:Distance(entity.Position) < 48 then
+                                entityburn:AddBurn(EntityRef(entity), 100, 1)
+                            end
+                        end
+                    end
+
+                    for i = 1, 16 do
+                        fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), entity.Velocity:Rotated(math.random(0, 360)), entity)
+                        fire:GetData().Putout = true
+                        fire:GetSprite():Play("FireStage03", true)
+                    end
+
+                    local fire2 = Isaac.Spawn(Entities.FIREBALL_2.id, Entities.FIREBALL_2.variant, 0, entity.Position, entity.Velocity, entity):ToTear()
+                    fire2.TearFlags = player.TearFlags | TearFlags.TEAR_PIERCING
+                    fire2.FallingAcceleration = -0.1
+                    fire2.CollisionDamage = player.Damage * 2
+                    fire2.Color = player.TearColor
+                    fire2.GridCollisionClass = GridCollisionClass.COLLISION_NONE
+                    
+                    if player:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) then
+                        for u = 1, math.random(3, 5) do
+                            player:FireTechLaser(entity.Position, 0, RandomVector(), false, false)
                         end
                     end
                 end
-
-                local fire2 = Isaac.Spawn(Entities.FIREBALL_2.id, Entities.FIREBALL_2.variant, 0, entity.Position, entity.Velocity, entity):ToTear()
-                fire2.TearFlags = player.TearFlags | TearFlags.TEAR_PIERCING
-                fire2.FallingAcceleration = -0.1
-                fire2.CollisionDamage = player.Damage * 2
-                fire2.Color = player.TearColor
-                fire2.GridCollisionClass = GridCollisionClass.COLLISION_NONE
-                
-                if player:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) then
-                    for u = 1, math.random(3, 5) do
-                        player:FireTechLaser(entity.Position, 0, RandomVector(), false, false)
-                    end
-                end
             end
         end
-        
-        if entity.Type == Entities.CHARGE_BAR.id and entity.Variant == Entities.CHARGE_BAR.variant and entity:GetData().IsFireball then
-            local sprite = entity:GetSprite()
-            
-            entity.Velocity = (player.Position - entity.Position) / 2
-            entity.Position = player.Position
-            
-            if ItemVariables.DRAGON_BREATH.Charge ~= 10 and ItemVariables.DRAGON_BREATH.Charge ~= -1 then
-                sprite:Play(tostring(math.floor(ItemVariables.DRAGON_BREATH.Charge)), false)
-            end
-            
-            if ItemVariables.DRAGON_BREATH.Charge >= 10 then
-                sprite:Play("Charged",false)
-            end
-            
-            if ItemVariables.DRAGON_BREATH.Charge < 0 then
-                entity.Visible = false
-            else
-                entity.Visible = true
-            end
-        end
+    elseif ItemVariables.DRAGON_BREATH.HasDragonBreath then
+        ItemVariables.DRAGON_BREATH.HasDragonBreath = false
+        player:TryRemoveNullCostume(CostumeId.DRAGON_BREATH)
     end
 end
 
@@ -5025,7 +5012,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.dragonBreathUpdate)
 
 function Exodus:dragonBreathCache(player, flag)
     if player:HasCollectible(ItemId.DRAGON_BREATH) and flag == CacheFlag.CACHE_FIREDELAY then
-        player.MaxFireDelay = player.MaxFireDelay * 2 - 1
+        player.MaxFireDelay = player.MaxFireDelay * 3 - 2
     end
 end
 
