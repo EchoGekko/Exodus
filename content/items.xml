@@ -33,7 +33,7 @@
 
 	<!-- Active Items -->
 	<active description="The ultimate sacrifice" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
-	<active description="Conjured from the deep" name="Wrath of the Lamb" gfx="Wrath of the Lamb.png" maxcharges="12" cache="all" devilprice="2"/>
+	<active description="Sacrificial" name="Wrath of the Lamb" gfx="Wrath of the Lamb.png" maxcharges="12" cache="all" devilprice="2"/>
 	<active description="Take a drink..." name="Birdbath" gfx="Birdbath.png" maxcharges="4"/>
 	<active description="Don't drop it" name="Ominous Lantern" gfx="Ominous Lantern.png"  maxcharges="1"/>
 	<active description="Batter up!" name="Baseball Mitt" gfx="Baseball Mitt.png" maxcharges="1" />
