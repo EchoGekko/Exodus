@@ -7,7 +7,7 @@
 	<passive description="Reinvent the wheel" name="Tech 360"  gfx="Tech 360.png" cache="firedelay"/>
 	<passive description="Ouch!" name="Paper Cut" gfx="Paper Cut.png"/>
 	<passive description="I still can't remember" name="Forget Me Later" gfx="Forget Me Later.png"/>
-	<passive description="Line of fire" name="Dragon Breath" gfx="Dragon Breath.png" cache="firedelay"/>
+	<passive description="Line of fire" name="Dragon Breath" gfx="Dragon Breath.png" cache="firedelay damage"/>
 	<passive description="Win streak" name="Cobalt Necklace" gfx="Cobalt Necklace.png" cache="damage"/>
 	<passive description="Tastes like apples" name="Pig Blood" gfx="Pig Blood.png"/>
 	<passive description="Squish" name="Dad's Boots" gfx="Dad's Boots.png" cache="speed"/>

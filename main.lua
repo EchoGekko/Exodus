@@ -225,7 +225,7 @@ function Exodus:newGame(fromSave)
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false, Placed = true, AppearFrame = nil },
             GLUTTONYS_STOMACH = { Parts = 0, RenderBar = Sprite() },
             ASTRO_BABY = { UsedBox = 0 },
-            LIL_RUNE = { UsedBox = 0, State = "Purple", RuneType = 0 },
+            LIL_RUNE = { HasLilRune = false, UsedBox = 0, State = "Purple", RuneType = 0 },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
             MOLDY_BREAD = { GotFlies = false },
             BUTTROT = { HasButtrot = false },
@@ -613,7 +613,7 @@ function Exodus:ShootFireball(position, vector)
     local player = Isaac.GetPlayer(0)
     local fire = Isaac.Spawn(Entities.FIREBALL.id, Entities.FIREBALL.variant, 0, position, vector:Resized(10) * player.ShotSpeed + (player.Velocity / 2), player):ToTear()
     fire.Color = player.TearColor
-    fire.CollisionDamage = player.Damage * 4
+    fire.CollisionDamage = player.Damage
     fire.TearFlags = fire.TearFlags | player.TearFlags
     fire.FallingAcceleration = -0.1
     fire.SpriteRotation = fire.Velocity:GetAngleDegrees() - 90
@@ -654,56 +654,6 @@ function Exodus:HasPlayerChance(luckcap)
         return true
     else
         return false
-    end
-end
-
-function Exodus:FireFire(vector, wiz, double, two)
-    local player = Isaac.GetPlayer(0)
-    
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYE) and Exodus:HasPlayerChance(2) then
-        Exodus:ShootFireball(player.Position, vector:Rotated(180))
-    end
-    
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_LOKIS_HORNS) and Exodus:HasPlayerChance(7) then
-        Exodus:ShootFireball(player.Position, vector:Rotated(90))
-        Exodus:ShootFireball(player.Position, vector:Rotated(180))
-        Exodus:ShootFireball(player.Position, vector:Rotated(90))
-    end
-    
-    if player:GetCollectibleNum(ItemId.DRAGON_BREATH) > 1 and two == false then
-        for i = 1, player:GetCollectibleNum(ItemId.DRAGON_BREATH) do
-            Exodus:FireFire(vector:Rotated(((i - math.floor(player:GetCollectibleNum(ItemId.DRAGON_BREATH) / 2)) * 2) - 1):Resized(2), wiz, double, true)
-        end
-    else
-        if player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) and double == false then
-            for i = 1, 2 do
-                Exodus:FireFire(vector:Rotated(((i - 1) * 2) - 1):Resized(3), wiz, true, two)
-            end
-        else
-            if player:HasCollectible(CollectibleType.COLLECTIBLE_THE_WIZ) and wiz == false then
-                for i = 1, 2 do
-                    Exodus:FireFire(vector:Rotated(((i - 1) * 2) - 1):Resized(45), true, double, two)
-                end
-            else
-                if player:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) then
-                    Exodus:ShootFireball(player.Position, vector:Rotated(-10))
-                    Exodus:ShootFireball(player.Position, vector:Rotated(10))
-                end
-                
-                if player:GetName() == "Keeper" then
-                    Exodus:ShootFireball(player.Position, vector:Rotated(-10))
-                    Exodus:ShootFireball(player.Position, vector:Rotated(10))
-                end
-                
-                if player:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then
-                    Exodus:ShootFireball(player.Position, vector:Rotated(-7))
-                    Exodus:ShootFireball(player.Position, vector:Rotated(7))
-                    Exodus:ShootFireball(player.Position, vector:Rotated(-13))
-                end
-                
-                Exodus:ShootFireball(player.Position, vector)
-            end
-        end
     end
 end
 
@@ -3888,7 +3838,6 @@ function Exodus:lilRuneInit(rune)
     local data = rune:GetData()
     sprite:Play("PurpleDown")
     data.FireDelay = 20
-    Isaac.Spawn(5, 300, math.random(32, 41), Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.lilRuneInit, Entities.LIL_RUNE.variant)
@@ -4170,6 +4119,19 @@ function Exodus:lilRuneUse(rune)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_CARD, Exodus.lilRuneUse)
+
+function Exodus:lilRuneUpdate()
+    local player = Isaac.GetPlayer(0)
+    
+    if player:HasCollectible(ItemId.LIL_RUNE) then
+        if not ItemVariables.LIL_RUNE.HasLilRune then
+            Isaac.Spawn(5, 300, math.random(32, 41), Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+            ItemVariables.LIL_RUNE.HasLilRune = true
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.lilRuneUpdate)
 
 --<<<BUSTED PIPE>>>--
 function Exodus:bustedPipeUpdate()
@@ -4922,7 +4884,7 @@ function Exodus:dragonBreathUpdate()
     
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_TEAR and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant ~= Entities.FIREBALL.variant and entity.Variant ~= Entities.FIREBALL_2.variant then
-                Exodus:FireFire(player:GetShootingJoystick(), false, false, false)
+                Exodus:ShootFireball(player.Position, entity.Velocity)
                 entity:Remove()
             end
 
@@ -4982,7 +4944,7 @@ function Exodus:dragonBreathUpdate()
                     end
 
                     for i = 1, 16 do
-                        fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), entity.Velocity:Rotated(math.random(0, 360)), entity)
+                        fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(0, 360)) * 1.25), entity)
                         fire:GetData().Putout = true
                         fire:GetSprite():Play("FireStage03", true)
                     end
@@ -5013,6 +4975,9 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.dragonBreathUpdate)
 function Exodus:dragonBreathCache(player, flag)
     if player:HasCollectible(ItemId.DRAGON_BREATH) and flag == CacheFlag.CACHE_FIREDELAY then
         player.MaxFireDelay = player.MaxFireDelay * 3 - 2
+    end
+    if player:HasCollectible(ItemId.DRAGON_BREATH) and flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage * 2
     end
 end
 
