@@ -4172,12 +4172,12 @@ function Exodus:bustedPipeUpdate()
                     creep:SetTimeout(20)
                     creep.Color = player.TearColor
                     creep.CollisionDamage = player.Damage
-                    creep:SetColor(Color(0.5, 0.5, 1, 1, 0, 0, 255), -1, 1, false, false)
+                    creep:SetColor(Color(0.4, 0.4, 1, 1, 150, 190, 255), -1, 1, false, false)
                 end
             elseif (entity.Type == EntityType.ENTITY_TEAR or (entity.Type == EntityType.ENTITY_LASER and entity:ToLaser().IsCircleLaser)) and entity.SpawnerType == EntityType.ENTITY_PLAYER then
                 if Exodus:HasPlayerChance(7) and entity.FrameCount == 1 then
                     data.IsLeakyTear = true
-                    entity:SetColor(Color(0.5, 0.5, 1, 1, 0, 0, 0), -1, 1, false, false)
+                    entity:SetColor(Color(0.4, 0.4, 1, 1, 130, 180, 255), -1, 1, false, false)
                 end
             
                 if data.IsLeakyTear then
@@ -4191,7 +4191,7 @@ function Exodus:bustedPipeUpdate()
                             creep:SetTimeout(20)
                             creep.Color = player.TearColor
                             creep.CollisionDamage = player.Damage * 2
-                            creep:SetColor(Color(0.5, 0.5, 1, 1, 0, 0, 255), -1, 1, false, false)
+                            creep:SetColor(Color(0.4, 0.4, 1, 1, 130, 180, 255), -1, 1, false, false)
                         end
                     end
                 end
