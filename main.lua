@@ -761,7 +761,7 @@ function Exodus:ritualCandleUpdate()
                 range = 150
             end
             
-            if ItemVariables.RITUAL_CANDLE.HasBonus and entity.Position:Distance(player.Position) <= range and entity:IsVulnerableEnemy() and entity:IsActiveEnemy() and game:GetFrameCount() % math.floor(player.MaxFireDelay / 3) == 0 then
+            if ItemVariables.RITUAL_CANDLE.HasBonus and entity.Position:Distance(player.Position) <= range and entity:IsVulnerableEnemy() and entity:IsActiveEnemy() and game:GetFrameCount() % math.ceil(player.MaxFireDelay / 3) == 0 then
                 entity:TakeDamage((player.Damage / 4) * (player:GetCollectibleNum(CollectibleType.COLLECTIBLE_BFFS) + 1), 0, EntityRef(player), 0)
             end
             
