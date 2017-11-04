@@ -3443,7 +3443,7 @@ function Exodus:dejaVuUpdate()
     if player:HasCollectible(ItemId.DEJA_VU) then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance == nil and entity:IsDead() then
-                if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
+                if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 and entity.Variant ~= Entities.FIREBALL_2.variant then
                     entity:GetData().ReturnChance = 50 + player.Luck
                     if rng:RandomInt(100) < entity:GetData().ReturnChance then
                         local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
@@ -3456,7 +3456,7 @@ function Exodus:dejaVuUpdate()
                     end
                 end
             elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance ~= nil and entity:IsDead() then
-                if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
+                if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 and entity.Variant ~= Entities.FIREBALL_2.variant then
                     if rng:RandomInt(100) < entity:GetData().ReturnChance then
                         local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
                         tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
@@ -4070,7 +4070,7 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 tearData2.IsFromLilRune = true
             elseif ItemVariables.LIL_RUNE.RuneType == 8 and rng:RandomInt(2) == 1 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EGG
-            elseif ItemVariables.LIL_RUNE.RuneType == 9 then
+            elseif ItemVariables.LIL_RUNE.RuneType == 9 and rng:RandomInt(10) == 1 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_HORN
             end
             tearData.IsFromLilRune = true
