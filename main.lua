@@ -2533,7 +2533,7 @@ function Exodus:gluttonysStomachRender()
     local level = game:GetLevel()
     local room = level:GetCurrentRoom()
     
-    if Hearts = 0 then
+    if Hearts == 0 then
         Hearts = 1
     end
     
@@ -3443,21 +3443,31 @@ function Exodus:dejaVuUpdate()
     if player:HasCollectible(ItemId.DEJA_VU) then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance == nil and entity:IsDead() then
-                entity:GetData().ReturnChance = 50 + player.Luck
-                if rng:RandomInt(100) < entity:GetData().ReturnChance then
-                    local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
-                    tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
-                else
-                    entity:GetData().ReturnChance = 0
-                end
+				if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
+					entity:GetData().ReturnChance = 50 + player.Luck
+					if rng:RandomInt(100) < entity:GetData().ReturnChance then
+						local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+						tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_BONE
+						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_SPLIT
+						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_QUADSPLIT
+					else
+						entity:GetData().ReturnChance = 0
+					end
+				end
             elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance ~= nil and entity:IsDead() then
-                if rng:RandomInt(100) < entity:GetData().ReturnChance then
-                    local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
-                    tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
-                else
-                    entity:GetData().ReturnChance = 0
-                end
-            end
+				if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
+					if rng:RandomInt(100) < entity:GetData().ReturnChance then
+						local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+						tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_BONE
+						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_SPLIT
+						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_QUADSPLIT
+					else
+						entity:GetData().ReturnChance = 0
+					end
+				end
+			end
         end
     end
 end
