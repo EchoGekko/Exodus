@@ -3443,31 +3443,31 @@ function Exodus:dejaVuUpdate()
     if player:HasCollectible(ItemId.DEJA_VU) then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance == nil and entity:IsDead() then
-				if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
-					entity:GetData().ReturnChance = 50 + player.Luck
-					if rng:RandomInt(100) < entity:GetData().ReturnChance then
-						local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
-						tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
-						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_BONE
-						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_SPLIT
-						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_QUADSPLIT
-					else
-						entity:GetData().ReturnChance = 0
-					end
-				end
+                if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
+                    entity:GetData().ReturnChance = 50 + player.Luck
+                    if rng:RandomInt(100) < entity:GetData().ReturnChance then
+                        local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+                        tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+                        tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_BONE
+                        tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_SPLIT
+                        tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_QUADSPLIT
+                    else
+                        entity:GetData().ReturnChance = 0
+                    end
+                end
             elseif entity.Type == EntityType.ENTITY_TEAR and entity:GetData().ReturnChance ~= nil and entity:IsDead() then
-				if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
-					if rng:RandomInt(100) < entity:GetData().ReturnChance then
-						local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
-						tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
-						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_BONE
-						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_SPLIT
-						tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_QUADSPLIT
-					else
-						entity:GetData().ReturnChance = 0
-					end
-				end
-			end
+                if entity:ToTear().TearFlags & TearFlags.TEAR_BONE == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_SPLIT == 0 and entity:ToTear().TearFlags & TearFlags.TEAR_QUADSPLIT == 0 then
+                    if rng:RandomInt(100) < entity:GetData().ReturnChance then
+                        local tear = player:FireTear(player.Position, entity.Velocity, true, true, true)
+                        tear:GetData().ReturnChance = entity:GetData().ReturnChance // 2
+                        tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_BONE
+                        tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_SPLIT
+                        tear.TearFlags = tear.TearFlags & ~TearFlags.TEAR_QUADSPLIT
+                    else
+                        entity:GetData().ReturnChance = 0
+                    end
+                end
+            end
         end
     end
 end
@@ -3881,12 +3881,14 @@ end
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.lilRuneCache)
 
 function Exodus:lilRuneInit(rune)
+    local player = Isaac.GetPlayer(0)
     rune.IsFollower = true
-  
+
     local sprite = rune:GetSprite()
     local data = rune:GetData()
     sprite:Play("PurpleDown")
     data.FireDelay = 20
+    Isaac.Spawn(5, 300, math.random(32, 41), Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.lilRuneInit, Entities.LIL_RUNE.variant)
