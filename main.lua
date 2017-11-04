@@ -1550,7 +1550,7 @@ function Exodus:loopNewRoom()
     if EntityVariables.LOOPS.Loop > 0 then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsActiveEnemy() then
-                entity.MaxHitPoints = entity.MaxHitPoints^(EntityVariables.LOOPS.Loop + 0.5) / EntityVariables.LOOPS.Loop
+                entity.MaxHitPoints = entity.MaxHitPoints * (2^EntityVariables.LOOPS.Loop)
                 entity.HitPoints = entity.MaxHitPoints
                 if 1 == math.random(10) then
                     game:RerollEnemy(entity)
@@ -1559,7 +1559,7 @@ function Exodus:loopNewRoom()
                     for i = 1, math.random(1, EntityVariables.LOOPS.Loop) do
                         dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 16), Vector(0,0), entity)
                         dup:GetData().IsDuplicate = true
-                        dup.MaxHitPoints = entity.MaxHitPoints^(EntityVariables.LOOPS.Loop + 0.5) / EntityVariables.LOOPS.Loop
+                        dup.MaxHitPoints = entity.MaxHitPoints * (2^EntityVariables.LOOPS.Loop)
                         dup.HitPoints = dup.MaxHitPoints
                     end
                 end
@@ -2532,6 +2532,10 @@ function Exodus:gluttonysStomachRender()
     local Bar = ItemVariables.GLUTTONYS_STOMACH.RenderBar
     local level = game:GetLevel()
     local room = level:GetCurrentRoom()
+    
+    if Hearts = 0 then
+        Hearts = 1
+    end
     
     if player:HasCollectible(ItemId.GLUTTONYS_STOMACH) and playerType ~= PlayerType.PLAYER_THELOST and playerType ~= PlayerType.PLAYER_KEEPER and (level:GetCurses() & LevelCurse.CURSE_OF_THE_UNKNOWN ~= LevelCurse.CURSE_OF_THE_UNKNOWN) and (room:GetType() ~= RoomType.ROOM_BOSS or room:GetFrameCount() >= 1) then
         Bar.Scale = Vector(1.3, 1.3)
@@ -3995,9 +3999,11 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
                 dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
                 dup.MaxHitPoints = dup.MaxHitPoints / 2
+                dup.HitPoints = dup.MaxHitPoints
                 local dup = Isaac.Spawn(entity.Type, entity.Variant, entity.SubType, Isaac.GetFreeNearPosition(entity.Position, 1), Vector(0,0), nil)
                 dup:ToNPC().Scale = dup:ToNPC().Scale / 1.3
                 dup.MaxHitPoints = dup.MaxHitPoints / 2
+                dup.HitPoints = dup.MaxHitPoints
             elseif entity:IsEnemy() and entity:IsDead() and data.RuneSplitted == nil then
                 data.RuneSplitted = true
             end
