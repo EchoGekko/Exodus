@@ -4318,7 +4318,7 @@ function Exodus:buttrotUpdate()
                 if entities[i]:IsDead() then
                     local splash = Isaac.Spawn(1000, 538978236, 0, entities[i].Position + Vector(0, entities[i]:ToTear().Height), Vector(0,0), nil):ToEffect()
                     splash:SetTimeout(30)                
-                else
+                elseif not player:HasCollectible(ItemId.TECH_360) then
                     entities[i].Visible = true
                 end
             end
@@ -4348,7 +4348,9 @@ function Exodus:buttrotUpdate()
                 local sprite = tear:GetSprite()
                 if flags & TearFlags.TEAR_LUDOVICO ~= 0 then
                     tear.TearFlags = tear.TearFlags | TearFlags.TEAR_SLOW
-                    tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
+                    if not player:HasCollectible(ItemId.TECH_360) then
+                        tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
+                    end
                     sprite:Play("Shroom6")
                     if tear.FrameCount == 0 then
                         tear.Visible = false
@@ -4883,9 +4885,22 @@ function Exodus:dragonBreathUpdate()
         end
     
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity.Type == EntityType.ENTITY_TEAR and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant ~= Entities.FIREBALL.variant and entity.Variant ~= Entities.FIREBALL_2.variant then
+            if entity.Type == EntityType.ENTITY_TEAR and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant ~= Entities.FIREBALL.variant and entity.Variant ~= Entities.FIREBALL_2.variant and entity:ToTear().TearFlags & TearFlags.TEAR_LUDOVICO == 0 then
                 Exodus:ShootFireball(player.Position, entity.Velocity)
                 entity:Remove()
+            elseif entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= Entities.FIREBALL.variant and entity.Variant ~= Entities.BLIGHT_TEAR.variant then
+                local tear = entity:ToTear()
+                local flags = tear.TearFlags
+                local sprite = tear:GetSprite()
+                if flags & TearFlags.TEAR_LUDOVICO ~= 0 then
+                    if not player:HasCollectible(ItemId.TECH_360) then
+                        tear:ChangeVariant(Entities.FIREBALL.variant)
+                    end
+                    entity.SpriteRotation = entity.Velocity:GetAngleDegrees() - 90
+                    if tear.FrameCount == 0 then
+                        tear.Visible = false
+                    end
+                end
             end
 
             if entity.Type == Entities.FIREBALL_2.id and entity.Variant == Entities.FIREBALL_2.variant then
@@ -4919,11 +4934,19 @@ function Exodus:dragonBreathUpdate()
                     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, Vector(entity.Position.X, entity.Position.Y - 12), RandomVector() * ((math.random() * 4) + 1), player)
                 end
 
-                local fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(140, 220)) / 2), entity)
-                fire:GetData().Putout = true
-                fire:GetSprite():Play("FireStage03", true)
+                if entity:ToTear().TearFlags & TearFlags.TEAR_LUDOVICO == 0 then
+                    local fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(140, 220)) / 2), entity)
+                    fire:GetData().Putout = true
+                    fire:GetSprite():Play("FireStage03", true)
+                elseif game:GetFrameCount() % player.MaxFireDelay == 0 then
+                    for i = 1, 16 do
+                        fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), Vector(25, 0):Rotated(math.random(0, 360)), entity)
+                        fire:GetData().Putout = true
+                        fire:GetSprite():Play("FireStage03", true)
+                    end
+                end
 
-                if math.random(4) == 1 then
+                if math.random(4) == 1 and entity:ToTear().TearFlags & TearFlags.TEAR_LUDOVICO == 0 then
                     fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(0, 360)) / 2), entity)
                     fire:GetData().Putout = true
                     fire:GetSprite():Play("FireStage03", true)
@@ -4932,7 +4955,7 @@ function Exodus:dragonBreathUpdate()
                 entity.Velocity = entity.Velocity * 1.01
                 entity.SpriteRotation = entity.Velocity:GetAngleDegrees() - 90
 
-                if entity:IsDead() or entity.FrameCount > 100 then
+                if (entity:IsDead() or entity.FrameCount > 100) and entity:ToTear().TearFlags & TearFlags.TEAR_LUDOVICO == 0 then
                     entity:Die()
 
                     for i, entityburn in pairs(Isaac.GetRoomEntities()) do
