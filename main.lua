@@ -1499,7 +1499,7 @@ function Exodus:loopNewRoom()
     
     if EntityVariables.LOOPS.Loop > 0 then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity:IsActiveEnemy() then
+            if entity:IsActiveEnemy() and not EntityRef(entity).IsFriendly then
                 entity.MaxHitPoints = entity.MaxHitPoints * (2^EntityVariables.LOOPS.Loop)
                 entity.HitPoints = entity.MaxHitPoints
                 if 1 == math.random(10) then
@@ -4414,14 +4414,14 @@ function Exodus:buttrotShatter(tear, target)
         isblankrune = true
         ItemVariables.LIL_RUNE.RuneType = rng:RandomInt(9)
     end
-    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 2 and target:IsVulnerableEnemy() then
+    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 2 and target:IsVulnerableEnemy() and not EntityRef(target).IsFriendly then
         for i, entity in pairs(Isaac.GetRoomEntities()) do
-            if entity:IsVulnerableEnemy() and entity ~= target then
+            if entity:IsVulnerableEnemy() and not EntityRef(entity).IsFriendly and entity ~= target then
                 entity:TakeDamage(tear.CollisionDamage / 2, 0, EntityRef(tear), 3)
             end
         end
     end
-    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 4 and target:IsVulnerableEnemy() then
+    if tear:GetData().IsFromLilRune and ItemVariables.LIL_RUNE.RuneType == 4 and target:IsVulnerableEnemy() and not EntityRef(target).IsFriendly then
         if 1 == math.random(10) then
             game:RerollEnemy(target)
         end
@@ -4432,7 +4432,7 @@ function Exodus:buttrotShatter(tear, target)
     if isblankrune then
         ItemVariables.LIL_RUNE.RuneType = 10
     end
-    if target:IsVulnerableEnemy() and tear.Variant == Entities.BLIGHT_TEAR.variant then
+    if target:IsVulnerableEnemy() and not EntityRef(target).IsFriendly and tear.Variant == Entities.BLIGHT_TEAR.variant then
         if tear.TearFlags & TearFlags.TEAR_LUDOVICO == 0 or rng:RandomInt(15) == 1 then
             game:ButterBeanFart(target.Position, 64, target, true)
         end
