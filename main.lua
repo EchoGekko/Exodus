@@ -3263,8 +3263,8 @@ function Exodus:tech360Update()
             local data = entity:GetData()
             
             if entity.Type == EntityType.ENTITY_LASER and data.Tech360 and data.LudoTear == nil then
-                entity.Position = player.Position
-                entity.Velocity = player.Velocity
+				entity.Position = data.TechParent.Position
+				entity.Velocity = data.TechParent.Velocity
             end
 
             if entity.Type == EntityType.ENTITY_TEAR and entity.Visible then
@@ -3290,15 +3290,25 @@ function Exodus:tech360Update()
                 return
             end
 
-            if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= TearVariant.CHAOS_CARD and entity.Variant ~= TearVariant.BOBS_HEAD and entity.SpawnerType == EntityType.ENTITY_PLAYER then
+            if entity.Type == EntityType.ENTITY_TEAR and entity.Variant ~= TearVariant.CHAOS_CARD and entity.Variant ~= Entities.LANTERN_TEAR.variant and entity.Variant ~= TearVariant.BOBS_HEAD and entity.SpawnerType == EntityType.ENTITY_PLAYER then
                 entity:Remove()
                 
                 local laser = player:FireTechXLaser(player.Position, player.Velocity, 1)
                 laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
                 laser.Color = player.TearColor
                 laser:GetData().Tech360 = true
+				laser:GetData().TechParent = entity.Parent
                 entity.SpawnerType = EntityType.ENTITY_TEAR
-            end
+            elseif entity.SpawnerType == EntityType.ENTITY_FAMILIAR and entity.SpawnerVariant == FamiliarVariant.INCUBUS then
+                entity:Remove()
+                
+                local laser = player:FireTechXLaser(player.Position, player.Velocity, 1)
+                laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
+                laser.Color = player.TearColor
+                laser:GetData().Tech360 = true
+				laser:GetData().TechParent = entity.Parent
+                entity.SpawnerType = EntityType.ENTITY_TEAR
+			end
       
             if entity.Type == EntityType.ENTITY_LASER and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant == 2 and 
             (data.Tech360 or player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X)) then
@@ -3330,6 +3340,7 @@ function Exodus:tech360Update()
                     laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
                     laser.Color = player.TearColor
                     laser:GetData().Tech360 = true
+					laser:GetData().TechParent = entity.Parent
                     laser:GetData().TechX = true
                 end
             end
@@ -4900,7 +4911,10 @@ function Exodus:dragonBreathUpdate()
                     if tear.FrameCount == 0 then
                         tear.Visible = false
                     end
-                end
+                elseif entity.SpawnerType == EntityType.ENTITY_FAMILIAR and entity.SpawnerVariant == FamiliarVariant.INCUBUS then
+					Exodus:ShootFireball(entity.Position, entity.Velocity)
+					entity:Remove()
+				end
             end
 
             if entity.Type == Entities.FIREBALL_2.id and entity.Variant == Entities.FIREBALL_2.variant then
