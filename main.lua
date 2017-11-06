@@ -3299,6 +3299,13 @@ function Exodus:tech360Update()
                 laser:GetData().Tech360 = true
                 laser:GetData().TechParent = entity.Parent
                 entity.SpawnerType = EntityType.ENTITY_TEAR
+                if player:HasCollectible(ItemId.DRAGON_BREATH) then
+                    for i = 1, 16 do
+                        fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), Vector(30, 0):Rotated(math.random(0, 360)), entity)
+                        fire:GetData().Putout = true
+                        fire:GetSprite():Play("FireStage03", true)
+                    end
+                end
             elseif entity.SpawnerType == EntityType.ENTITY_FAMILIAR and entity.SpawnerVariant == FamiliarVariant.INCUBUS then
                 entity:Remove()
                 
@@ -3308,6 +3315,13 @@ function Exodus:tech360Update()
                 laser:GetData().Tech360 = true
                 laser:GetData().TechParent = entity.Parent
                 entity.SpawnerType = EntityType.ENTITY_TEAR
+                if player:HasCollectible(ItemId.DRAGON_BREATH) then
+                    for i = 1, 16 do
+                        fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), Vector(30, 0):Rotated(math.random(0, 360)), entity)
+                        fire:GetData().Putout = true
+                        fire:GetSprite():Play("FireStage03", true)
+                    end
+                end
             end
       
             if entity.Type == EntityType.ENTITY_LASER and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant == 2 and 
