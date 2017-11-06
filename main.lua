@@ -4005,9 +4005,26 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 dir = Vector(0, -10) + (rune.Velocity / 3)
             end
             
-            local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, rune.Position, dir, rune):ToTear()
+            local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619576, 0, rune.Position, dir, rune):ToTear()
             local tearData = tear:GetData()
-            tear.CollisionDamage = 3.5
+            local tearSprite = tear:GetSprite()
+            if isblankrune then
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                    tear.CollisionDamage = 7
+                    tearSprite:Play("BFFS Blank", true)
+                else
+                    tear.CollisionDamage = 3.5
+                    tearSprite:Play("Blank", true)
+                end
+            else
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                    tear.CollisionDamage = 7
+                    tearSprite:Play("BFFS Purple", true)
+                else
+                    tear.CollisionDamage = 3.5
+                    tearSprite:Play("Purple", true)
+                end
+            end
             if ItemVariables.LIL_RUNE.RuneType == 2 and rng:RandomInt(6) == 1 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EXPLOSIVE
             elseif ItemVariables.LIL_RUNE.RuneType == 3 then
@@ -4015,9 +4032,27 @@ function Exodus:lilRuneFamiliarUpdate(rune)
             elseif ItemVariables.LIL_RUNE.RuneType == 5 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_SPECTRAL + TearFlags.TEAR_PIERCING
             elseif ItemVariables.LIL_RUNE.RuneType == 6 then
-                local tear2 = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, rune.Position, dir, rune):ToTear()
+                local tear2 = Isaac.Spawn(EntityType.ENTITY_TEAR, 619576, 0, rune.Position, dir, rune):ToTear()
                 local tearData2 = tear2:GetData()
-                tear2.CollisionDamage = 3
+                local tearSprite2 = tear2:GetSprite()
+                if isblankrune then
+                    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                        tear2.CollisionDamage = 7
+                        tearSprite2:Play("BFFS Blank", true)
+                    else
+                        tear2.CollisionDamage = 3.5
+                        tearSprite2:Play("Blank", true)
+                    end
+                else
+                    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                        tear2.CollisionDamage = 7
+                        tearSprite2:Play("BFFS Purple", true)
+                    else
+                        tear2.CollisionDamage = 3.5
+                        tearSprite2:Play("Purple", true)
+                    end
+                end
+
                 if player:GetHeadDirection() == Direction.DOWN then
                     tear.Position = tear.Position + Vector(-8, 0)
                     tear2.Position = tear2.Position + Vector(8, 0)
@@ -4034,8 +4069,17 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 tearData2.IsFromLilRune = true
             elseif ItemVariables.LIL_RUNE.RuneType == 8 and rng:RandomInt(2) == 1 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EGG
-            elseif ItemVariables.LIL_RUNE.RuneType == 9 and rng:RandomInt(10) == 1 then
-                tear.TearFlags = tear.TearFlags + TearFlags.TEAR_HORN
+            elseif ItemVariables.LIL_RUNE.RuneType == 9 then
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                    tear.CollisionDamage = 7
+                    tearSprite:Play("BFFS Black", true)
+                else
+                    tear.CollisionDamage = 3.5
+                    tearSprite:Play("Black", true)
+                end
+                if rng:RandomInt(10) == 1 then
+                    tear.TearFlags = tear.TearFlags + TearFlags.TEAR_HORN
+                end
             end
             tearData.IsFromLilRune = true
         else
