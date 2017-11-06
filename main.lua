@@ -765,18 +765,20 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ritualCandleUpdate)
 
 function Exodus:randomiseCandleSprites()
     local count = 1
-    
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == Entities.CANDLE.variant then
-            local data = entity:GetData()
-            
-            if not data.RandomSpritesheet then
-                local sprite = entity:GetSprite()
+
+    if player:HasCollectible(ItemId.RITUAL_CANDLE) then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == Entities.CANDLE.variant then
+                local data = entity:GetData()
                 
-                data.RandomSpritesheet = true
-                sprite:ReplaceSpritesheet(0, "gfx/familiar/candle" .. math.min(count, 5) .. ".png")
-                sprite:LoadGraphics()
-                count = count + 1
+                if not data.RandomSpritesheet then
+                    local sprite = entity:GetSprite()
+
+                    data.RandomSpritesheet = true
+                    sprite:ReplaceSpritesheet(0, "gfx/familiar/candle" .. math.min(count, 5) .. ".png")
+                    sprite:LoadGraphics()
+                    count = count + 1
+                end
             end
         end
     end
@@ -859,7 +861,7 @@ Exodus:AddCallback(ModCallbacks.MC_POST_RENDER, Exodus.ritualCandleRender)
 --<<<SCARED HEART>>>--
 function Exodus:newScaredHeartLogic()
     local player = Isaac.GetPlayer(0)
-    
+
     for i, entity in pairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_HEART and entity.SubType == HeartSubType.HEART_SCARED then
             entity:ToPickup():Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, Entities.SCARED_HEART.subtype, true)
@@ -919,46 +921,7 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.newScaredHeartLogic)
 
---<<<???>>>--
-function Exodus:lobbedShotCollision()
-    local player = Isaac.GetPlayer(0)
-    
-    for i, entity in pairs(Isaac.GetRoomEntities()) do 
-        if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().IsExodusLobbed == true then
-            if entity.Position:DistanceSquared(player.Position) < 18^2 and entity:ToTear().Height < 5 then
-                entity:Die()
-                player:TakeDamage(1, 0, EntityRef(entity), 0)
-            end
-        end
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.lobbedShotCollision)
-
 --<<<OCCULTIST>>>--
-function Exodus:occultistAOEMarkTrigger()
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-        local data = entity:GetData()
-        
-        if data.IsOccultistAOE == true then
-            if data.OccultistParent and not data.OccultistParent:IsDead() then
-                if data.AOEFrames < 120 then
-                    if entity.FrameCount >= 2 then
-                        local NewAOETear = Isaac.Spawn(EntityType.ENTITY_PROJECTILE, ProjectileVariant.BLOOD, 0, entity.Position, Vector(0, 0), entity):GetData()
-                        
-                        NewAOETear.IsOccultistAOE = true
-                        NewAOETear.AOEFrames = data.AOEFrames + 1
-                        NewAOETear.OccultistParent = data.OccultistParent
-                        entity:Remove()
-                    end
-                end
-            end
-        end
-    end
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.occultistAOEMarkTrigger)
-
 function Exodus:occultistEntityUpdate(entity)
     local player = Isaac.GetPlayer(0)
     local data = entity:GetData()
@@ -1047,44 +1010,30 @@ function Exodus:occultistEntityUpdate(entity)
             entity.State = 3
         end
     end
-end
 
-Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.occultistEntityUpdate, Entities.OCCULTIST.id)
-
---<<<IRON LUNG>>>--
-function Exodus:ironLungGasLogic()
-    local entities = Isaac.GetRoomEntities()
-    
-    for i, entity in pairs(entities) do
-        if entity.Type == Entities.IRON_LUNG_GAS.id and entity.Variant == Entities.IRON_LUNG_GAS.variant then
-            local sprite = entity:GetSprite()
-            
-            if sprite:IsFinished("Appear") then
-                sprite:Play("Pyroclastic Flow", false)
-            end
-            
-            if sprite:IsFinished("Pyroclastic Flow") then
-                sprite:Play("Fade", false)
-            end
-            
-            for v, tear in pairs(entities) do
-                if tear:ToTear() then
-                    if tear.Position:Distance(entity.Position) < entity.Size + tear.Size then
-                        tear.Velocity = tear.Velocity * 0.8
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        local data = entity:GetData()
+        
+        if data.IsOccultistAOE == true then
+            if data.OccultistParent and not data.OccultistParent:IsDead() then
+                if data.AOEFrames < 120 then
+                    if entity.FrameCount >= 2 then
+                        local NewAOETear = Isaac.Spawn(EntityType.ENTITY_PROJECTILE, ProjectileVariant.BLOOD, 0, entity.Position, Vector(0, 0), entity):GetData()
+                        
+                        NewAOETear.IsOccultistAOE = true
+                        NewAOETear.AOEFrames = data.AOEFrames + 1
+                        NewAOETear.OccultistParent = data.OccultistParent
+                        entity:Remove()
                     end
                 end
-            end
-            
-            if sprite:IsFinished("Fade") then
-                entity:Remove()
-                entity.Visible = false
             end
         end
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ironLungGasLogic)
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.occultistEntityUpdate, Entities.OCCULTIST.id)
 
+--<<<IRON LUNG>>>--
 function Exodus:ironLungEntityUpdate(entity)
     local player = Isaac.GetPlayer(0)
     local data = entity:GetData()
@@ -1227,6 +1176,35 @@ function Exodus:ironLungEntityUpdate(entity)
             end
         if sprite:IsFinished("HoriSlam") or sprite:IsFinished("UpSlam") or sprite:IsFinished("DownSlam") then
             entity.State = 0
+        end
+    end
+
+    local entities = Isaac.GetRoomEntities()
+    
+    for i, entity in pairs(entities) do
+        if entity.Type == Entities.IRON_LUNG_GAS.id and entity.Variant == Entities.IRON_LUNG_GAS.variant then
+            local sprite = entity:GetSprite()
+            
+            if sprite:IsFinished("Appear") then
+                sprite:Play("Pyroclastic Flow", false)
+            end
+            
+            if sprite:IsFinished("Pyroclastic Flow") then
+                sprite:Play("Fade", false)
+            end
+            
+            for v, tear in pairs(entities) do
+                if tear:ToTear() then
+                    if tear.Position:Distance(entity.Position) < entity.Size + tear.Size then
+                        tear.Velocity = tear.Velocity * 0.8
+                    end
+                end
+            end
+            
+            if sprite:IsFinished("Fade") then
+                entity:Remove()
+                entity.Visible = false
+            end
         end
     end
 end
@@ -6085,6 +6063,14 @@ function Exodus:headcaseEntityUpdate(entity)
         
         if sprite:IsFinished("Stomp") then
             entity.State = 0
+        end
+    end
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().IsExodusLobbed == true then
+            if entity.Position:DistanceSquared(player.Position) < 18^2 and entity:ToTear().Height < 5 then
+                entity:Die()
+                player:TakeDamage(1, 0, EntityRef(entity), 0)
+            end
         end
     end
 end
