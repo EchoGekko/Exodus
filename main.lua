@@ -5019,7 +5019,7 @@ function Exodus:dragonBreathUpdate()
 
             if entity.Type == EntityType.ENTITY_EFFECT and entity.Variant == 51 then
                 entity.Velocity = entity.Velocity / 1.25
-                if entity:GetData().Putout ~= nil and entity.FrameCount > 6 then
+                if entity:GetData().Putout ~= nil and entity.FrameCount > 8 then
                     entity:Remove()
                 end
             end
@@ -5030,7 +5030,7 @@ function Exodus:dragonBreathUpdate()
                 end
 
                 if entity:ToTear().TearFlags & TearFlags.TEAR_LUDOVICO == 0 then
-                    local fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(140, 220)) / 2), entity)
+                    local fire = Isaac.Spawn(1000, 51, 0, Vector(entity.Position.X, entity.Position.Y + entity:ToTear().Height), (entity.Velocity:Rotated(math.random(90, 270)) / 2), entity)
                     fire:GetData().Putout = true
                     fire:GetSprite():Play("FireStage03", true)
                 elseif game:GetFrameCount() % player.MaxFireDelay == 0 then
