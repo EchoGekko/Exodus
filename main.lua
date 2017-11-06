@@ -3741,6 +3741,10 @@ function Exodus:astroBabyFamiliarUpdate(astro)
         
         if entity.Type == EntityType.ENTITY_TEAR and data.IsFromAstroBaby == true then
             if not entity:IsDead() then
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                    entity:GetSprite():Play("BFFS", false)
+                end
+
                 entity.Velocity = entity.Velocity:Rotated(data.RotateAmount)
 
                 if data.RotateAmount < 10 then
@@ -3774,13 +3778,13 @@ function Exodus:astroBabyFamiliarUpdate(astro)
                 dir = Vector(0, -10) + (astro.Velocity / 3)
                 sprite:Play("ShootUp", true)
             end
-            
+
             local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, astro.Position, dir, astro):ToTear()
             local tearData = tear:GetData()
             if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-                tear.CollisionDamage = 6
+                tear.CollisionDamage = 7
             else
-                tear.CollisionDamage = 3
+                tear.CollisionDamage = 3.5
             end
             tearData.IsFromAstroBaby = true
             tearData.Parent = astro
@@ -4003,7 +4007,7 @@ function Exodus:lilRuneFamiliarUpdate(rune)
             
             local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 619575, 0, rune.Position, dir, rune):ToTear()
             local tearData = tear:GetData()
-            tear.CollisionDamage = 3
+            tear.CollisionDamage = 3.5
             if ItemVariables.LIL_RUNE.RuneType == 2 and rng:RandomInt(6) == 1 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_EXPLOSIVE
             elseif ItemVariables.LIL_RUNE.RuneType == 3 then
