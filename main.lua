@@ -4400,7 +4400,6 @@ function Exodus:buttrotUpdate()
                 local flags = tear.TearFlags
                 local sprite = tear:GetSprite()
                 if flags & TearFlags.TEAR_LUDOVICO ~= 0 then
-                    tear.TearFlags = tear.TearFlags | TearFlags.TEAR_SLOW
                     if not player:HasCollectible(ItemId.TECH_360) then
                         tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
                     end
@@ -4437,7 +4436,7 @@ function Exodus:buttrotUpdate()
                 for v, target in pairs(Isaac.GetRoomEntities()) do
                     if target:IsActiveEnemy() and not EntityRef(target).IsFriendly and target.Position:DistanceSquared(entities[i].Position) < (entities[i].Size * 2)^2 and target.Position:DistanceSquared(entities[i].Position) > 1 then
                         game:ButterBeanFart(entities[i].Position, 64, entities[i], true)
-                        entities[i]:TakeDamage(2, 0, EntityRef(target), 3)
+                        entities[i]:TakeDamage(player.Damage / 2, 0, EntityRef(target), 3)
                     end
                 end
             end
