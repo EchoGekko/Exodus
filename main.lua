@@ -4402,10 +4402,7 @@ function Exodus:buttrotUpdate()
                 end
             end
             if entities[i]:GetData().BlightedFrame ~= nil then
-                if entities[i]:GetData().BlightedFrame + 90 < game:GetFrameCount() then
-                    entities[i]:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-                    entities[i]:ClearEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
-                    entities[i]:ClearEntityFlags(EntityFlag.FLAG_SLOW)
+                if entities[i]:GetData().BlightedFrame + 200 < game:GetFrameCount() then
                     entities[i]:GetData().BlightedFrame = nil
                 end
             end
@@ -4431,9 +4428,35 @@ function Exodus:buttrotUpdate()
                 end
             end
             if entities[i].Type == EntityType.ENTITY_BOMBDROP and entities[i].SpawnerType == 1 and entities[i]:GetData().IsButtrotBomb == nil then
-                entities[i]:GetSprite():Load("gfx/blight_bomb.anm2", true)
-                entities[i]:GetData().IsButtrotBomb = true
-                entities[i]:ToBomb().Flags = entities[i]:ToBomb().Flags | TearFlags.TEAR_SLOW
+                local buttchance = 4 - player.Luck
+                if buttchance < 1 then
+                    buttchance = 1
+                end
+                if math.random(buttchance) == 1 then
+                    entities[i]:GetSprite():Load("gfx/blight_bomb.anm2", true)
+                    entities[i]:GetData().IsButtrotBomb = true
+                else
+                    entities[i]:GetData().IsButtrotBomb = false
+                end
+            elseif entities[i].Type == EntityType.ENTITY_BOMBDROP and entities[i].SpawnerType == 1 and entities[i]:GetData().IsButtrotBomb and entities[i]:IsDead() then
+                for i, target in pairs(Isaac.GetRoomEntities()) do
+                    if target:IsVulnerableEnemy() and not EntityRef(target).IsFriendly and target.Position:Distance(entities[i].Position) < 12 then
+                        if target:GetData().BlightedFrame == nil then
+                            target:SetColor(Color(0.75, 0.17, 0.46, 1, 0, 0, 0), 90, 1, false, false)    
+                            local arrow = Isaac.Spawn(1000, 538978237, 0, target.Position + Vector(0, target.Size), Vector(0,0), nil)
+                            arrow:GetData().parent = target
+                            target:GetData().BlightedFrame = game:GetFrameCount()
+                        end
+                    end
+                end
+            end
+            if entities[i]:IsActiveEnemy() and entities[i]:GetData().BlightedFrame ~= nil then
+                for v, target in pairs(Isaac.GetRoomEntities()) do
+                    if target:IsActiveEnemy() and not EntityRef(target).IsFriendly and target.Position:DistanceSquared(entities[i].Position) < (entities[i].Size + 8)^2 and target.Position:DistanceSquared(entities[i].Position) > 1 then
+                        game:ButterBeanFart(entities[i].Position, 64, entities[i], true)
+                        entities[i]:TakeDamage(2, 0, EntityRef(target), 3)
+                    end
+                end
             end
         end
     end
@@ -4468,7 +4491,6 @@ function Exodus:buttrotTear(tear)
         end
         if math.random(buttchance) == 1 then
             tear:ChangeVariant(Entities.BLIGHT_TEAR.variant)
-            tear.CollisionDamage = tear.CollisionDamage + 2
             local sprite = tear:GetSprite()
             local flags = tear.TearFlags
             local size = Exodus.getSize(tear.Scale, flags)
@@ -4509,11 +4531,8 @@ function Exodus:buttrotShatter(tear, target)
         if tear.TearFlags & TearFlags.TEAR_LUDOVICO == 0 or rng:RandomInt(15) == 1 then
             game:ButterBeanFart(target.Position, 64, target, true)
         end
-        if not target:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
-            target:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-            target:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK)
-            target:AddEntityFlags(EntityFlag.FLAG_SLOW)
-            target:SetColor(Color(0.75, 0.17, 0.46, 1, 0, 0, 0), 90, 1, false, false)    
+        if target:GetData().BlightedFrame == nil then
+            target:SetColor(Color(0.75, 0.17, 0.46, 1, 0, 0, 0), 200, 1, false, false)    
             local arrow = Isaac.Spawn(1000, 538978237, 0, target.Position + Vector(0, target.Size), Vector(0,0), nil)
             arrow:GetData().parent = target
             target:GetData().BlightedFrame = game:GetFrameCount()
