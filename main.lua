@@ -764,6 +764,7 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.ritualCandleUpdate)
 
 function Exodus:randomiseCandleSprites()
+    local player = Isaac.GetPlayer(0)
     local count = 1
 
     if player:HasCollectible(ItemId.RITUAL_CANDLE) then
