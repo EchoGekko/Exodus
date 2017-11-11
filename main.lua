@@ -1478,6 +1478,9 @@ function Exodus:fullersClubHit()
     end
 
     if player:HasCollectible(ItemId.FULLERS_CLUB) and clothchance > rng:RandomInt(100) then
+        if clothchance > rng:RandomInt(100) then
+            Isaac.Spawn(5, 10, 0, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
+        end
         player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
         return false
     end
