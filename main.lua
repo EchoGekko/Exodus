@@ -7138,62 +7138,60 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.hatefulFlyGhost, Entities.HATEFUL_FLY.id)
 
-function Exodus:hatefulFlyLaserStop(fly)
+function Exodus:hatefulFlyLaserStop(entity)
     local player = Isaac.GetPlayer(0)
     local entities = Isaac.GetRoomEntities()
-    
-    for i, entity in pairs(entities) do
-        if entity:ToLaser() and entity.Parent:ToPlayer() then
-            local laser = entity:ToLaser()
-            local data = laser:GetData()
-            
-            if data.flyStopped then 
-                if laser.Radius <= 10 then
-                    laser:Remove()
-                elseif laser.Velocity:LengthSquared() < 0.5 then
-                    laser.Velocity = data.flyStopped
-                    data.flyStopped = false
-                end
-                
+
+    if entity.Parent:ToPlayer() then
+        local laser = entity:ToLaser()
+        local data = laser:GetData()
+        
+        if data.flyStopped then 
+            if laser.Radius <= 10 then
+                laser:Remove()
+            elseif laser.Velocity:LengthSquared() < 0.5 then
+                laser.Velocity = data.flyStopped
+                data.flyStopped = false
             end
             
-            for u, fly in pairs(entities) do
-                if fly.Type == Entities.HATEFUL_FLY.id and fly.Variant == Entities.HATEFUL_FLY.variant then
-                    if not laser:IsCircleLaser() then
-                        local angle = (fly.Position - laser.Position):GetAngleDegrees()
+        end
+        
+        for u, fly in pairs(entities) do
+            if fly.Type == Entities.HATEFUL_FLY.id and fly.Variant == Entities.HATEFUL_FLY.variant then
+                if not laser:IsCircleLaser() then
+                    local angle = (fly.Position - laser.Position):GetAngleDegrees()
+                    
+                    if math.abs(math.abs(angle) - math.abs(laser.Angle)) < 20 then
+                        local room = Game():GetLevel():GetCurrentRoom()
+                        local centreY = room:GetCenterPos().Y
+                        local centreX = room:GetCenterPos().X
+                            
+                        local x1 = laser.Position.X - centreX
+                        local y1 = laser.Position.Y - centreY
+                        local x2 = fly.Position.X - centreX
+                        local y2 = fly.Position.Y - centreY
+                        local a = math.tan((360 - laser.Angle) / 180 * math.pi)
+                        local b = -1
+                        local c = y1 - (a * x1)
                         
-                        if math.abs(math.abs(angle) - math.abs(laser.Angle)) < 20 then
-                            local room = Game():GetLevel():GetCurrentRoom()
-                            local centreY = room:GetCenterPos().Y
-                            local centreX = room:GetCenterPos().X
-                                
-                            local x1 = laser.Position.X - centreX
-                            local y1 = laser.Position.Y - centreY
-                            local x2 = fly.Position.X - centreX
-                            local y2 = fly.Position.Y - centreY
-                            local a = math.tan((360 - laser.Angle) / 180 * math.pi)
-                            local b = -1
-                            local c = y1 - (a * x1)
-                            
-                            local perpendicularDist = math.abs((a * x2) + (b * y2) + c) / math.sqrt(a^2 + b^2)
-                            local stopDist = 10
-                            
-                            if laser.Variant == 1 or laser.Variant == 9 then
-                                stopDist = 30
-                            end
-                            
-                            if perpendicularDist <= 30 then
-                                laser:SetMaxDistance((laser.Position - fly.Position):Length() - stopDist)
-                            end
+                        local perpendicularDist = math.abs((a * x2) + (b * y2) + c) / math.sqrt(a^2 + b^2)
+                        local stopDist = 10
+                        
+                        if laser.Variant == 1 or laser.Variant == 9 then
+                            stopDist = 30
                         end
-                    else
-                        if laser.FrameCount > 120 then
-                            laser:Remove()
-                        elseif fly.Position:DistanceSquared(laser.Position) < (laser.Radius^2 + 10) then
-                            data.flyStopped = laser.Velocity
-                            laser.Velocity = Vector(0, 0)
-                            laser.Radius = laser.Radius * 0.9
+                        
+                        if perpendicularDist <= 30 then
+                            laser:SetMaxDistance((laser.Position - fly.Position):Length() - stopDist)
                         end
+                    end
+                else
+                    if laser.FrameCount > 120 then
+                        laser:Remove()
+                    elseif fly.Position:DistanceSquared(laser.Position) < (laser.Radius^2 + 10) then
+                        data.flyStopped = laser.Velocity
+                        laser.Velocity = Vector(0, 0)
+                        laser.Radius = laser.Radius * 0.9
                     end
                 end
             end
@@ -7201,7 +7199,7 @@ function Exodus:hatefulFlyLaserStop(fly)
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.hatefulFlyLaserStop)
+Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.hatefulFlyLaserStop, EntityType.ENTITY_LASER)
 
 --<<<HOTHEAD>>>--
 function Exodus:hotheadEntityUpdate(hothead)
