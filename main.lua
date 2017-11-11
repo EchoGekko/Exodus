@@ -3346,18 +3346,15 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.tragicMushroomCache)
 
 function Exodus:tragicMushroomUse()
     local player = Isaac.GetPlayer(0)
-    
-    if player:GetMaxHearts() == 2 and player:GetSoulHearts() == 0 then
-        player:AddHearts(-player:GetHearts())
+
+    if player:GetPlayerType() == PlayerType.PLAYER_XXX then
+        local maxhp = player:GetSoulHearts() - 2
+        player:AddSoulHearts(-maxhp)
     else
-        if player:GetPlayerType() == PlayerType.PLAYER_XXX then
-            local maxhp = player:GetSoulHearts() - 2
-            player:AddSoulHearts(-maxhp)
-        else
-            local maxhp = player:GetMaxHearts() - 2
-            player:AddSoulHearts(-player:GetSoulHearts())
-            player:AddMaxHearts(-maxhp)
-        end
+        local maxhp = player:GetMaxHearts() - 2
+        player:AddSoulHearts(-player:GetSoulHearts())
+        player:AddMaxHearts(-maxhp)
+        player:AddHearts(2)
     end
     
     ItemVariables.TRAGIC_MUSHROOM.Uses = ItemVariables.TRAGIC_MUSHROOM.Uses + 1
