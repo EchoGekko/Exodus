@@ -330,6 +330,7 @@ function Exodus:newGame(fromSave)
         EntityVariables = {
             ---<<ENEMIES>>---
             FLYERBALL = { Fires = {} },
+            HEADCASE = { DoLobbed = false },
             
             ---<<CHARACTERS>>---
             KEEPER = { ThirdHeart = 2, CurrentCoins = 0 },
@@ -6192,11 +6193,16 @@ Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.halfblindEntityUpdate, Ent
 function Exodus:lobbedShotCollision()
     local player = Isaac.GetPlayer(0)
     
-    for i, entity in pairs(Isaac.GetRoomEntities()) do 
-        if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().IsExodusLobbed == true then
-            if entity.Position:DistanceSquared(player.Position) < 18^2 and entity:ToTear().Height < 5 then
-                entity:Die()
-                player:TakeDamage(1, 0, EntityRef(entity), 0)
+    if EntityVariables.HEADCASE.DoLobbed then
+        for i, entity in pairs(Isaac.GetRoomEntities()) do 
+            if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().IsExodusLobbed == true then
+                if entity.Position:DistanceSquared(player.Position) < 18^2 and entity:ToTear().Height < 5 then
+                    entity:Die()
+                    player:TakeDamage(1, 0, EntityRef(entity), 0)
+                end
+                if entity:ToTear().Height < 1 then
+                    EntityVariables.HEADCASE.DoLobbed = false
+                end
             end
         end
     end
@@ -6234,6 +6240,8 @@ function Exodus:headcaseEntityUpdate(entity)
         for i = 1, math.random(4) do
             Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_RED, 0, entity.Position + Vector(math.random(-5, 5), math.random(-5, 5)), Vector(0, 0), entity)
         end
+        
+        EntityVariables.HEADCASE.DoLobbed = true
         
         for i = 0, 7 do
             local boom = Isaac.Spawn(EntityType.ENTITY_TEAR, TearVariant.BLOOD, 0, entity.Position, Vector.FromAngle(i * 45):Resized(10), entity)
