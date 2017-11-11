@@ -1402,17 +1402,16 @@ end
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType.ENTITY_PLAYER)
 
 --<<JAMES>>--
-function Exodus:jamesUpdate()
+function Exodus:jamesNewFloor()
     local player = Isaac.GetPlayer(0)
     if player:GetPlayerType() == Characters.JAMES and not EntityVariables.JAMES.HasGivenItems then
         player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
         player:AddCollectible(ItemId.FULLERS_CLUB, 1, false)
-        player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
         EntityVariables.JAMES.HasGivenItems = true
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.jamesUpdate)
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.jamesNewFloor)
 
 --<<FULLER'S CLUB>>--
 function Exodus:fullersClubUse()
