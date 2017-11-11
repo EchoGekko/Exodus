@@ -2398,26 +2398,25 @@ function Exodus:hurdleHeelsUpdate()
     if ItemVariables.HURDLE_HEELS.JumpState == 1 and ItemVariables.HURDLE_HEELS.FrameUsed + 8 < game:GetFrameCount() then
         ItemVariables.HURDLE_HEELS.JumpState = 2
         player.Visible = false
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity.Type == EntityType.ENTITY_FAMILIAR then
+                entity.Visible = false
+            end
+        end
         player:SetShootingCooldown(120)
         player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
         ItemVariables.HURDLE_HEELS.Crosshair = Isaac.Spawn(1000, 30, 0, player.Position, Vector(0,0), player)
-        ItemVariables.HURDLE_HEELS.Crosshair.GridCollisionClass = GridCollisionClass.GRIDCOLL_NOPITS
-        ItemVariables.HURDLE_HEELS.Crosshair.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
     end
     
     if ItemVariables.HURDLE_HEELS.JumpState == 2 then
-        player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
-        if Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTUP, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y - 5)
-        end
-        if Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTDOWN, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y + 5)
-        end
-        if Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTLEFT, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X - 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
-        end
-        if Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex) or Input.IsActionPressed(ButtonAction.ACTION_SHOOTRIGHT, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X + 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
+        ItemVariables.HURDLE_HEELS.Crosshair.Position = player.Position
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity:IsEnemy() then
+                entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+            end
+            if entity.Type == EntityType.ENTITY_PROJECTILE then
+                entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+            end
         end
         if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 50 then
             ItemVariables.HURDLE_HEELS.JumpState = 3
@@ -2425,18 +2424,14 @@ function Exodus:hurdleHeelsUpdate()
     end
 
     if ItemVariables.HURDLE_HEELS.JumpState == 3 then
-        player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
-        if Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y - 5)
-        end
-        if Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y + 5)
-        end
-        if Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X - 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
-        end
-        if Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex) then
-            ItemVariables.HURDLE_HEELS.Crosshair.Position = Vector(ItemVariables.HURDLE_HEELS.Crosshair.Position.X + 5, ItemVariables.HURDLE_HEELS.Crosshair.Position.Y)
+        ItemVariables.HURDLE_HEELS.Crosshair.Position = player.Position
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+            if entity:IsEnemy() then
+                entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+            end
+            if entity.Type == EntityType.ENTITY_PROJECTILE then
+                entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+            end
         end
         if ItemVariables.HURDLE_HEELS.Crosshair.FrameCount > 60 then
             player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
@@ -2448,8 +2443,17 @@ function Exodus:hurdleHeelsUpdate()
             player:UseActiveItem(CollectibleType.COLLECTIBLE_WAIT_WHAT, false, false, false, false)
             player.Position = ItemVariables.HURDLE_HEELS.Crosshair.Position
             for i, entity in pairs(Isaac.GetRoomEntities()) do
+                if entity:IsEnemy() then
+                    entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
+                end
+                if entity.Type == EntityType.ENTITY_PROJECTILE then
+                    entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYEROBJECTS
+                end
                 if player.Position:Distance(entity.Position) < 64 and entity:IsVulnerableEnemy() then
                     entity:TakeDamage(player.Damage * 4, 0, EntityRef(player), 3)
+                end
+                if entity.Type == EntityType.ENTITY_FAMILIAR then
+                    entity.Visible = true
                 end
             end
         end
@@ -2477,9 +2481,11 @@ Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.hurdleHeelsUse, ItemId.HURDL
 function Exodus:hurdleHeelsRender()
     local player = Isaac.GetPlayer(0)
     if ItemVariables.HURDLE_HEELS.JumpState == 2 then
+        ItemVariables.HURDLE_HEELS.Icon:SetFrame("Idle", ItemVariables.HURDLE_HEELS.Crosshair.FrameCount)
         ItemVariables.HURDLE_HEELS.Icon:Render(game:GetRoom():WorldToScreenPosition(Vector(player.Position.X, player.Position.Y - ((ItemVariables.HURDLE_HEELS.Crosshair.FrameCount) * 32))), NullVector, NullVector)
     end
     if ItemVariables.HURDLE_HEELS.JumpState == 3 then
+        ItemVariables.HURDLE_HEELS.Icon:SetFrame("Idle", (ItemVariables.HURDLE_HEELS.Crosshair.FrameCount - 60) * -1)
         ItemVariables.HURDLE_HEELS.Icon:Render(game:GetRoom():WorldToScreenPosition(Vector(player.Position.X, player.Position.Y - ((ItemVariables.HURDLE_HEELS.Crosshair.FrameCount - 60) * -32))), NullVector, NullVector)
     end
 end
@@ -2494,6 +2500,22 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.hurdleHeelsDamage, EntityType.ENTITY_PLAYER)
 
+function Exodus:hurdleHeelsCollision(player, entity)
+    if ItemVariables.HURDLE_HEELS.JumpState > 0 then
+        return false
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_PRE_PLAYER_COLLISION, Exodus.hurdleHeelsCollision)
+
+function Exodus:hurdleHeelsEnemyCollision(npc, entity)
+    if ItemVariables.HURDLE_HEELS.JumpState > 0 and npc:IsEnemy() and entity.Type == EntityType.ENTITY_PLAYER then
+        return false
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_PRE_NPC_COLLISION, Exodus.hurdleHeelsEnemyCollision)
+
 function Exodus:hurdleHeelsCache(player, flag)
     if player:HasCollectible(ItemId.HURDLE_HEELS) and flag == CacheFlag.CACHE_SPEED then
         player.MoveSpeed = player.MoveSpeed + 0.1
@@ -2501,6 +2523,15 @@ function Exodus:hurdleHeelsCache(player, flag)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.hurdleHeelsCache)
+
+function Exodus:hurdleHeelsNewRoom()
+    local player = Isaac.GetPlayer(0)
+    if player:HasCollectible(ItemId.HURDLE_HEELS) then
+        ItemVariables.HURDLE_HEELS.JumpState = 0
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.hurdleHeelsNewRoom)
 
 --<<<DAD'S BOOTS>>>--
 function Exodus:dadsBootsUpdate()
