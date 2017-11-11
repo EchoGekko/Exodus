@@ -1406,6 +1406,7 @@ function Exodus:jamesUpdate()
     if player:GetPlayerType() == Characters.JAMES and not EntityVariables.JAMES.HasGivenItems then
         player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
         player:AddCollectible(ItemId.FULLERS_CLUB, 1, false)
+        player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
         EntityVariables.JAMES.HasGivenItems = true
     end
 end
@@ -1510,29 +1511,35 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.fullersClubCache)
 --<<THE APOCRYPHON>>--
 function Exodus:theApocryphonNewLevel()
     local player = Isaac.GetPlayer(0)
-    player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
+    if player:HasCollectible(ItemId.THE_APOCRYPHON) then
+        player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
+    end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.theApocryphonNewLevel)
 
-function Exodus:theApocryphonUpdate()
+function Exodus:theApocryphonNewRoom()
     local player = Isaac.GetPlayer(0)
     local room = game:GetRoom()
     local level = game:GetLevel()
-    if room:GetType() == RoomType.ROOM_ANGEL and not ItemVariables.THE_APOCRYPHON.HasBeenToAngel then
-        ItemVariables.THE_APOCRYPHON.HasBeenToAngel = true
-    end
-    if room:GetType() == RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.HasBeenToAngel and level:GetCurses() & 1 << 6 == 0 then
-        level:AddCurse(LevelCurse.CURSE_OF_BLIND, false)
-        ItemVariables.THE_APOCRYPHON.ChangeBack = true
-    end
-    if room:GetType() ~= RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.ChangeBack then
-        level:RemoveCurse(LevelCurse.CURSE_OF_BLIND)
-        ItemVariables.THE_APOCRYPHON.ChangeBack = false
+
+    if player:HasCollectible(ItemId.THE_APOCRYPHON) then
+        if room:GetType() == RoomType.ROOM_ANGEL and not ItemVariables.THE_APOCRYPHON.HasBeenToAngel then
+            ItemVariables.THE_APOCRYPHON.HasBeenToAngel = true
+        end
+        if room:GetType() == RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.HasBeenToAngel and level:GetCurses() & 1 << 6 == 0 then
+            level:AddCurse(LevelCurse.CURSE_OF_BLIND, false)
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_D6, false, false, false, false)
+            ItemVariables.THE_APOCRYPHON.ChangeBack = true
+        end
+        if room:GetType() ~= RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.ChangeBack then
+            level:RemoveCurse(LevelCurse.CURSE_OF_BLIND)
+            ItemVariables.THE_APOCRYPHON.ChangeBack = false
+        end
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Exodus.theApocryphonUpdate)
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.theApocryphonNewRoom)
 
 --<<BETTER LOOPS>>--
 function loop()
