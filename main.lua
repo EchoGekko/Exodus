@@ -50,6 +50,7 @@ local ItemId = {
     CLOCK_PIECE_2 = Isaac.GetItemIdByName("Clock Piece 2"),
     CLOCK_PIECE_3 = Isaac.GetItemIdByName("Clock Piece 3"),
     CLOCK_PIECE_4 = Isaac.GetItemIdByName("Clock Piece 4"),
+    THE_APOCRYPHON = Isaac.GetItemIdByName("The Apocryphon"),
     
     ---<<ACTIVES>>---
     FORBIDDEN_FRUIT = Isaac.GetItemIdByName("The Forbidden Fruit"),
@@ -62,6 +63,7 @@ local ItemId = {
     TRAGIC_MUSHROOM = Isaac.GetItemIdByName("Tragic Mushroom"),
     ANAMNESIS = Isaac.GetItemIdByName("Anamnesis"),
     HURDLE_HEELS = Isaac.GetItemIdByName("Hurdle Heels"),
+    FULLERS_CLUB = Isaac.GetItemIdByName("Fuller's Club"),
     
     ---<<FAMILIARS>>---
     HUNGRY_HIPPO = Isaac.GetItemIdByName("Hungry Hippo"),
@@ -80,6 +82,10 @@ local ItemId = {
     BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul"),
     CLAUSTROPHOBIA = Isaac.GetTrinketIdByName("Claustrophobia"),
     FLYDER = Isaac.GetTrinketIdByName("Flyder")
+}
+
+local Characters = {
+    JAMES = Isaac.GetPlayerTypeByName("James")
 }
 
 local function getEntity(stringName, intSubtype)
@@ -237,6 +243,7 @@ function Exodus:newGame(fromSave)
             ARCADE_TOKEN = { HasArcadeToken = false },
             MAKEUP_REMOVER = { HasMakeupRemover = false },
             HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = 0, HasGreedHand = false },
+            THE_APOCRYPHON = { HasBeenToAngel = false, ChangeBack = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -268,6 +275,7 @@ function Exodus:newGame(fromSave)
             PSEUDOBULBAR_AFFECT = { Icon = Sprite() },
             OMINOUS_LANTERN = { Fired = true, Lifted = false, Hid = false, LastEnemyHit = nil, FrameModifier = 300 },
             HURDLE_HEELS = { JumpState = 0, FrameUsed = 0, Icon = Sprite() },
+            FULLERS_CLUB = { Uses = 0, ClubDamage = 0, ClubTearDelay = 0, ClubSpeed = 0, ClubLuck = 0, ClubShotSpeed = 0, ClubRange = 0 },
             WRATH_OF_THE_LAMB = { 
                 Uses = {}, 
                 Stats = {
@@ -325,6 +333,7 @@ function Exodus:newGame(fromSave)
             
             ---<<CHARACTERS>>---
             KEEPER = { ThirdHeart = 2, CurrentCoins = 0 },
+            JAMES = { HasGivenItems = false },
             
             ---<<BETTER LOOPS>>---
             LOOPS = { Loop = 0, KeyFrame = 0, Keyhole = nil, IgnoreNegativeIndex = false, SSIndex = 0 }
@@ -1391,8 +1400,141 @@ end
 
 Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType.ENTITY_PLAYER)
 
---<<BETTER LOOPS>>--
+--<<JAMES>>--
+function Exodus:jamesUpdate()
+    local player = Isaac.GetPlayer(0)
+    if player:GetPlayerType() == Characters.JAMES and not EntityVariables.JAMES.HasGivenItems then
+        player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
+        player:AddCollectible(ItemId.FULLERS_CLUB, 1, false)
+        EntityVariables.JAMES.HasGivenItems = true
+    end
+end
 
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.jamesUpdate)
+
+--<<FULLER'S CLUB>>--
+function Exodus:fullersClubUse()
+    local player = Isaac.GetPlayer(0)
+    local config = Isaac.GetItemConfig()
+    local collectibleList = {}
+    
+    for i = 1, #config:GetCollectibles() do
+        value = config:GetCollectible(i)
+        
+        if value and player:HasCollectible(value.ID) then
+            table.insert(collectibleList, value.ID)
+        end
+    end
+
+    if #collectibleList - ItemVariables.FULLERS_CLUB.Uses <= 0 then
+        sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1)
+        return true
+    end
+
+    player:TryRemoveCollectibleCostume(collectibleList[math.random(#collectibleList)], false)
+    
+    ItemVariables.FULLERS_CLUB.Uses = ItemVariables.FULLERS_CLUB.Uses + 1
+
+    if math.random(2) == 1 then
+        ItemVariables.FULLERS_CLUB.ClubDamage = ItemVariables.FULLERS_CLUB.ClubDamage + 0.03
+        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+    end
+    if math.random(25) == 1 then
+        ItemVariables.FULLERS_CLUB.ClubTearDelay = ItemVariables.FULLERS_CLUB.ClubTearDelay + 1
+        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+    end
+    if math.random(3) == 1 then
+        ItemVariables.FULLERS_CLUB.ClubSpeed = ItemVariables.FULLERS_CLUB.ClubSpeed + 0.01
+        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+    end
+    if math.random(3) == 1 then
+        ItemVariables.FULLERS_CLUB.ClubShotSpeed = ItemVariables.FULLERS_CLUB.ClubShotSpeed + 0.01
+        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+    end
+    if math.random(20) == 1 then
+        ItemVariables.FULLERS_CLUB.ClubLuck = ItemVariables.FULLERS_CLUB.ClubLuck + 1
+        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+    end
+    if math.random(2) == 1 then
+        ItemVariables.FULLERS_CLUB.ClubRange = ItemVariables.FULLERS_CLUB.ClubRange + 0.01
+        player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+    end
+
+    player:EvaluateItems()
+
+    return true
+end
+
+Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.fullersClubUse, ItemId.FULLERS_CLUB)
+
+function Exodus:fullersClubHit()
+    local player = Isaac.GetPlayer(0)
+    local config = Isaac.GetItemConfig()
+    local clothchance = #config:GetCollectibles() - ItemVariables.FULLERS_CLUB.Uses
+    
+    if clothchance > 25 then
+        clothchance = 25
+    end
+
+    if player:HasCollectible(ItemId.FULLERS_CLUB) and clothchance > rng:RandomInt(100) then
+        player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
+        return false
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.fullersClubHit, EntityType.ENTITY_PLAYER)
+
+function Exodus:fullersClubCache(player, flag)
+    if flag == CacheFlag.CACHE_SPEED then
+        player.MoveSpeed = player.MoveSpeed + ItemVariables.FULLERS_CLUB.ClubSpeed
+    end
+    if flag == CacheFlag.CACHE_FIREDELAY then
+        player.MaxFireDelay = player.MaxFireDelay - ItemVariables.FULLERS_CLUB.ClubTearDelay
+    end
+    if flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage + ItemVariables.FULLERS_CLUB.ClubDamage
+    end
+    if flag == CacheFlag.CACHE_LUCK then
+        player.Luck = player.Luck + ItemVariables.FULLERS_CLUB.ClubLuck
+    end
+    if flag == CacheFlag.CACHE_SHOTSPEED then
+        player.ShotSpeed = player.ShotSpeed + ItemVariables.FULLERS_CLUB.ClubShotSpeed
+    end
+    if flag == CacheFlag.CACHE_RANGE then
+        player.TearHeight = player.TearHeight - ItemVariables.FULLERS_CLUB.ClubRange
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.fullersClubCache)
+
+--<<THE APOCRYPHON>>--
+function Exodus:theApocryphonNewLevel()
+    local player = Isaac.GetPlayer(0)
+    player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.theApocryphonNewLevel)
+
+function Exodus:theApocryphonUpdate()
+    local player = Isaac.GetPlayer(0)
+    local room = game:GetRoom()
+    local level = game:GetLevel()
+    if room:GetType() == RoomType.ROOM_ANGEL and not ItemVariables.THE_APOCRYPHON.HasBeenToAngel then
+        ItemVariables.THE_APOCRYPHON.HasBeenToAngel = true
+    end
+    if room:GetType() == RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.HasBeenToAngel and level:GetCurses() & 1 << 6 == 0 then
+        level:AddCurse(LevelCurse.CURSE_OF_BLIND, false)
+        ItemVariables.THE_APOCRYPHON.ChangeBack = true
+    end
+    if room:GetType() ~= RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.ChangeBack then
+        level:RemoveCurse(LevelCurse.CURSE_OF_BLIND)
+        ItemVariables.THE_APOCRYPHON.ChangeBack = false
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Exodus.theApocryphonUpdate)
+
+--<<BETTER LOOPS>>--
 function loop()
     local player = Isaac.GetPlayer(0)
     EntityVariables.LOOPS.Loop = EntityVariables.LOOPS.Loop + 1

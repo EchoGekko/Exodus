@@ -30,6 +30,7 @@
 	<passive description="Face" name="Clock Piece 2" gfx="Clock Piece 2.png"/>
 	<passive description="Big hand" name="Clock Piece 3" gfx="Clock Piece 3.png"/>
 	<passive description="Small hand" name="Clock Piece 4" gfx="Clock Piece 4.png"/>
+	<passive description="Take it to the grave" name="The Apocryphon" gfx="The Apocryphon.png"/>
 
 	<!-- Active Items -->
 	<active description="The ultimate sacrifice" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
@@ -42,6 +43,7 @@
 	<active description="All stats up, but..." name="Tragic Mushroom" gfx="Tragic Mushroom.png" maxcharges="0"/>
 	<active description="Recall your destiny" name="Anamnesis" gfx="Anamnesis.png" maxcharges="6" discharged="true"/>
 	<active description="Super jump" name="Hurdle Heels" gfx="Hurdle Heels.png" maxcharges="2"/>
+	<active description="Hand me down" name="Fuller's Club" gfx="Fuller's Club.png" maxcharges="1"/>
 
 	<!-- Familiar Items -->
 	<familiar description="Yummy" gfx="Hungry Hippo.png" name="Hungry Hippo" cache="familiars"/>
