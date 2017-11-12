@@ -5418,12 +5418,24 @@ function Exodus:birdbathEntityUpdate(bath)
                     entity:AddPoison(EntityRef(bath), 30, entity.MaxHitPoints)
                 end
             end
-            if entity.Type == EntityType.ENTITY_TEAR or entity.Type == EntityType.ENTITY_KNIFE then
+            if (entity.Type == EntityType.ENTITY_TEAR or entity.Type == EntityType.ENTITY_KNIFE) and entity:GetData().DontSplash == nil then
                 if entity.Position:DistanceSquared(bath.Position) < (entity.Size + bath.Size)^2 then
                     local splash = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.LARGE_BLOOD_EXPLOSION, 0, bath.Position + Vector(math.random(-8, 8), math.random(-16, -12)), Vector(0,0), player)
                     splash:GetSprite().Color = Color(1, 1, 1, 1, 0, math.random(150, 255), math.random(200, 255))
                     splash:GetSprite().Rotation = math.random(-30, 30)
+                    entity:GetData().DontSplash = true
+                    for v = 1, 8 do
+                        local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 0, 0, bath.Position + Vector(0,-32), Vector(5,5):Rotated(math.random(360)), player)
+                        tear:ToTear().Height = -21
+                        tear:ToTear().FallingSpeed = 3
+                        tear:GetData().DontSplash = true
+                        tear:GetSprite():Load("gfx/effects/Birdbath Tears.anm2", true)
+                    end
                 end
+            end
+            if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().DontSplash ~= nil and entity:IsDead() then
+                local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, entity.Position, Vector(0,0), player)
+                creep:GetSprite().Color = Color(1, 1, 1, 1, 0, math.random(150, 255), math.random(200, 255))
             end
         end
 
