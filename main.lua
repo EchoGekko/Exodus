@@ -4132,7 +4132,8 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 for i, fam in pairs(Isaac.GetRoomEntities()) do
                     if fam.Type == EntityType.ENTITY_FAMILIAR and fam.Variant == Entities.LIL_RUNE.variant then
                         if shot.Position:Distance(entity.Position) < 24 then
-                            entity:ToTear().TearFlags = entity:ToTear().TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_SPECTRAL + TearFlags.TEAR_PIERCING
+                            entity:ToTear().TearFlags = entity:ToTear().TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_PIERCING
+                            entity:ToTear().TearFallingSpeed = entity:ToTear().TearFallingSpeed - 5
                         end
                     end
                 end
@@ -4208,6 +4209,7 @@ function Exodus:lilRuneFamiliarUpdate(rune)
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_SPLIT
             elseif ItemVariables.LIL_RUNE.RuneType == 5 then
                 tear.TearFlags = tear.TearFlags + TearFlags.TEAR_CONTINUUM + TearFlags.TEAR_SPECTRAL + TearFlags.TEAR_PIERCING
+                tear.Height = tear.Height + 5
             elseif ItemVariables.LIL_RUNE.RuneType == 6 then
                 local tear2 = Isaac.Spawn(EntityType.ENTITY_TEAR, 619576, 0, rune.Position, dir, rune):ToTear()
                 local tearData2 = tear2:GetData()
