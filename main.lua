@@ -77,7 +77,7 @@ local ItemId = {
     BURLAP_SACK = Isaac.GetTrinketIdByName("Burlap Sack"),
     PET_ROCK = Isaac.GetTrinketIdByName("Pet Rock"),
     ROTTEN_PENNY = Isaac.GetTrinketIdByName("Rotten Penny"),
-    PURPLE_MOON = Isaac.GetTrinketIdByName("Purple Moon"),
+    BLUE_MOON = Isaac.GetTrinketIdByName("Blue Moon"),
     BROKEN_GLASSES = Isaac.GetTrinketIdByName("Broken Glasses"),
     BOMBS_SOUL = Isaac.GetTrinketIdByName("Bomb's Soul"),
     CLAUSTROPHOBIA = Isaac.GetTrinketIdByName("Claustrophobia"),
@@ -2006,14 +2006,14 @@ function Exodus:trinketNewRoom()
     local player = Isaac.GetPlayer(0)
     local room = game:GetRoom()
     
-    ---<<PURPLE MOON>>---
-    if player:HasTrinket(ItemId.PURPLE_MOON) then
+    ---<<BLUE MOON>>---
+    if player:HasTrinket(ItemId.BLUE_MOON) then
         if room:GetType() == RoomType.ROOM_SECRET then
             for i = 1, room:GetGridSize() do
                 local gridEnt = room:GetGridEntity(i)
                 
                 if gridEnt then
-                    if not gridEnt:ToDoor() and not gridEnt:ToWall() then
+                    if not gridEnt:ToDoor() then
                         room:RemoveGridEntity(i, 0, true)
                     end
                 end
@@ -2021,7 +2021,8 @@ function Exodus:trinketNewRoom()
             
             if room:IsFirstVisit() then
                 local item = itemPool:GetCollectible(ItemPoolType.POOL_BOSS, true, game:GetSeeds():GetStartSeed())
-                
+                local item2 = itemPool:GetCollectible(ItemPoolType.POOL_BOSS, true, game:GetSeeds():GetStartSeed())
+
                 for u, entity in pairs(Isaac.GetRoomEntities()) do
                     if entity ~= nil then
                         if entity.Type > 3 and entity.Type ~= EntityType.ENTITY_EFFECT then
@@ -2029,8 +2030,13 @@ function Exodus:trinketNewRoom()
                         end
                     end
                 end
-                
-                Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, Isaac.GetFreeNearPosition(room:GetCenterPos(), 7), NullVector, nil)
+
+                if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, Isaac.GetFreeNearPosition(room:GetCenterPos() - Vector(-32, 0), 7), NullVector, nil)
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item2, Isaac.GetFreeNearPosition(room:GetCenterPos() + Vector(-32, 0), 7), NullVector, nil)
+                else
+                    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, Isaac.GetFreeNearPosition(room:GetCenterPos(), 7), NullVector, nil)
+                end
             end
         end
     end
