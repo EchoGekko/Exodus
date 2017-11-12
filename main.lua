@@ -5382,7 +5382,8 @@ Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.anamnesisUpdate)
 function Exodus:birdbathUse()
     local player = Isaac.GetPlayer(0)
     
-    Isaac.Spawn(Entities.BIRDBATH.id, Entities.BIRDBATH.variant, 0, Isaac.GetFreeNearPosition(player.Position, 7), NullVector, player)
+    local bath = Isaac.Spawn(Entities.BIRDBATH.id, Entities.BIRDBATH.variant, 0, Isaac.GetFreeNearPosition(player.Position, 7), NullVector, player)
+    bath:GetSprite():Play("Appear", true)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.birdbathUse, ItemId.BIRDBATH)
@@ -5397,44 +5398,46 @@ function Exodus:birdbathEntityUpdate(bath)
         if not bath:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK) then
             bath:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
         end
-        
-        if data.SuckTimer == nil then
-            data.SuckTimer = 60
+
+        if bath:GetSprite():IsFinished("Appear") then
+            bath:GetSprite():Play("Idle", true)
         end
-        
-        if math.random(200) == 1 and data.IsSucking ~= true then
-            data.IsSucking = true
-            data.SuckTimer = 60
-        end
-        
-        if data.IsSucking ~= false and data.SuckTimer == 0 then
-            data.IsSucking = false
-        end
-        
-        if data.SuckTimer > 0 then
-            data.SuckTimer = data.SuckTimer - 1
-        end
-        
+
+        local suckable = false
+
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsActiveEnemy(false) and entity:IsVulnerableEnemy() and entity:IsFlying() then
-                if data.IsSucking then
-                    if entity.Velocity:Length() < 3 then
-                        entity.Velocity = (bath.Position - entity.Position):Resized(3)
-                    else
-                        entity.Velocity = (bath.Position - entity.Position):Resized(entity.Velocity:Length())
-                    end
+                suckable = true
+                if entity.Velocity:Length() < 3 then
+                    entity.Velocity = (bath.Position - entity.Position):Resized(3)
+                else
+                    entity.Velocity = (bath.Position - entity.Position):Resized(entity.Velocity:Length())
                 end
                 
                 if entity.Position:DistanceSquared(bath.Position) < (entity.Size + bath.Size)^2 then
                     entity:AddPoison(EntityRef(bath), 30, entity.MaxHitPoints)
                 end
             end
+            if entity.Type == EntityType.ENTITY_TEAR or entity.Type == EntityType.ENTITY_KNIFE then
+                if entity.Position:DistanceSquared(bath.Position) < (entity.Size + bath.Size)^2 then
+                    local splash = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.LARGE_BLOOD_EXPLOSION, 0, bath.Position + Vector(math.random(-8, 8), math.random(-16, -12)), Vector(0,0), player)
+                    splash:GetSprite().Color = Color(1, 1, 1, 1, 0, math.random(150, 255), math.random(200, 255))
+                    splash:GetSprite().Rotation = math.random(-30, 30)
+                end
+            end
+        end
+
+        if not suckable and bath:GetSprite():IsPlaying("Idle") and bath.FrameCount > 180 then
+            bath:GetSprite():Play("Disappear", true)
+        end
+
+        if bath:GetSprite():IsFinished("Disappear") then
+            bath:Remove()
         end
     end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Exodus.birdbathEntityUpdate, Entities.BIRDBATH.id)
-
 
 --<<<POSSESSED BOMBS>>>--
 function Exodus:possessedBombUpdate()
