@@ -1836,10 +1836,6 @@ function Exodus:trinketUpdate()
                             local bomb = Isaac.Spawn(EntityType.ENTITY_BOMBDROP, BombVariant.BOMB_MR_MEGA, 0, entity.Position, Vector(0, 0), player)
                         end
                     end
-                    
-                    local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, TearVariant.FIRE_MIND, 0, entity.Position, (player.Position - entity.Position):Resized(10), player)
-                    tear.CollisionDamage = player.Damage
-                    tear:ToTear().Scale = 1 * player.Damage / 5
                 end
             end
         end
