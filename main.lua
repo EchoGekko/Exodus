@@ -1408,10 +1408,28 @@ function Exodus:jamesNewFloor()
         player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
         player:AddCollectible(ItemId.FULLERS_CLUB, 1, false)
         EntityVariables.JAMES.HasGivenItems = true
+        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+        player:EvaluateItems()
     end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.jamesNewFloor)
+
+function Exodus:jamesCache(player, flag)
+    if flag == CacheFlag.CACHE_SPEED then
+        player.MoveSpeed = player.MoveSpeed + 0.1
+    end
+    if flag == CacheFlag.CACHE_FIREDELAY then
+        player.MaxFireDelay = player.MaxFireDelay + 2
+    end
+    if flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage - 0.5
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.jamesCache)
 
 --<<FULLER'S CLUB>>--
 function Exodus:fullersClubUse()
@@ -1437,7 +1455,7 @@ function Exodus:fullersClubUse()
     ItemVariables.FULLERS_CLUB.Uses = ItemVariables.FULLERS_CLUB.Uses + 1
 
     if math.random(2) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubDamage = ItemVariables.FULLERS_CLUB.ClubDamage + 0.03
+        ItemVariables.FULLERS_CLUB.ClubDamage = ItemVariables.FULLERS_CLUB.ClubDamage + 0.05
         player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
     end
     if math.random(25) == 1 then
@@ -1445,11 +1463,11 @@ function Exodus:fullersClubUse()
         player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
     end
     if math.random(3) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubSpeed = ItemVariables.FULLERS_CLUB.ClubSpeed + 0.01
+        ItemVariables.FULLERS_CLUB.ClubSpeed = ItemVariables.FULLERS_CLUB.ClubSpeed + 0.02
         player:AddCacheFlags(CacheFlag.CACHE_SPEED)
     end
     if math.random(3) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubShotSpeed = ItemVariables.FULLERS_CLUB.ClubShotSpeed + 0.01
+        ItemVariables.FULLERS_CLUB.ClubShotSpeed = ItemVariables.FULLERS_CLUB.ClubShotSpeed + 0.02
         player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
     end
     if math.random(20) == 1 then
@@ -1457,7 +1475,7 @@ function Exodus:fullersClubUse()
         player:AddCacheFlags(CacheFlag.CACHE_LUCK)
     end
     if math.random(2) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubRange = ItemVariables.FULLERS_CLUB.ClubRange + 0.01
+        ItemVariables.FULLERS_CLUB.ClubRange = ItemVariables.FULLERS_CLUB.ClubRange + 0.05
         player:AddCacheFlags(CacheFlag.CACHE_RANGE)
     end
 
@@ -5427,15 +5445,12 @@ function Exodus:birdbathEntityUpdate(bath)
                     for v = 1, 8 do
                         local tear = Isaac.Spawn(EntityType.ENTITY_TEAR, 0, 0, bath.Position + Vector(0,-32), Vector(5,5):Rotated(math.random(360)), player)
                         tear:ToTear().Height = -21
-                        tear:ToTear().FallingSpeed = 3
+                        tear:ToTear().FallingSpeed = 2
+                        tear:ToTear().Flags = tear:ToTear().Flags + TearFlags.TEAR_POISON
                         tear:GetData().DontSplash = true
                         tear:GetSprite():Load("gfx/effects/Birdbath Tears.anm2", true)
                     end
                 end
-            end
-            if entity.Type == EntityType.ENTITY_TEAR and entity:GetData().DontSplash ~= nil and entity:IsDead() then
-                local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 0, entity.Position, Vector(0,0), player)
-                creep:GetSprite().Color = Color(1, 1, 1, 1, 0, math.random(150, 255), math.random(200, 255))
             end
         end
 
