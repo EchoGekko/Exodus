@@ -1407,7 +1407,7 @@ function Exodus:jamesNewFloor()
     local player = Isaac.GetPlayer(0)
     if player:GetPlayerType() == Characters.JAMES and not EntityVariables.JAMES.HasGivenItems then
         player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
-        player:AddCollectible(ItemId.FULLERS_CLUB, 1, false)
+        player:AddCollectible(ItemId.FULLERS_CLUB, 6, false)
         EntityVariables.JAMES.HasGivenItems = true
         player:AddCacheFlags(CacheFlag.CACHE_SPEED)
         player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
@@ -1633,6 +1633,8 @@ function Exodus:theApocryphonCache(player, flag)
         player.TearHeight = player.TearHeight - ItemVariables.THE_APOCRYPHON.ApocRange
     end
 end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.theApocryphonCache)
 
 --<<BETTER LOOPS>>--
 function loop()
