@@ -275,7 +275,7 @@ function Exodus:newGame(fromSave)
             PSEUDOBULBAR_AFFECT = { Icon = Sprite() },
             OMINOUS_LANTERN = { Fired = true, Lifted = false, Hid = false, LastEnemyHit = nil, FrameModifier = 300 },
             HURDLE_HEELS = { JumpState = 0, FrameUsed = 0, Icon = Sprite() },
-            FULLERS_CLUB = { Uses = 0, ClubDamage = 0, ClubTearDelay = 0, ClubSpeed = 0, ClubLuck = 0, ClubShotSpeed = 0, ClubRange = 0 },
+            FULLERS_CLUB = { Uses = 0, CollectibleList = {}, ClubDamage = 0, ClubTearDelay = 0, ClubSpeed = 0, ClubLuck = 0, ClubShotSpeed = 0, ClubRange = 0 },
             WRATH_OF_THE_LAMB = { 
                 Uses = {}, 
                 Stats = {
@@ -1418,14 +1418,16 @@ end
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.jamesNewFloor)
 
 function Exodus:jamesCache(player, flag)
-    if flag == CacheFlag.CACHE_SPEED then
-        player.MoveSpeed = player.MoveSpeed + 0.1
-    end
-    if flag == CacheFlag.CACHE_FIREDELAY then
-        player.MaxFireDelay = player.MaxFireDelay + 2
-    end
-    if flag == CacheFlag.CACHE_DAMAGE then
-        player.Damage = player.Damage - 0.5
+    if player:GetPlayerType() == Characters.JAMES then
+        if flag == CacheFlag.CACHE_SPEED then
+            player.MoveSpeed = player.MoveSpeed + 0.1
+        end
+        if flag == CacheFlag.CACHE_FIREDELAY then
+            player.MaxFireDelay = player.MaxFireDelay + 2
+        end
+        if flag == CacheFlag.CACHE_DAMAGE then
+            player.Damage = player.Damage - 0.5
+        end
     end
 end
 
@@ -1435,76 +1437,63 @@ Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.jamesCache)
 function Exodus:fullersClubUse()
     local player = Isaac.GetPlayer(0)
     local config = Isaac.GetItemConfig()
-    local collectibleList = {}
+    ItemVariables.FULLERS_CLUB.CollectibleList = {}
     
     for i = 1, #config:GetCollectibles() do
         value = config:GetCollectible(i)
         
         if value and player:HasCollectible(value.ID) then
-            table.insert(collectibleList, value.ID)
+            table.insert(ItemVariables.FULLERS_CLUB.CollectibleList, value)
         end
     end
 
-    if #collectibleList - ItemVariables.FULLERS_CLUB.Uses <= 0 then
+    if #ItemVariables.FULLERS_CLUB.CollectibleList == 0 then
         sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1)
         return true
     end
 
-    player:TryRemoveCollectibleCostume(collectibleList[math.random(#collectibleList)], false)
-    
-    ItemVariables.FULLERS_CLUB.Uses = ItemVariables.FULLERS_CLUB.Uses + 1
+    player:ClearCostumes()
+    player:UseActiveItem(CollectibleType.COLLECTIBLE_BIBLE, false, false, false, false)
 
-    if math.random(2) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubDamage = ItemVariables.FULLERS_CLUB.ClubDamage + 0.05
-        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-    end
-    if math.random(25) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubTearDelay = ItemVariables.FULLERS_CLUB.ClubTearDelay + 1
-        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
-    end
-    if math.random(3) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubSpeed = ItemVariables.FULLERS_CLUB.ClubSpeed + 0.02
-        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
-    end
-    if math.random(3) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubShotSpeed = ItemVariables.FULLERS_CLUB.ClubShotSpeed + 0.02
-        player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
-    end
-    if math.random(20) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubLuck = ItemVariables.FULLERS_CLUB.ClubLuck + 1
-        player:AddCacheFlags(CacheFlag.CACHE_LUCK)
-    end
-    if math.random(2) == 1 then
-        ItemVariables.FULLERS_CLUB.ClubRange = ItemVariables.FULLERS_CLUB.ClubRange + 0.05
-        player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+    for i = 0, ItemVariables.FULLERS_CLUB.Uses do
+        if math.random(2) == 1 then
+            ItemVariables.FULLERS_CLUB.ClubDamage = ItemVariables.FULLERS_CLUB.ClubDamage + 0.25
+            player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+        end
+        if math.random(10) == 1 then
+            ItemVariables.FULLERS_CLUB.ClubTearDelay = ItemVariables.FULLERS_CLUB.ClubTearDelay + 1
+            player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+        end
+        if math.random(3) == 1 then
+            ItemVariables.FULLERS_CLUB.ClubSpeed = ItemVariables.FULLERS_CLUB.ClubSpeed + 0.05
+            player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+        end
+        if math.random(3) == 1 then
+            ItemVariables.FULLERS_CLUB.ClubShotSpeed = ItemVariables.FULLERS_CLUB.ClubShotSpeed + 0.05
+            player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+        end
+        if math.random(15) == 1 then
+            ItemVariables.FULLERS_CLUB.ClubLuck = ItemVariables.FULLERS_CLUB.ClubLuck + 1
+            player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+        end
+        if math.random(2) == 1 then
+            ItemVariables.FULLERS_CLUB.ClubRange = ItemVariables.FULLERS_CLUB.ClubRange + 0.1
+            player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+        end
     end
 
     player:EvaluateItems()
-
+    ItemVariables.FULLERS_CLUB.Uses = 0
     return true
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.fullersClubUse, ItemId.FULLERS_CLUB)
 
-function Exodus:fullersClubHit()
-    local player = Isaac.GetPlayer(0)
-    local config = Isaac.GetItemConfig()
-    local clothchance = #config:GetCollectibles() - ItemVariables.FULLERS_CLUB.Uses
-    
-    if clothchance > 25 then
-        clothchance = 25
-    end
-
-    if player:HasCollectible(ItemId.FULLERS_CLUB) and clothchance > rng:RandomInt(100) then
-        if clothchance > rng:RandomInt(100) then
-            Isaac.Spawn(5, 10, 0, Isaac.GetFreeNearPosition(player.Position, 50), Vector(0, 0), nil)
-        end
-        player:UseActiveItem(CollectibleType.COLLECTIBLE_DULL_RAZOR, false, false, false, false)
-        return false
-    end
+function Exodus:fullersClubItem()
+    ItemVariables.FULLERS_CLUB.Uses = ItemVariables.FULLERS_CLUB.Uses + 1
 end
 
-Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.fullersClubHit, EntityType.ENTITY_PLAYER)
+Exodus:AddCallback(ModCallbacks.MC_POST_GET_COLLECTIBLE, Exodus.fullersClubItem, EntityType.ENTITY_PLAYER)
 
 function Exodus:fullersClubCache(player, flag)
     if flag == CacheFlag.CACHE_SPEED then
@@ -1528,6 +1517,30 @@ function Exodus:fullersClubCache(player, flag)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.fullersClubCache)
+
+function Exodus:fullersClubNewRoom()
+    local player = Isaac.GetPlayer(0)
+    local room = game:GetRoom()
+    local level = game:GetLevel()
+
+    if #ItemVariables.FULLERS_CLUB.CollectibleList > 0 then
+        for i = 1, #ItemVariables.FULLERS_CLUB.CollectibleList do
+            player:AddCostume(ItemVariables.FULLERS_CLUB.CollectibleList[i])
+        end
+    end
+
+    ItemVariables.FULLERS_CLUB.CollectibleList = {}
+
+    ItemVariables.FULLERS_CLUB.ClubDamage = 0
+    ItemVariables.FULLERS_CLUB.ClubTearDelay = 0
+    ItemVariables.FULLERS_CLUB.ClubSpeed = 0
+    ItemVariables.FULLERS_CLUB.ClubShotSpeed = 0
+    ItemVariables.FULLERS_CLUB.ClubLuck = 0
+    ItemVariables.FULLERS_CLUB.ClubRange = 0
+    player:EvaluateItems()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.fullersClubNewRoom)
 
 --<<THE APOCRYPHON>>--
 function Exodus:theApocryphonNewLevel()
