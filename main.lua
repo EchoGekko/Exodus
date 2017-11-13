@@ -276,7 +276,7 @@ function Exodus:newGame(fromSave)
             PSEUDOBULBAR_AFFECT = { Icon = Sprite() },
             OMINOUS_LANTERN = { Fired = true, Lifted = false, Hid = false, LastEnemyHit = nil, FrameModifier = 300 },
             HURDLE_HEELS = { JumpState = 0, FrameUsed = 0, Icon = Sprite() },
-            FULLERS_CLUB = { Uses = 0, CollectibleList = {}, ClubDamage = 0, ClubTearDelay = 0, ClubSpeed = 0, ClubLuck = 0, ClubShotSpeed = 0, ClubRange = 0 },
+            FULLERS_CLUB = { CollectibleList = {}, ClubDamage = 0, ClubTearDelay = 0, ClubSpeed = 0, ClubLuck = 0, ClubShotSpeed = 0, ClubRange = 0 },
             WRATH_OF_THE_LAMB = { 
                 Uses = {}, 
                 Stats = {
@@ -1456,7 +1456,7 @@ function Exodus:fullersClubUse()
     player:ClearCostumes()
     player:UseActiveItem(CollectibleType.COLLECTIBLE_BIBLE, false, false, false, false)
 
-    for i = 0, ItemVariables.FULLERS_CLUB.Uses do
+    for i = 0, #ItemVariables.FULLERS_CLUB.CollectibleList do
         if math.random(2) == 1 then
             ItemVariables.FULLERS_CLUB.ClubDamage = ItemVariables.FULLERS_CLUB.ClubDamage + 0.25
             player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
@@ -1484,17 +1484,10 @@ function Exodus:fullersClubUse()
     end
 
     player:EvaluateItems()
-    ItemVariables.FULLERS_CLUB.Uses = 0
     return true
 end
 
 Exodus:AddCallback(ModCallbacks.MC_USE_ITEM, Exodus.fullersClubUse, ItemId.FULLERS_CLUB)
-
-function Exodus:fullersClubItem()
-    ItemVariables.FULLERS_CLUB.Uses = ItemVariables.FULLERS_CLUB.Uses + 1
-end
-
-Exodus:AddCallback(ModCallbacks.MC_POST_GET_COLLECTIBLE, Exodus.fullersClubItem, EntityType.ENTITY_PLAYER)
 
 function Exodus:fullersClubCache(player, flag)
     if flag == CacheFlag.CACHE_SPEED then
