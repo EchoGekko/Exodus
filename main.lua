@@ -1570,6 +1570,16 @@ function Exodus:theApocryphonNewRoom()
             level:RemoveCurse(LevelCurse.CURSE_OF_BLIND)
             ItemVariables.THE_APOCRYPHON.ChangeBack = false
         end
+        if room:GetType() ~= RoomType.ROOM_DEFAULT and room:IsFirstVisit() then
+            local consumable = math.random(1,3)
+            if consumable == 1 then
+                player:AddCoins(1)
+            elseif consumable == 2 then
+                player:AddBombs(1)
+            elseif consumable == 3 then
+                player:AddKeys(1)
+            end
+        end
     end
 end
 

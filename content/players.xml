@@ -2,7 +2,7 @@
          portraitroot="gfx/ui/boss/" 
          nameimageroot="gfx/ui/boss/" 
          bigportraitroot="gfx/ui/stage/">
-	<player name="James" skin="James.png" hp="6"
+	<player name="James" skin="James.png" hp="4" armor="2" coins="1" bombs="1" keys="1"
           nameimage="James Name.png" 
           portrait="James Portrait.png" 
           bigportrait="James Portrait.png" skinColor="-1" />
