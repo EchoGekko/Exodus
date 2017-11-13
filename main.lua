@@ -243,7 +243,7 @@ function Exodus:newGame(fromSave)
             ARCADE_TOKEN = { HasArcadeToken = false },
             MAKEUP_REMOVER = { HasMakeupRemover = false },
             HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = 0, HasGreedHand = false },
-            THE_APOCRYPHON = { HasBeenToAngel = false, ChangeBack = false },
+            THE_APOCRYPHON = { HasBeenToAngel = false, ChangeBack = false, ApocDamage = 0, ApocTearDelay = 0, ApocSpeed = 0, ApocLuck = 0, ApocShotSpeed = 0, ApocRange = 0 },
             BROKEN_GLASSES = { Broke = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
@@ -1541,6 +1541,13 @@ function Exodus:theApocryphonNewLevel()
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(ItemId.THE_APOCRYPHON) then
         player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
+        ItemVariables.FULLERS_CLUB.ClubDamage = 0
+        ItemVariables.FULLERS_CLUB.ClubTearDelay = 0
+        ItemVariables.FULLERS_CLUB.ClubSpeed = 0
+        ItemVariables.FULLERS_CLUB.ClubShotSpeed = 0
+        ItemVariables.FULLERS_CLUB.ClubLuck = 0
+        ItemVariables.FULLERS_CLUB.ClubRange = 0
+        player:EvaluateItems()
     end
 end
 
@@ -1574,10 +1581,58 @@ function Exodus:theApocryphonNewRoom()
                 player:AddKeys(1)
             end
         end
+        if room:IsFirstVisit() then
+            if math.random(2) == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocDamage = ItemVariables.THE_APOCRYPHON.ApocDamage + 0.25
+                player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+            end
+            if math.random(10) == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocTearDelay = ItemVariables.THE_APOCRYPHON.ApocTearDelay + 1
+                player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+            end
+            if math.random(3) == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocSpeed = ItemVariables.THE_APOCRYPHON.ApocSpeed + 0.05
+                player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+            end
+            if math.random(3) == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocShotSpeed = ItemVariables.THE_APOCRYPHON.ApocShotSpeed + 0.05
+                player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+            end
+            if math.random(15) == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocLuck = ItemVariables.THE_APOCRYPHON.ApocLuck + 1
+                player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+            end
+            if math.random(2) == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocRange = ItemVariables.THE_APOCRYPHON.ApocRange + 0.1
+                player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+            end
+            player:EvaluateItems()
+        end
     end
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.theApocryphonNewRoom)
+
+function Exodus:theApocryphonCache(player, flag)
+    if flag == CacheFlag.CACHE_SPEED then
+        player.MoveSpeed = player.MoveSpeed + ItemVariables.THE_APOCRYPHON.ApocSpeed
+    end
+    if flag == CacheFlag.CACHE_FIREDELAY then
+        player.MaxFireDelay = player.MaxFireDelay - ItemVariables.THE_APOCRYPHON.ApocTearDelay
+    end
+    if flag == CacheFlag.CACHE_DAMAGE then
+        player.Damage = player.Damage + ItemVariables.THE_APOCRYPHON.ApocDamage
+    end
+    if flag == CacheFlag.CACHE_LUCK then
+        player.Luck = player.Luck + ItemVariables.THE_APOCRYPHON.ApocLuck
+    end
+    if flag == CacheFlag.CACHE_SHOTSPEED then
+        player.ShotSpeed = player.ShotSpeed + ItemVariables.THE_APOCRYPHON.ApocShotSpeed
+    end
+    if flag == CacheFlag.CACHE_RANGE then
+        player.TearHeight = player.TearHeight - ItemVariables.THE_APOCRYPHON.ApocRange
+    end
+end
 
 --<<BETTER LOOPS>>--
 function loop()

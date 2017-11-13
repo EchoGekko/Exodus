@@ -43,7 +43,7 @@
 	<active description="All stats up, but..." name="Tragic Mushroom" gfx="Tragic Mushroom.png" maxcharges="0"/>
 	<active description="Recall your destiny" name="Anamnesis" gfx="Anamnesis.png" maxcharges="6" discharged="true"/>
 	<active description="Super jump" name="Hurdle Heels" gfx="Hurdle Heels.png" maxcharges="2"/>
-	<active description="Hand me down" name="Fuller's Club" gfx="Fuller's Club.png" maxcharges="1"/>
+	<active description="Hand me down" name="Fuller's Club" gfx="Fuller's Club.png" maxcharges="6"/>
 
 	<!-- Familiar Items -->
 	<familiar description="Yummy" gfx="Hungry Hippo.png" name="Hungry Hippo" cache="familiars"/>
