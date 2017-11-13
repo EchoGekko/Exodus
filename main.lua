@@ -244,6 +244,7 @@ function Exodus:newGame(fromSave)
             MAKEUP_REMOVER = { HasMakeupRemover = false },
             HAND_OF_GREED = { RedHearts = 3, SoulHearts = 0, ActiveItem = 0, HasGreedHand = false },
             THE_APOCRYPHON = { HasBeenToAngel = false, ChangeBack = false },
+            BROKEN_GLASSES = { Broke = false },
             DADS_BOOTS = { HasDadsBoots = false,
                 Squishables = {
                     { id = EntityType.ENTITY_MAGGOT }, --ID 21
@@ -1797,7 +1798,8 @@ function Exodus:trinketUpdate()
     end
     
     ---<<BROKEN GLASSES>>---
-    if player:HasTrinket(ItemId.BROKEN_GLASSES) then
+    if player:HasTrinket(ItemId.BROKEN_GLASSES) or ItemVariables.BROKEN_GLASSES.Broke then
+        ItemVariables.BROKEN_GLASSES.Broke = true
         for i, entity in pairs(Isaac.GetRoomEntities()) do
             if entity:IsActiveEnemy() or entity.Type == EntityType.ENTITY_PICKUP then
                 entity:GetSprite().Color = Color(0, 0, 0, 1, 0, 0, 0)
@@ -1967,7 +1969,7 @@ function Exodus:trinketUpdate()
     end
 end
 
-Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.trinketUpdate)
+Exodus:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, Exodus.trinketUpdate)
 
 function Exodus:trinketCache(player, flag)
     ---<<GRID WORM>>---
@@ -2104,6 +2106,14 @@ function Exodus:trinketNewRoom()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.trinketNewRoom)
+
+function Exodus:trinketNewFloor()
+    if ItemVariables.BROKEN_GLASSES.Broke then
+        ItemVariables.BROKEN_GLASSES.Broke = false
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.trinketNewFloor)
 
 --<<<SUB ROOM CHARGE ITEMS>>>--
 function Exodus:subRoomChargeItemsUpdate()
