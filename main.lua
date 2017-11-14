@@ -71,6 +71,7 @@ local ItemId = {
     ASTRO_BABY = Isaac.GetItemIdByName("Astro Baby"),
     LIL_RUNE = Isaac.GetItemIdByName("Lil Rune"),
     SUNDIAL = Isaac.GetItemIdByName("Sundial"),
+    ROBOBABY_360 = Isaac.GetItemIdByName("Robo-Baby 3.6.0"),
     
     ---<<TRINKETS>>---
     GRID_WORM = Isaac.GetTrinketIdByName("Grid Worm"),
@@ -125,6 +126,7 @@ local Entities = {
     LIL_RUNE = getEntity("Lil Rune"),
     SUN = getEntity("Sundial Sun"),
     SHADOW = getEntity("Sundial Shadow"),
+    ROBOBABY_360 = getEntity("Robobaby 3.6.0"),
     
     ---<<ENEMIES>>---
     POISON_MASTERMIND = getEntity("Poison Mastermind"),
@@ -231,6 +233,7 @@ function Exodus:newGame(fromSave)
             WELCOME_MAT = { HasWelcomeMat = false, Position = NullVector, Direction = 0, CloseToMat = false, Placed = true, AppearFrame = nil },
             GLUTTONYS_STOMACH = { Parts = 0, RenderBar = Sprite() },
             ASTRO_BABY = { UsedBox = 0 },
+            ROBOBABY_360 = { UsedBox = 0 },
             LIL_RUNE = { HasLilRune = false, UsedBox = 0, State = "Purple", RuneType = 0 },
             POSSESSED_BOMBS = { HasPossessedBombs = false },
             MOLDY_BREAD = { GotFlies = false },
@@ -3591,10 +3594,9 @@ function Exodus:tech360Update()
             end
       
             if entity.Type == EntityType.ENTITY_LASER and entity.SpawnerType == EntityType.ENTITY_PLAYER and entity.Variant == 2 and 
-            (data.Tech360 or player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X)) then
+            (data.Tech360 or player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X)) and entity:GetData().IsFromRoboBaby == nil then
                 entity.Color = player.TearColor
                 entity = entity:ToLaser()
-                    
                 if (player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and entity.Radius > math.abs(player.TearHeight * 6)) or
                 (entity.Radius > math.abs(player.TearHeight * 3) and player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) == false) then
                     entity:Remove()
@@ -4101,6 +4103,7 @@ function Exodus:boxOfFriendsUse()
     local player = Isaac.GetPlayer(0)
     ItemVariables.ASTRO_BABY.UsedBox = ItemVariables.ASTRO_BABY.UsedBox + 1
     ItemVariables.LIL_RUNE.UsedBox = ItemVariables.LIL_RUNE.UsedBox + 1
+    ItemVariables.ROBOBABY_360.UsedBox = ItemVariables.ROBOBABY_360.UsedBox + 1
     player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
     player:EvaluateItems()
 end
@@ -4115,6 +4118,138 @@ function Exodus:astroBabyNewRoom()
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.astroBabyNewRoom)
+
+--<<<ROBO-BABY 3.6.0>>>--
+function Exodus:roboBabyCache(player, flag)
+    if player:HasCollectible(ItemId.ROBOBABY_360) and flag == CacheFlag.CACHE_FAMILIARS then
+        player:CheckFamiliar(Entities.ROBOBABY_360.variant, player:GetCollectibleNum(ItemId.ROBOBABY_360) + ItemVariables.ROBOBABY_360.UsedBox, rng)
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.roboBabyCache)
+
+function Exodus:roboBabyInit(robo)
+    local player = Isaac.GetPlayer(0)
+    robo:GetData().FireDelay = 30
+  
+    local sprite = robo:GetSprite()
+    sprite:Play("IdleDown")
+    robo.OrbitLayer = 120
+    robo.Position = robo:GetOrbitPosition(player.Position + player.Velocity)
+    robo.Visible = false
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Exodus.roboBabyInit, Entities.ROBOBABY_360.variant)
+
+function Exodus:roboBabyFamiliarUpdate(robo)
+    local player = Isaac.GetPlayer(0)
+    local sprite = robo:GetSprite()
+    local data = robo:GetData()
+    
+    if not player:HasCollectible(ItemId.ROBOBABY_360) then
+        robo:Remove()
+    end
+
+    if robo.FrameCount >= 1 then
+        robo.Visible = true
+    else
+        robo.Visible = false
+    end
+
+    if robo.FrameCount == 1 then
+        robo.SpawnerVariant = 0
+        robo.SpawnerType = 0
+    end
+
+    robo.OrbitDistance = Vector(64, 64)
+    
+    if player:HasTrinket(TrinketType.TRINKET_CHILD_LEASH) then
+        robo.OrbitDistance = robo.OrbitDistance / 2
+    end
+    
+    robo.OrbitSpeed = 0.03
+
+    if not Exodus:PlayerIsMoving() then
+        robo.Position = robo:GetOrbitPosition(player.Position + player.Velocity)
+    end
+    
+    robo.Velocity = robo:GetOrbitPosition(player.Position + player.Velocity) - robo.Position
+    robo.GridCollisionClass = 0
+
+    if data.FireDelay == 0 then
+        if player:GetFireDirection() > -1 then
+            data.FireDelay = 30
+
+            if player:GetHeadDirection() == Direction.DOWN then
+                sprite:Play("ShootDown", true)
+            elseif player:GetHeadDirection() == Direction.LEFT then
+                sprite:Play("ShootSide2", true)
+            elseif player:GetHeadDirection() == Direction.RIGHT then
+                sprite:Play("ShootSide", true)
+            elseif player:GetHeadDirection() == Direction.UP then
+                sprite:Play("ShootUp", true)
+            end
+
+            local laser = player:FireTechXLaser(robo.Position, robo.Velocity, 1)
+            laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
+            if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                laser.CollisionDamage = 4
+            else
+                laser.CollisionDamage = 2
+            end
+            laser:GetData().IsFromRoboBaby = true
+        else
+            sprite:Play("IdleDown", true)
+        end
+    else
+        data.FireDelay = data.FireDelay - 1
+
+        if player:GetFireDirection() > -1 then
+            if data.FireDelay < 7 then
+                if player:GetHeadDirection() == Direction.UP then
+                    sprite:Play("IdleUp", true)
+                elseif player:GetHeadDirection() == Direction.LEFT then
+                    sprite:Play("IdleSide2", true)
+                elseif player:GetHeadDirection() == Direction.RIGHT then
+                    sprite:Play("IdleSide", true)
+                else
+                    sprite:Play("IdleDown", true)
+                end
+            end
+        else
+            sprite:Play("IdleDown", true)
+        end
+    end
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_LASER and entity:GetData().IsFromRoboBaby ~= nil then
+            entity.Position = robo.Position
+            entity.Velocity = robo.Velocity
+            entity:ToLaser().Radius = entity:ToLaser().Radius + 4
+            if entity:ToLaser().Radius > 64 then
+                entity:Remove()
+                
+                for u = 1, 4 do
+                    local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (60 + rng:RandomInt(11) - 5)), false, false)
+                    laser.TearFlags = laser.TearFlags | TearFlags.TEAR_SPECTRAL
+                    laser.Color = player.TearColor
+                    laser.DisableFollowParent = true
+                end
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Exodus.roboBabyFamiliarUpdate, Entities.ROBOBABY_360.variant)
+
+function Exodus:roboBabyNewRoom()
+    local player = Isaac.GetPlayer(0)
+    ItemVariables.ROBOBABY_360.UsedBox = 0
+    player:AddCacheFlags(CacheFlag.CACHE_FAMILIARS)
+    player:EvaluateItems()
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.roboBabyNewRoom)
 
 --<<<LIL RUNE>>>--
 function Exodus:lilRuneCache(player, flag)
