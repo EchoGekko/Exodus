@@ -1581,7 +1581,7 @@ function Exodus:theApocryphonNewRoom()
                 player:AddKeys(1)
             end
         end
-        if room:IsFirstVisit() then
+        if room:GetType() ~= RoomType.ROOM_DEFAULT and room:IsFirstVisit() then
             if math.random(2) == 1 then
                 ItemVariables.THE_APOCRYPHON.ApocDamage = ItemVariables.THE_APOCRYPHON.ApocDamage + 0.25
                 player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
