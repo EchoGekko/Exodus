@@ -1541,12 +1541,12 @@ function Exodus:theApocryphonNewLevel()
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(ItemId.THE_APOCRYPHON) then
         player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
-        ItemVariables.FULLERS_CLUB.ClubDamage = 0
-        ItemVariables.FULLERS_CLUB.ClubTearDelay = 0
-        ItemVariables.FULLERS_CLUB.ClubSpeed = 0
-        ItemVariables.FULLERS_CLUB.ClubShotSpeed = 0
-        ItemVariables.FULLERS_CLUB.ClubLuck = 0
-        ItemVariables.FULLERS_CLUB.ClubRange = 0
+        ItemVariables.THE_APOCRYPHON.ApocDamage = 0
+        ItemVariables.THE_APOCRYPHON.ApocTearDelay = 0
+        ItemVariables.THE_APOCRYPHON.ApocSpeed = 0
+        ItemVariables.THE_APOCRYPHON.ApocShotSpeed = 0
+        ItemVariables.THE_APOCRYPHON.ApocLuck = 0
+        ItemVariables.THE_APOCRYPHON.ApocRange = 0
         player:EvaluateItems()
     end
 end
