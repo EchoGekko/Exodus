@@ -4813,7 +4813,11 @@ function Exodus:beehiveUpdate()
                 if entity.SpawnerType == EntityType.ENTITY_PLAYER or entity.SpawnerType == EntityType.ENTITY_FAMILIAR then
                     if entity.SpawnerType == EntityType.ENTITY_PLAYER or entity.SpawnerVariant == 120 or entity.SpawnerVariant == 80 then
                         entity.Color = player.TearColor
-                        entity.Velocity = entity.Velocity - RandomVector()
+                        if entity.FrameCount > 20 then
+                            entity.Velocity = entity.Velocity - RandomVector()
+                        else
+                            entity.Velocity = entity.Velocity - (RandomVector() / 2)
+                        end
                         
                         if entity.FrameCount == 1 and player:HasCollectible(CollectibleType.COLLECTIBLE_HIVE_MIND) then
                             entity.CollisionDamage = entity.CollisionDamage * 2
