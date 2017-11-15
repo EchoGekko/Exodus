@@ -4250,7 +4250,9 @@ function Exodus:roboBabyFamiliarUpdate(robo)
             end
 
             local laser = player:FireTechXLaser(robo.Position, robo.Velocity, 1)
+            laser:Update()
             laser.TearFlags = TearFlags.TEAR_CONTINUUM
+            laser:Update()
             if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
                 laser.CollisionDamage = 4
             else
@@ -4291,8 +4293,9 @@ function Exodus:roboBabyFamiliarUpdate(robo)
                 
                 for u = 1, 4 do
                     local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (90 + rng:RandomInt(11) - 5)), false, false)
-                    laser.TearFlags = 0
+                    laser:Update()
                     laser.TearFlags = TearFlags.TEAR_SPECTRAL
+                    laser:Update()
                     laser.DisableFollowParent = true
                     if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
                         laser.CollisionDamage = 4
