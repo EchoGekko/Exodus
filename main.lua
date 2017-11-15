@@ -1417,6 +1417,7 @@ function Exodus:jamesNewFloor()
         player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
         player:EvaluateItems()
     end
+    player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.jamesNewFloor)
@@ -1436,6 +1437,38 @@ function Exodus:jamesCache(player, flag)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Exodus.jamesCache)
+
+function Exodus:jamesNewRoom()
+    local player = Isaac.GetPlayer(0)
+    local room = game:GetRoom()
+    local level = game:GetLevel()
+    if player:GetPlayerType() == Characters.JAMES then
+        if room:GetType() == RoomType.ROOM_ANGEL and not ItemVariables.THE_APOCRYPHON.HasBeenToAngel then
+            ItemVariables.THE_APOCRYPHON.HasBeenToAngel = true
+        end
+        if room:GetType() == RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.HasBeenToAngel and level:GetCurses() & 1 << 6 == 0 then
+            level:AddCurse(LevelCurse.CURSE_OF_BLIND, false)
+            player:UseActiveItem(CollectibleType.COLLECTIBLE_D6, false, false, false, false)
+            ItemVariables.THE_APOCRYPHON.ChangeBack = true
+        end
+        if room:GetType() ~= RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.ChangeBack then
+            level:RemoveCurse(LevelCurse.CURSE_OF_BLIND)
+            ItemVariables.THE_APOCRYPHON.ChangeBack = false
+        end
+        if room:GetType() ~= RoomType.ROOM_DEFAULT and room:IsFirstVisit() then
+            local consumable = math.random(1,3)
+            if consumable == 1 then
+                player:AddCoins(1)
+            elseif consumable == 2 then
+                player:AddBombs(1)
+            elseif consumable == 3 then
+                player:AddKeys(1)
+            end
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.jamesNewRoom)
 
 --<<FULLER'S CLUB>>--
 function Exodus:fullersClubUse()
@@ -1543,7 +1576,6 @@ Exodus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Exodus.fullersClubNewRoom)
 function Exodus:theApocryphonNewLevel()
     local player = Isaac.GetPlayer(0)
     if player:HasCollectible(ItemId.THE_APOCRYPHON) then
-        player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
         ItemVariables.THE_APOCRYPHON.ApocDamage = 0
         ItemVariables.THE_APOCRYPHON.ApocTearDelay = 0
         ItemVariables.THE_APOCRYPHON.ApocSpeed = 0
@@ -1562,51 +1594,45 @@ function Exodus:theApocryphonNewRoom()
     local level = game:GetLevel()
 
     if player:HasCollectible(ItemId.THE_APOCRYPHON) then
-        if room:GetType() == RoomType.ROOM_ANGEL and not ItemVariables.THE_APOCRYPHON.HasBeenToAngel then
-            ItemVariables.THE_APOCRYPHON.HasBeenToAngel = true
-        end
-        if room:GetType() == RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.HasBeenToAngel and level:GetCurses() & 1 << 6 == 0 then
-            level:AddCurse(LevelCurse.CURSE_OF_BLIND, false)
-            player:UseActiveItem(CollectibleType.COLLECTIBLE_D6, false, false, false, false)
-            ItemVariables.THE_APOCRYPHON.ChangeBack = true
-        end
-        if room:GetType() ~= RoomType.ROOM_DEVIL and ItemVariables.THE_APOCRYPHON.ChangeBack then
-            level:RemoveCurse(LevelCurse.CURSE_OF_BLIND)
-            ItemVariables.THE_APOCRYPHON.ChangeBack = false
-        end
         if room:GetType() ~= RoomType.ROOM_DEFAULT and room:IsFirstVisit() then
-            local consumable = math.random(1,3)
-            if consumable == 1 then
-                player:AddCoins(1)
-            elseif consumable == 2 then
-                player:AddBombs(1)
-            elseif consumable == 3 then
-                player:AddKeys(1)
-            end
-        end
-        if room:GetType() ~= RoomType.ROOM_DEFAULT and room:IsFirstVisit() then
-            if math.random(2) == 1 then
-                ItemVariables.THE_APOCRYPHON.ApocDamage = ItemVariables.THE_APOCRYPHON.ApocDamage + 0.25
+            statup = math.random(6)
+            if statup == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocDamage = ItemVariables.THE_APOCRYPHON.ApocDamage + 0.5
                 player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-            end
-            if math.random(10) == 1 then
+            elseif statup == 2 then
                 ItemVariables.THE_APOCRYPHON.ApocTearDelay = ItemVariables.THE_APOCRYPHON.ApocTearDelay + 1
                 player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
-            end
-            if math.random(3) == 1 then
-                ItemVariables.THE_APOCRYPHON.ApocSpeed = ItemVariables.THE_APOCRYPHON.ApocSpeed + 0.05
+            elseif statup == 3 then
+                ItemVariables.THE_APOCRYPHON.ApocSpeed = ItemVariables.THE_APOCRYPHON.ApocSpeed + 0.1
                 player:AddCacheFlags(CacheFlag.CACHE_SPEED)
-            end
-            if math.random(3) == 1 then
-                ItemVariables.THE_APOCRYPHON.ApocShotSpeed = ItemVariables.THE_APOCRYPHON.ApocShotSpeed + 0.05
+            elseif statup == 4 then
+                ItemVariables.THE_APOCRYPHON.ApocShotSpeed = ItemVariables.THE_APOCRYPHON.ApocShotSpeed + 0.1
                 player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
-            end
-            if math.random(15) == 1 then
+            elseif statup == 5 then
                 ItemVariables.THE_APOCRYPHON.ApocLuck = ItemVariables.THE_APOCRYPHON.ApocLuck + 1
                 player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+            elseif statup == 6 then
+                ItemVariables.THE_APOCRYPHON.ApocRange = ItemVariables.THE_APOCRYPHON.ApocRange + 0.25
+                player:AddCacheFlags(CacheFlag.CACHE_RANGE)
             end
-            if math.random(2) == 1 then
-                ItemVariables.THE_APOCRYPHON.ApocRange = ItemVariables.THE_APOCRYPHON.ApocRange + 0.1
+            statup = math.random(12)
+            if statup == 1 then
+                ItemVariables.THE_APOCRYPHON.ApocDamage = ItemVariables.THE_APOCRYPHON.ApocDamage + 0.5
+                player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+            elseif statup == 2 then
+                ItemVariables.THE_APOCRYPHON.ApocTearDelay = ItemVariables.THE_APOCRYPHON.ApocTearDelay + 1
+                player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+            elseif statup == 3 then
+                ItemVariables.THE_APOCRYPHON.ApocSpeed = ItemVariables.THE_APOCRYPHON.ApocSpeed + 0.1
+                player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+            elseif statup == 4 then
+                ItemVariables.THE_APOCRYPHON.ApocShotSpeed = ItemVariables.THE_APOCRYPHON.ApocShotSpeed + 0.1
+                player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+            elseif statup == 5 then
+                ItemVariables.THE_APOCRYPHON.ApocLuck = ItemVariables.THE_APOCRYPHON.ApocLuck + 1
+                player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+            elseif statup == 6 then
+                ItemVariables.THE_APOCRYPHON.ApocRange = ItemVariables.THE_APOCRYPHON.ApocRange + 0.25
                 player:AddCacheFlags(CacheFlag.CACHE_RANGE)
             end
             player:EvaluateItems()
