@@ -1953,6 +1953,7 @@ function Exodus:trinketUpdate()
             if entity.Type == EntityType.ENTITY_TEAR and entity.SpawnerType == EntityType.ENTITY_PLAYER then
                 if entity:CollidesWithGrid() then
                     entity.Velocity = entity.Velocity * -1
+                    entity.Position = entity.Position + entity.Velocity
                 elseif entity.FrameCount % 10 == 1 and entity.FrameCount > 20 then
                     local signX = 10
                     local signY = 10
@@ -1980,6 +1981,21 @@ function Exodus:trinketUpdate()
                         end
                     end
                     
+                    entity.Velocity = Vector(player.ShotSpeed * signX, player.ShotSpeed * signY)
+                elseif entity.FrameCount <= 1 then
+                    local signX = 10
+                    local signY = 10
+                    if player:GetHeadDirection() == Direction.DOWN then
+                        signX = 0
+                    elseif player:GetHeadDirection() == Direction.LEFT then
+                        signX = -signX
+                        signY = 0
+                    elseif player:GetHeadDirection() == Direction.RIGHT then
+                        signY = 0
+                    elseif player:GetHeadDirection() == Direction.UP then
+                        signX = 0
+                        signY = -signY
+                    end
                     entity.Velocity = Vector(player.ShotSpeed * signX, player.ShotSpeed * signY)
                 end
             end
