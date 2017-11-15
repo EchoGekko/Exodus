@@ -2150,7 +2150,7 @@ function Exodus:trinketNewRoom()
                 local gridEnt = room:GetGridEntity(i)
                 
                 if gridEnt then
-                    if not gridEnt:ToDoor() then
+                    if gridEnt:GetType() ~= GridEntityType.GRID_WALL and gridEnt:GetType() ~= GridEntityType.GRID_DOOR then
                         room:RemoveGridEntity(i, 0, true)
                     end
                 end
