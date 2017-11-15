@@ -1408,19 +1408,38 @@ Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.keeperHit, EntityType
 --<<JAMES>>--
 function Exodus:jamesNewFloor()
     local player = Isaac.GetPlayer(0)
-    if player:GetPlayerType() == Characters.JAMES and not EntityVariables.JAMES.HasGivenItems then
-        player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
-        player:AddCollectible(ItemId.FULLERS_CLUB, 6, false)
-        EntityVariables.JAMES.HasGivenItems = true
-        player:AddCacheFlags(CacheFlag.CACHE_SPEED)
-        player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
-        player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
-        player:EvaluateItems()
+    if player:GetPlayerType() == Characters.JAMES then
+        if not EntityVariables.JAMES.HasGivenItems then
+            player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
+            player:AddCollectible(ItemId.FULLERS_CLUB, 6, false)
+            EntityVariables.JAMES.HasGivenItems = true
+            player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+            player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+            player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+            player:EvaluateItems()
+        end
+        player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
     end
-    player:UseActiveItem(CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS, false, false, false, false)
 end
 
 Exodus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Exodus.jamesNewFloor)
+
+function Exodus:jamesUpdate()
+    local player = Isaac.GetPlayer(0)
+    if player:GetPlayerType() == Characters.JAMES then
+        if not EntityVariables.JAMES.HasGivenItems then
+            player:AddCollectible(ItemId.THE_APOCRYPHON, 0, false)
+            player:AddCollectible(ItemId.FULLERS_CLUB, 6, false)
+            EntityVariables.JAMES.HasGivenItems = true
+            player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+            player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+            player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+            player:EvaluateItems()
+        end
+    end
+end
+
+Exodus:AddCallback(ModCallbacks.MC_POST_UPDATE, Exodus.jamesUpdate)
 
 function Exodus:jamesCache(player, flag)
     if player:GetPlayerType() == Characters.JAMES then
@@ -4217,13 +4236,14 @@ function Exodus:roboBabyFamiliarUpdate(robo)
             end
 
             local laser = player:FireTechXLaser(robo.Position, robo.Velocity, 1)
-            laser.TearFlags = laser.TearFlags | TearFlags.TEAR_CONTINUUM
+            laser.TearFlags = TearFlags.TEAR_CONTINUUM
             if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
                 laser.CollisionDamage = 4
             else
                 laser.CollisionDamage = 2
             end
             laser:GetData().IsFromRoboBaby = true
+            laser.Color = Color(1, 0, 0, 1, 100, 0, 0)
         else
             sprite:Play("IdleDown", true)
         end
@@ -4251,15 +4271,21 @@ function Exodus:roboBabyFamiliarUpdate(robo)
         if entity.Type == EntityType.ENTITY_LASER and entity:GetData().IsFromRoboBaby ~= nil then
             entity.Position = robo.Position
             entity.Velocity = robo.Velocity
-            entity:ToLaser().Radius = entity:ToLaser().Radius + 4
+            entity:ToLaser().Radius = entity:ToLaser().Radius + 3
             if entity:ToLaser().Radius > 64 then
                 entity:Remove()
                 
                 for u = 1, 4 do
-                    local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (60 + rng:RandomInt(11) - 5)), false, false)
-                    laser.TearFlags = laser.TearFlags | TearFlags.TEAR_SPECTRAL
-                    laser.Color = player.TearColor
+                    local laser = player:FireTechLaser(entity.Position, 3193, Vector.FromAngle(u * (90 + rng:RandomInt(11) - 5)), false, false)
+                    laser.TearFlags = 0
+                    laser.TearFlags = TearFlags.TEAR_SPECTRAL
                     laser.DisableFollowParent = true
+                    if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+                        laser.CollisionDamage = 4
+                    else
+                        laser.CollisionDamage = 2
+                    end
+                    laser.Color = Color(1, 0, 0, 1, 100, 0, 0)
                 end
             end
         end
