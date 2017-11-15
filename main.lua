@@ -1953,9 +1953,9 @@ function Exodus:trinketUpdate()
             if entity.Type == EntityType.ENTITY_TEAR and entity.SpawnerType == EntityType.ENTITY_PLAYER then
                 if entity.FrameCount > player.TearHeight * -3 then
                     entity:Die()
-                end
-                
-                if entity.FrameCount % 10 == 1 and entity.FrameCount > 10 or entity.FrameCount == 4 then
+                elseif entity:CollidesWithGrid() then
+                    entity.Velocity = entity.Velocity * -1
+                elseif entity.FrameCount % 10 == 1 and entity.FrameCount > 10 or entity.FrameCount == 4 then
                     local signX = 10
                     local signY = 10
                     
