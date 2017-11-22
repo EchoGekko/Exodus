@@ -1,5 +1,5 @@
 <AnimatedActor>
-	<Info CreatedBy="Unknown" CreatedOn="9/9/2017 4:10:27 PM" Version="14" Fps="30"/>
+	<Info CreatedBy="Unknown" CreatedOn="21/11/2017 11:45:57 PM" Version="15" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="sling_icon.png" Id="0"/>
@@ -17,7 +17,7 @@
 			</RootAnimation>
 			<LayerAnimations>
 				<LayerAnimation LayerId="0" Visible="true">
-					<Frame XPosition="5" YPosition="-10" XPivot="17" YPivot="29" XCrop="-1" YCrop="-1" Width="21" Height="28" XScale="85" YScale="80" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="250" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
+					<Frame XPosition="6" YPosition="-10" XPivot="17" YPivot="29" XCrop="-1" YCrop="-1" Width="19" Height="24" XScale="85" YScale="80" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="250" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="true"/>
 				</LayerAnimation>
 			</LayerAnimations>
 			<NullAnimations/>
