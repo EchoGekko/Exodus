@@ -9,14 +9,14 @@
 	<passive description="I still can't remember" name="Forget Me Later" gfx="Forget Me Later.png"/>
 	<passive description="Line of fire" name="Dragon Breath" gfx="Dragon Breath.png" cache="firedelay damage"/>
 	<passive description="Win streak" name="Cobalt Necklace" gfx="Cobalt Necklace.png" cache="damage"/>
-	<passive description="Tastes like apples" name="Pig Blood" gfx="Pig Blood.png"/>
+	<passive description="Bountiful immolation" name="Pig Blood" gfx="Pig Blood.png"/>
 	<passive description="Squish" name="Dad's Boots" gfx="Dad's Boots.png" cache="speed"/>
 	<passive description="Where did it come from?" name="Mysterious Mustache" gfx="Mysterious Mustache.png"/>
 	<passive description="Tock tick" name="Cursed Metronome" gfx="Cursed Metronome.png" cache="luck"/>
 	<passive description="Running with them!" name="Big Scissors" gfx="Big Scissors.png" cache="speed"/>
 	<passive description="No place like home" name="Welcome Mat" gfx="Welcome Mat.png"/>
 	<passive description="Part from your heart" name="Gluttony's Stomach" gfx="Gluttony's Stomach.png"/>
-	<passive description="Controlled bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
+	<passive description="Haunted blast! +5 bombs" name="Possessed Bombs" gfx="Possessed Bombs.png" bombs="5"/>
 	<passive description="Blight shot" name="Buttrot" gfx="Buttrot.png"/>
 	<passive description="Size matters" name="Sling" gfx="Sling.png"/>
 	<passive description="Negativity" name="Yin" gfx="Yin.png" cache="firedelay" blackhearts="2" devilprice="2"/>
@@ -35,7 +35,7 @@
 	<!-- Active Items -->
 	<active description="The ultimate sacrifice" name="The Forbidden Fruit" gfx="Forbidden Fruit.png" maxcharges="0"/>
 	<active description="Sacrificial" name="Wrath of the Lamb" gfx="Wrath of the Lamb.png" maxcharges="12" cache="all" devilprice="2"/>
-	<active description="Take a drink..." name="Birdbath" gfx="Birdbath.png" maxcharges="3"/>
+	<active description="A noxious spring" name="Birdbath" gfx="Birdbath.png" maxcharges="3"/>
 	<active description="Don't drop it" name="Ominous Lantern" gfx="Ominous Lantern.png"  maxcharges="1"/>
 	<active description="Batter up!" name="Baseball Mitt" gfx="Baseball Mitt.png" maxcharges="1" />
 	<active description="You're bringing everyone down" name="The Pseudobulbar Affect" gfx="The Pseudobulbar Affect.png" maxcharges="4"/>
