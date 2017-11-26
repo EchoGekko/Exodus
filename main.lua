@@ -18,6 +18,33 @@ local ProjectileVariant = {
     COIN = 7
 }
 
+local ChampionFlag = {
+    RED = 1,
+    YELLOW = 1<<1,
+    GREEN = 1<<2,
+    ORANGE = 1<<3,
+    DARK_BLUE = 1<<4,
+    DARK_GREEN = 1<<5,
+    SOLID_WHITE = 1<<6,
+    GRAY = 1<<7,
+    TRANSPARENT_WHITE = 1<<8,
+    BLACK = 1<<9,
+    PINK = 1<<10,
+    PURPLE = 1<<11,
+    DARK_RED = 1<<12,
+    LIGHT_BLUE = 1<<13,
+    CAMOUFLAGE = 1<<14,
+    PULSING_GREEN = 1<<15,
+    PULSING_GREY = 1<<16,
+    LIGHT_WHITE = 1<<17,
+    TINY = 1<<18,
+    LARGE = 1<<19,
+    PULSING_RED = 1<<20,
+    PULSATING = 1<<21,
+    CROWN = 1<<22,
+    SKULL = 1<<23
+}
+
 local ItemId = {
     ---<<PASSIVES>>---
     BEEHIVE = Isaac.GetItemIdByName("Beehive"),
