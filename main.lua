@@ -7068,7 +7068,7 @@ Exodus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Exodus.deathsEyeTakeDamage, 
 
 --<<<LOVELY FLIES>>>--
 local FLIES = {
-    LOVELY_FLY = { 
+    [Entities.LOVELY_FLY.variant] = { 
         turnFactor = 1, --This value influences how fast the fly will turn towards the player when it can't find a mate
         velocityFactor = 1, --This value influences how fast the fly will move towards the player when it can't find a mate
         parentOffset = Vector(50, 0), --How far away the fly will orbit from the enemy, a normal room is 500x260 units
@@ -7080,7 +7080,7 @@ local FLIES = {
         healColour = Color(1, 1, 1, 1, 50, 50, 50), --The base colour that enemies will be set to when this fly heals them
     },
     
-    SOULFUL_FLY = { 
+    [Entities.SOULFUL_FLY.variant] = { 
         turnFactor = 1, --This value influences how fast the fly will turn towards the player when it can't find a mate
         velocityFactor = 1, --This value influences how fast the fly will move towards the player when it can't find a mate
         parentOffset = Vector(50, 0), --How far away the fly will orbit from the enemy, a normal room is 500x260 units
@@ -7090,7 +7090,7 @@ local FLIES = {
         invincibilityColour = Color(1, 1, 1, 1, 125, 150, 200) --The colour that enemies will flash when this fly prevents damage
     },
     
-    HATEFUL_FLY = { 
+    [Entities.HATEFUL_FLY.variant] = { 
         turnFactor = 1, --This value influences how fast the fly will turn towards the player when it can't find a mate
         velocityFactor = 8, --This value influences how fast the fly will move towards the player when it can't find a mate
         parentOffset = Vector(50, 0), --How far away the fly will orbit from the enemy, a normal room is 500x260 units,
@@ -7100,30 +7100,18 @@ local FLIES = {
         baseColour = Color(0.6, 0.6, 0.6, 1, 0, 0, 0), --The base colour that enemies will be set to while this fly is on them
     },
     
-    HATEFUL_FLY_GHOST = { 
+    [Entities.HATEFUL_FLY_GHOST.variant] = { 
         turnFactor = 0.5, --This value influences how fast the fly will turn towards the player when it can't find a mate
         velocityFactor = 6, --This value influences how fast the fly will move towards the player when it can't find a mate
         baseColour = Color(0.6, 0.5, 0.5, 1, 0, 0, 0), --The base colour that enemies will be set to while this fly is on them
     }
 }
 
-local function getTableByVariant(variant)
-    if variant == Entities.LOVELY_FLY.variant then
-        return FLIES.LOVELY_FLY
-    elseif variant == Entities.SOULFUL_FLY.variant then
-        return FLIES.SOULFUL_FLY
-    elseif variant == Entities.HATEFUL_FLY.variant then
-        return FLIES.HATEFUL_FLY
-    elseif variant == Entities.HATEFUL_FLY_GHOST.variant then
-        return FLIES.HATEFUL_FLY_GHOST
-    end
-end
-
 function Exodus:lovelyFlyLogic(fly)
     local data = fly:GetData()
     local sprite = fly:GetSprite()
     local player = Isaac.GetPlayer(0)
-    local flyStats = getTableByVariant(fly.Variant)
+    local flyStats = FLIES[fly.Variant]
     local noMate = "Alone"
     
     --[[
@@ -7144,10 +7132,10 @@ function Exodus:lovelyFlyLogic(fly)
         
         if not data.parentEnemy or data.parentEnemy == noMate then
             local nearEnemy
-            local checkDist = 1000000000
+            local checkDist = math.huge
             
             for i, entity in pairs(Isaac.GetRoomEntities()) do
-                if entity:IsVulnerableEnemy() and entity.Index ~= fly.Index and entity.InitSeed ~= fly.InitSeed then
+                if entity:IsActiveEnemy(false) and entity.Index ~= fly.Index and entity.InitSeed ~= fly.InitSeed then
                     local newDist = fly.Position:DistanceSquared(entity.Position)
                     local entityData = entity:GetData()
                     
@@ -7430,7 +7418,7 @@ function Exodus:soulfulFlyInvincibility(entity, dmgAmount, dmgFlags, dmgSource, 
     if data.childFlies then
         for i, fly in ipairs(data.childFlies) do
             if fly.Variant == Entities.SOULFUL_FLY.variant and fly:GetData().lockedToParent then
-                local flyStats = getTableByVariant(fly.Variant)
+                local flyStats = FLIES[fly.Variant]
                 
                 data.invulnFrames = 6
                 entity:SetColor(flyStats.invincibilityColour, 10, 1, true, false)
@@ -7447,13 +7435,14 @@ function Exodus:hatefulFlyGhost(entity, dmgAmount, dmgFlags, dmgSource, invulnFr
     dmgSource = getEntityFromRef(dmgSource)
     
     if entity.Variant == Entities.HATEFUL_FLY.variant then
-        if dmgSource:ToTear() and dmgSource:ToTear().TearFlags & TearFlags.TEAR_PIERCING == TearFlags.TEAR_PIERCING then
+        local dmgSourceTear = dmgSource:ToTear()
+        
+        if dmgSourceTear and dmgSourceTear.TearFlags & TearFlags.TEAR_PIERCING == TearFlags.TEAR_PIERCING then
             dmgSource:Kill()
         end
         
         if entity.HitPoints - dmgAmount <= 0 and data.lockedToParent then
             data.parentEnemy:GetData().hasHatefulFly = false
-            
             entity:GetSprite():Play("Wait what?", true)
             return false
         end
