@@ -211,15 +211,15 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	
-	<entity anm2path="monsters/Lovely Fly.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="0" name="Lovely Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="4">
+	<entity anm2path="monsters/Lovely Fly.anm2" reroll="true" baseHP="8" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="0" name="Lovely Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="4">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 	
-	<entity anm2path="monsters/Soulful Fly.anm2" reroll="true" baseHP="15" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="1" name="Soulful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="5">
+	<entity anm2path="monsters/Soulful Fly.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="1" name="Soulful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="4">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
 	
-	<entity anm2path="monsters/Hateful Fly.anm2" reroll="true" baseHP="21" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="2" name="Hateful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="5">
+	<entity anm2path="monsters/Hateful Fly.anm2" reroll="true" baseHP="22" boss="0" champion="1" collisionDamage="0" collisionMass="5" collisionRadius="10" friction="1" id="867" variant="2" name="Hateful Fly" numGridCollisionPoints="12" shadowSize="16" stageHP="4">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="1" />
     </entity>
 	
